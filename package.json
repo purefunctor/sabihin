@@ -1,0 +1,29 @@
+{
+  "name": "sabihin",
+  "version": "1.0.0",
+  "description": "Anonymous and Secure Confessions",
+  "scripts": {
+    "build": "pnpm build:dune && pnpm build:entry",
+    "dev": "concurrently \"pnpm:dev:dune\" \"pnpm:dev:entry\" \"pnpm:dev:server\"",
+    "build:dune": "dune build @backend @frontend",
+    "build:entry": "esbuild --minify --bundle --outfile=dist/index.js _build/default/src/frontend/output/src/frontend/Main.js",
+    "dev:dune": "dune build -w @backend @frontend",
+    "dev:entry": "esbuild --watch --minify --bundle --outfile=dist/index.js _build/default/src/frontend/output/src/frontend/Main.js",
+    "dev:server": "nodemon -w _build/last_built.txt --exec \"_build/default/src/backend/backend.exe\""
+  },
+  "keywords": [
+    "fullstack",
+    "web"
+  ],
+  "author": "Justin Garcia",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "esbuild": "^0.20.1",
+    "nodemon": "^3.1.0"
+  }
+}

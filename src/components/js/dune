@@ -1,0 +1,11 @@
+(library
+ (name components_js)
+ (modes melange)
+ (wrapped false)
+ (libraries reason-react melange.belt)
+ (preprocess
+  (pps melange.ppx reason-react-ppx server-reason-react.browser_ppx -js)))
+
+(copy_files#
+ (mode fallback)
+ (files "../native/**.{re,rei}"))
