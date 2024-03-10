@@ -10,9 +10,10 @@ let make = (~serverUrl: option(ReasonReactRouter.url)=?) => {
       }
     };
 
-  switch (url.path) {
-  | [] => <div> {React.string("Index!")} </div>
-  | [name] => <Counter name />
-  | _ => <div> {React.string("Not Found!")} </div>
-  };
+  <Layout>
+    {switch (url.path) {
+     | [] => <Index />
+     | _ => <NotFound />
+     }}
+  </Layout>;
 };

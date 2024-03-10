@@ -1,0 +1,120 @@
+:root {
+    --primary: hsla(23, 87%, 72%, 1);
+    --secondary: hsla(202, 85%, 72%, 1);
+    --accent: hsla(266, 45%, 76%, 1);
+    --black: hsla(240, 7%, 8%, 1);
+    --white: hsla(0, 8%, 97%, 1);
+    --background: hsla(228, 8%, 12%, 1);
+    --neutral: hsla(230, 7%, 16%, 1);
+    --info: hsla(187, 51%, 76%, 1);
+    --success: hsla(129, 51%, 84%, 1);
+    --warning: hsla(51, 100%, 85%, 1);
+    --error: hsla(354, 47%, 80%, 1);
+    --easeOutExpo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--white);
+}
+
+.josefin-sans-title {
+    font-family: "Josefin Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.josefin-sans-regular {
+    font-family: "Josefin Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.color-primary {
+    color: var(--primary);
+}
+
+.color-secondary {
+    color: var(--primary);
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.header-title {
+    cursor: pointer;
+    font-size: 2rem;
+}
+
+.header-nav {
+    display: flex;
+    gap: 4px;
+}
+
+.header-button {
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.header-login {
+    background-color: var(--primary);
+    color: var(--black);
+    text-align: center;
+    min-width: 4rem;
+}
+
+.header-register {
+    display: none;
+}
+
+@media screen and (min-width: 768px) {
+    #root {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .header-login {
+        background-color: initial;
+        color: var(--white);
+        transition: color 0.6s var(--easeOutExpo);
+    }
+
+    .header-login:hover {
+        color: var(--secondary);
+    }
+
+    .header-register {
+        display: initial;
+        background-color: var(--primary);
+        color: var(--black);
+        transition: transform 0.6s var(--easeOutExpo);
+    }
+
+    .header-register:hover {
+        transform: scale(1.05);
+    }
+}
+
+.main-root {
+    flex-grow: 1;
+}
