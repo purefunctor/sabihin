@@ -212,6 +212,12 @@
     color: var(--secondary);
 }
 
+.icon-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 /* #endregion: Utils */
 
 body {

@@ -18,11 +18,13 @@ let make = () => {
            )}
         </p>
         <nav className="index-banner-header-actions">
-          <a className="button-primary josefin-sans-regular">
-            {React.string("Get Started")}
+          <a className="button-primary icon-button josefin-sans-regular">
+            <Icons.Sparkle size="1.25rem" />
+            <span> {React.string("Get Started")} </span>
           </a>
-          <a className="button-secondary-ghost josefin-sans-regular">
-            {React.string("Learn More")}
+          <a className="button-secondary-ghost icon-button josefin-sans-regular">
+            <Icons.Book size="1.25rem" />
+            <span> {React.string("Learn More")} </span>
           </a>
         </nav>
       </header>
