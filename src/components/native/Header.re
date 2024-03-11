@@ -1,6 +1,6 @@
 [@react.component]
 let make = () => {
-  <header className="header ">
+  <header className="header">
     <a className="header-title josefin-sans-title">
       <span> {React.string("sabihin")} </span>
       <span className="color-secondary"> {React.string(".")} </span>
