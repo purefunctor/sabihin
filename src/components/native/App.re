@@ -13,7 +13,8 @@ let make = (~serverUrl: option(ReasonReactRouter.url)=?) => {
   <Layout>
     {switch (url.path) {
      | [] => <Index />
-     | ["not-found"] | _ => <NotFound />
+     | ["not-found"]
+     | _ => <NotFound />
      }}
   </Layout>;
 };
