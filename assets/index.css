@@ -424,6 +424,8 @@ body {
     display: flex;
     align-items: center;
     font-size: 6rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 .index-banner-graphic > svg:nth-child(1) {
