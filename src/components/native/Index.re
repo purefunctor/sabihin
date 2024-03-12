@@ -1,3 +1,16 @@
+module IndexCard = {
+  [@react.component]
+  let make = (~title, ~iconFn, ~children) => {
+    <div className="feature-card poppins-bold">
+      <article className="feature-card-article">
+        <header> {React.string(title)} </header>
+        children
+      </article>
+      {iconFn(~size="3rem", ~className="color-primary")}
+    </div>;
+  };
+};
+
 [@react.component]
 let make = () => {
   <main className="index-content">
@@ -29,5 +42,47 @@ let make = () => {
         </nav>
       </header>
     </section>
+    <hr />
+    <section className="index-cards" id="learn-more">
+      <IndexCard
+        title="End-to-End Encryption"
+        iconFn={(~size, ~className) => <Icons.DoorLock size className />}>
+        <p className="color-offwhite poppins-regular">
+          {React.string("Sabihin utilizes end-to-end encryption techniques.")}
+        </p>
+        <p className="color-offwhite poppins-regular">
+          {React.string(
+             "Messages can only be read by its intended recipients.",
+           )}
+        </p>
+      </IndexCard>
+      <IndexCard
+        title="Open-Source Software"
+        iconFn={(~size, ~className) => <Icons.GitPr size className />}>
+        <p className="color-offwhite poppins-regular">
+          {React.string("Sabihin is open-source software.")}
+        </p>
+        <p className="color-offwhite poppins-regular">
+          {React.string(
+             "Its source code is public and contributions are welcome!",
+           )}
+        </p>
+      </IndexCard>
+      <IndexCard
+        title="Functional Programming"
+        iconFn={(~size, ~className) => <Icons.OCamlLogo size className />}>
+        <p className="color-offwhite poppins-regular">
+          {React.string(
+             "Sabihin is built with functional programming languages.",
+           )}
+        </p>
+        <p className="color-offwhite poppins-regular">
+          {React.string(
+             "OCaml and Reason offers performance, reliability, and blazingly-fast iteration times.",
+           )}
+        </p>
+      </IndexCard>
+    </section>
+    // <hr />
   </main>;
 };
