@@ -31,7 +31,10 @@ let error_template = (_, _, suggested_response) => {
   };
 };
 
-Dream.run(~error_handler=Dream.error_template(error_template)) @@
+Dream.run(
+  ~error_handler=Dream.error_template(error_template),
+  ~interface="0.0.0.0",
+) @@
 Dream.logger @@
 Dream.router([
   Dream.get("assets/**", Dream.static("assets")),
