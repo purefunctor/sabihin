@@ -370,8 +370,8 @@ body {
 
 .index-banner {
     display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
     row-gap: 4rem;
     padding-bottom: 4rem;
     border-bottom: 1px solid var(--neutral);
@@ -421,12 +421,17 @@ body {
     }
 }
 
+@media screen and (min-width: 1024px) {
+    .index-banner {
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+}
+
 .index-banner-graphic {
     display: flex;
     align-items: center;
     font-size: 6rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
 }
 
 .index-banner-graphic > svg:nth-child(1) {
@@ -490,7 +495,7 @@ body {
     }
 
     .feature-card {
-        max-width: 16rem;
+        max-width: 410px;
     }
 
     .index-cards > .feature-card:nth-child(3) {
@@ -499,7 +504,7 @@ body {
     }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1280px) {
     .index-cards {
         grid-template-columns: auto auto auto;
     }
