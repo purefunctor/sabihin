@@ -36,6 +36,44 @@ module Chat = {
   };
 };
 
+module ChatHeart = {
+  [@react.component]
+  let make = (~size=?, ~className=?) => {
+    let size = Option.value(size, ~default="1rem");
+    let className = Option.value(className, ~default="");
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M6.455 19L2 22.5V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1zM4 18.385L5.763 17H20V5H4zm8.018-3.685l-3.359-3.36a2.25 2.25 0 0 1 3.182-3.182l.177.177l.176-.177a2.25 2.25 0 0 1 3.182 3.182z"
+      />
+    </svg>;
+  };
+};
+
+module ChatPrivate = {
+  [@react.component]
+  let make = (~size=?, ~className=?) => {
+    let size = Option.value(size, ~default="1rem");
+    let className = Option.value(className, ~default="");
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10a9.956 9.956 0 0 1-4.708-1.175L2 22l1.176-5.29A9.956 9.956 0 0 1 2 12C2 6.477 6.477 2 12 2m0 2a8 8 0 0 0-8 8c0 1.335.326 2.618.94 3.766l.35.654l-.656 2.946l2.948-.654l.653.349A7.955 7.955 0 0 0 12 20a8 8 0 1 0 0-16m0 3a3 3 0 0 1 3 3v1h1v5H8v-5h1v-1a3 3 0 0 1 3-3m2 6h-4v1h4zm-2-4c-.552 0-1 .45-1 1v1h2v-1a1 1 0 0 0-1-1"
+      />
+    </svg>;
+  };
+};
+
 module DoorLock = {
   [@react.component]
   let make = (~size=?, ~className=?) => {

@@ -172,6 +172,10 @@
     color: var(--offwhite);
 }
 
+.flip-v {
+    transform: scaleX(-1);
+}
+
 .color-primary-gradient {
     background:
         linear-gradient(to right,
@@ -361,18 +365,22 @@ body {
 .index-content {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
 }
 
-.index-content > hr {
-    color: var(--neutral);
-    width: 100%;
+.index-banner {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    row-gap: 4rem;
+    padding-bottom: 4rem;
+    border-bottom: 1px solid var(--neutral);
 }
 
 .index-banner-header {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    flex: 1 0 100%;
 }
 
 .index-banner-header > h2,
@@ -388,6 +396,10 @@ body {
 }
 
 @media screen and (min-width: 768px) {
+    .index-banner-header {
+        flex: 0 1 auto;
+    }
+
     .index-banner-header > h2 {
         font-size: 3.25rem;
         line-height: 1.5;
@@ -408,11 +420,32 @@ body {
     }
 }
 
+.index-banner-graphic {
+    display: flex;
+    align-items: center;
+    font-size: 6rem;
+}
+
+.index-banner-graphic > svg:nth-child(1) {
+    margin-bottom: 4rem;
+}
+
+.index-banner-graphic > svg:nth-child(2) {
+    margin-top: 4rem;
+}
+
+@media screen and (min-width: 768px) {
+    .index-banner-graphic {
+        flex:  0 0;
+    }
+}
+
 .index-cards {
     display: flex;
     gap: 2rem;
     flex-wrap: wrap;
     justify-content: center;
+    padding-top: 4rem;
 }
 
 .feature-card {

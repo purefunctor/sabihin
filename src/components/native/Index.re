@@ -35,14 +35,18 @@ let make = () => {
             <Icons.Sparkle size="1.25rem" />
             <span> {React.string("Get Started")} </span>
           </a>
-          <a className="button-secondary-ghost icon-button josefin-sans-regular">
+          <a
+            className="button-secondary-ghost icon-button josefin-sans-regular">
             <Icons.Book size="1.25rem" />
             <span> {React.string("Learn More")} </span>
           </a>
         </nav>
       </header>
+      <div className="index-banner-graphic">
+        <Icons.ChatHeart size="1em" className="color-primary" />
+        <Icons.ChatPrivate size="1em" className="color-secondary flip-v" />
+      </div>
     </section>
-    <hr />
     <section className="index-cards" id="learn-more">
       <IndexCard
         title="End-to-End Encryption"
@@ -83,6 +87,5 @@ let make = () => {
         </p>
       </IndexCard>
     </section>
-    // <hr />
   </main>;
 };
