@@ -1,6 +1,6 @@
 [@react.component]
 let make = () => {
-    <>
-      {React.string("Hello, World")}
-    </>
+  <AuthForm kind=AuthForm.Login>
+    {React.string("Hello, World")}
+  </AuthForm>;
 };
