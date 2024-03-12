@@ -7,7 +7,9 @@ let make = () => {
       <span> {React.string("ph")} </span>
     </a>
     <nav className="header-nav josefin-sans-regular">
-      <a className="header-button header-login"> {React.string("Login")} </a>
+      <Link href="/login" className="header-button header-login">
+        {React.string("Login")}
+      </Link>
       <a className="header-button header-register">
         {React.string("Register")}
       </a>

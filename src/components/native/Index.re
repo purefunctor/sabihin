@@ -31,10 +31,12 @@ let make = () => {
            )}
         </p>
         <nav className="index-banner-header-actions">
-          <a className="button-primary icon-button josefin-sans-regular">
+          <Link
+            href="/login"
+            className="button-primary icon-button josefin-sans-regular">
             <Icons.Sparkle size="1.25rem" />
             <span> {React.string("Get Started")} </span>
-          </a>
+          </Link>
           <a
             className="button-secondary-ghost icon-button josefin-sans-regular">
             <Icons.Book size="1.25rem" />
