@@ -441,16 +441,14 @@ body {
 }
 
 .index-cards {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto;
     justify-content: center;
     padding-top: 4rem;
+    gap: 2rem;
 }
 
 .feature-card {
-    flex: 1 1 100%;
-    min-height: 8rem;
     padding: 2rem;
     background-color: var(--neutral);
     border-radius: 8px;
@@ -473,14 +471,47 @@ body {
     flex-shrink: 0;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 640px) {
     .feature-card {
-        flex: 1 1 20rem;
+        max-width: 50%;
+    }
+
+    .index-cards > .feature-card:nth-child(2) {
+        justify-self: end;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .index-cards {
+        grid-template-columns: auto auto;
+    }
+
+    .feature-card {
+        max-width: 16rem;
+    }
+
+    .index-cards > .feature-card:nth-child(3) {
+        justify-self: center;
+        grid-column: span 2;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .index-cards {
+        grid-template-columns: auto auto auto;
+    }
+
+    .feature-card {
         max-width: 20rem;
     }
 
-    .feature-card-article > a {
-        margin-top: auto;
+    .index-cards > .feature-card:nth-child(2) {
+        justify-self: initial;
+    }
+
+    .index-cards > .feature-card:nth-child(3) {
+        justify-self: center;
+        grid-column: initial;
     }
 }
 
