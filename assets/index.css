@@ -230,6 +230,7 @@ body {
     min-height: 100vh;
     background-color: var(--background);
     color: var(--white);
+    display: flex;
 }
 
 #root {
@@ -424,8 +425,8 @@ body {
     display: flex;
     align-items: center;
     font-size: 6rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
 }
 
 .index-banner-graphic > svg:nth-child(1) {
