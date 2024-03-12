@@ -13,6 +13,7 @@ let make = (~serverUrl: option(ReasonReactRouter.url)=?) => {
   <Layout>
     {switch (url.path) {
      | [] => <Index />
+     | ["login"] => <Login />
      | ["not-found"]
      | _ => <NotFound />
      }}

@@ -40,4 +40,5 @@ Dream.router([
   Dream.get("assets/**", Dream.static("assets")),
   Dream.get("static/**", Dream.static("dist")),
   Dream.get("/", _ => {[] |> renderPage |> Dream.html}),
+  Dream.get("/login", _ => {["login"] |> renderPage |> Dream.html}),
 ]);
