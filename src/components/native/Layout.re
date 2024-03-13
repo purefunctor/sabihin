@@ -1,4 +1,4 @@
 [@react.component]
 let make = (~children) => {
-  <> <Header /> children <Footer /> </>;
+  <> <div className="layout-full"> <Header /> children </div> <Footer /> </>;
 };

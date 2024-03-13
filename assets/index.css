@@ -248,6 +248,12 @@ a {
     margin-right: 1rem;
 }
 
+.layout-full {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .header {
     display: flex;
     align-items: center;
