@@ -10,9 +10,9 @@ let make = () => {
       <Link href="/login" className="header-button header-login">
         {React.string("Login")}
       </Link>
-      <a className="header-button header-register">
+      <Link href="/register" className="header-button header-register">
         {React.string("Register")}
-      </a>
+      </Link>
     </nav>
   </header>;
 };

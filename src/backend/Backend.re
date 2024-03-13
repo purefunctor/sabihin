@@ -41,4 +41,5 @@ Dream.router([
   Dream.get("static/**", Dream.static("dist")),
   Dream.get("/", _ => {[] |> renderPage |> Dream.html}),
   Dream.get("/login", _ => {["login"] |> renderPage |> Dream.html}),
+  Dream.get("/register", _ => {["register"] |> renderPage |> Dream.html})
 ]);
