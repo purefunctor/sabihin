@@ -231,6 +231,7 @@ body {
     background-color: var(--background);
     color: var(--white);
     display: flex;
+    flex-direction: column;
 }
 
 a {
@@ -238,6 +239,7 @@ a {
 }
 
 #root {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -317,6 +319,9 @@ a {
     flex-grow: 1;
     padding-top: 4rem;
     padding-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* #region Footer.re */
@@ -370,6 +375,7 @@ a {
 .index-content {
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
 .index-banner {
