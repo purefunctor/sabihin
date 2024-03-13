@@ -5,9 +5,19 @@ let make = () => {
   let (username, setUsername) = React.useState(() => "");
   let (password, setPassword) = React.useState(() => "");
   let (confirmPassword, setConfirmPassword) = React.useState(() => "");
+  let (usernameError, setUsernameError) = React.useState(() => None);
 
   let onUsernameChange = event => {
-    setUsername(_ => Form.target(event)##value);
+    let value = Form.target(event)##value;
+    if (String.length(value) > 0) {
+      switch (Validate.Username.validate(value)) {
+      | Error(e) => setUsernameError(_ => Some(e))
+      | Ok(_) => setUsernameError(_ => None)
+      };
+    } else {
+      setUsernameError(_ => None);
+    };
+    setUsername(_ => value);
   };
   let onPasswordChange = event => {
     setPassword(_ => Form.target(event)##value);
@@ -27,6 +37,9 @@ let make = () => {
     Js.Console.log2("Confirm Password:", confirmPassword);
   };
 
+  let usernameErrorText =
+    Belt.Option.map(usernameError, Validate.Username.to_string);
+
   <AuthCore
     register=true
     username
@@ -36,5 +49,6 @@ let make = () => {
     confirmPassword
     onConfirmPasswordChange
     onSubmit
+    usernameErrorText
   />;
 };

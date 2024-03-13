@@ -557,7 +557,13 @@ a {
     justify-content: center;
 }
 
-.auth-field {
+.auth-field-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-field-input {
+    border: 2px solid var(--neutral);
     display: flex;
     align-items: center;
     background-color: var(--neutral);
@@ -566,12 +572,12 @@ a {
     gap: 0.25rem;
 }
 
-.auth-field > svg {
+.auth-field-input > svg {
     font-size: 1.5rem;
     opacity: 0.5;
 }
 
-.auth-field > input {
+.auth-field-input > input {
     flex-grow: 1;
     line-height: 2rem;
     border: none;
@@ -580,9 +586,20 @@ a {
     padding-left: 0.25rem;
 }
 
-.auth-field > input:focus {
+.auth-field-input > input:focus {
     border-radius: 4px;
     outline: var(--primary) solid 2px;
+}
+
+.auth-field-input-error {
+    border: 2px solid var(--error);
+}
+
+.auth-field-error-message {
+    padding-top: 0.5rem;
+    padding-left: 1rem;
+    color: var(--error);
+    font-size: 0.90rem;
 }
 
 .auth-button {
