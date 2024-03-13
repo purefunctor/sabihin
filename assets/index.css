@@ -7,6 +7,7 @@
     --offwhite: hsl(173, 7%, 74%);
     --background: hsla(228, 8%, 12%, 1);
     --neutral: hsla(230, 7%, 16%, 1);
+    --highlight: hsla(225, 8%, 20%, 1);
     --info: hsla(187, 51%, 76%, 1);
     --success: hsla(129, 51%, 84%, 1);
     --warning: hsla(51, 100%, 85%, 1);
@@ -525,6 +526,85 @@ a {
     .index-cards > .feature-card:nth-child(3) {
         justify-self: center;
         grid-column: initial;
+    }
+}
+
+/* #endregion */
+
+/* #region AuthCore.re */
+
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    gap: 1rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.auth-title {
+    font-size: 3rem;
+    display: flex;
+    justify-content: center;
+}
+
+.auth-field {
+    display: flex;
+    align-items: center;
+    background-color: var(--neutral);
+    padding: 1rem;
+    border-radius: 8px;
+    gap: 0.25rem;
+}
+
+.auth-field > svg {
+    font-size: 1.5rem;
+    opacity: 0.5;
+}
+
+.auth-field > input {
+    flex-grow: 1;
+    line-height: 2rem;
+    border: none;
+    background: none;
+    color: var(--white);
+    padding-left: 0.25rem;
+}
+
+.auth-field > input:focus {
+    border-radius: 4px;
+    outline: var(--primary) solid 2px;
+}
+
+.auth-button {
+    font-size: 1rem;
+}
+
+.auth-button:focus {
+    outline: var(--white) solid 2px;
+}
+
+.auth-link {
+    color: var(--secondary);
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+@media screen and (min-width: 768px) {
+    .auth-form {
+        max-width: 32rem;
     }
 }
 

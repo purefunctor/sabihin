@@ -131,6 +131,44 @@ module OCamlLogo = {
   };
 };
 
+module LockPassword = {
+  [@react.component]
+  let make = (~size=?, ~className=?) => {
+    let size = Option.value(size, ~default="1rem");
+    let className = Option.value(className, ~default="");
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M18 8h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2V7a6 6 0 1 1 12 0zM5 10v10h14V10zm6 4h2v2h-2zm-4 0h2v2H7zm8 0h2v2h-2zm1-6V7a4 4 0 0 0-8 0v1z"
+      />
+    </svg>;
+  };
+};
+
+module User = {
+  [@react.component]
+  let make = (~size=?, ~className=?) => {
+    let size = Option.value(size, ~default="1rem");
+    let className = Option.value(className, ~default="");
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M4 22a8 8 0 1 1 16 0h-2a6 6 0 0 0-12 0zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6s6 2.685 6 6s-2.685 6-6 6m0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4"
+      />
+    </svg>;
+  };
+};
+
 module Sparkle = {
   [@react.component]
   let make = (~size=?, ~className=?) => {
