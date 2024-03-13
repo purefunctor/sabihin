@@ -315,15 +315,6 @@ a {
     }
 }
 
-.content-wrapper {
-    flex-grow: 1;
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
 /* #region Footer.re */
 
 .layout-footer {
@@ -333,6 +324,7 @@ a {
     padding-bottom: 2rem;
     border-top: 2px solid var(--neutral);
     gap: 2rem;
+    margin-top: auto;
 }
 
 .footer-section {
@@ -376,6 +368,9 @@ a {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    flex-grow: 1;
 }
 
 .index-banner {
