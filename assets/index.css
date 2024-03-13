@@ -263,6 +263,7 @@ a {
 }
 
 .header-title {
+    color: var(--white);
     cursor: pointer;
     font-size: 2rem;
 }

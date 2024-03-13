@@ -1,11 +1,11 @@
 [@react.component]
 let make = () => {
   <header className="header">
-    <a className="header-title josefin-sans-title">
+    <Link href="/" className="header-title josefin-sans-title">
       <span> {React.string("sabihin")} </span>
-      <span className="color-secondary"> {React.string(".")} </span>
+      <span className="color-primary"> {React.string(".")} </span>
       <span> {React.string("ph")} </span>
-    </a>
+    </Link>
     <nav className="header-nav josefin-sans-regular">
       <Link href="/login" className="header-button header-login">
         {React.string("Login")}
