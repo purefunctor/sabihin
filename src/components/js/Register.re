@@ -28,8 +28,14 @@ let make = () => {
       setPasswordState(_ =>
         Some(Validate.Password.validate(username, value))
       );
+      if (String.length(confirmPassword) > 0) {
+        setConfirmState(_ =>
+          Some(Validate.Confirm.validate(value, confirmPassword))
+        );
+      };
     } else {
       setPasswordState(_ => None);
+      setConfirmState(_ => None);
     };
     setPassword(_ => value);
   };
@@ -40,7 +46,7 @@ let make = () => {
     } else {
       setConfirmState(_ => None);
     };
-    setConfirmPassword(_ => Form.target(event)##value);
+    setConfirmPassword(_ => value);
   };
 
   let onSubmit = event => {
