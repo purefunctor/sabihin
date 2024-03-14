@@ -5,24 +5,41 @@ let make = () => {
   let (username, setUsername) = React.useState(() => "");
   let (password, setPassword) = React.useState(() => "");
   let (confirmPassword, setConfirmPassword) = React.useState(() => "");
-  let (usernameError, setUsernameError) = React.useState(() => None);
+
+  let (usernameState, setUsernameState) = React.useState(() => None);
+  let (passwordState, setPasswordState) = React.useState(() => None);
+  let (confirmState, setConfirmState) = React.useState(() => None);
 
   let onUsernameChange = event => {
     let value = Form.target(event)##value;
     if (String.length(value) > 0) {
       switch (Validate.Username.validate(value)) {
-      | Error(e) => setUsernameError(_ => Some(e))
-      | Ok(_) => setUsernameError(_ => None)
+      | Error(e) => setUsernameState(_ => Some(e))
+      | Ok(_) => setUsernameState(_ => None)
       };
     } else {
-      setUsernameError(_ => None);
+      setUsernameState(_ => None);
     };
     setUsername(_ => value);
   };
   let onPasswordChange = event => {
-    setPassword(_ => Form.target(event)##value);
+    let value = Form.target(event)##value;
+    if (String.length(value) > 0) {
+      setPasswordState(_ =>
+        Some(Validate.Password.validate(username, value))
+      );
+    } else {
+      setPasswordState(_ => None);
+    };
+    setPassword(_ => value);
   };
   let onConfirmPasswordChange = event => {
+    let value = Form.target(event)##value;
+    if (String.length(value) > 0) {
+      setConfirmState(_ => Some(Validate.Confirm.validate(password, value)));
+    } else {
+      setConfirmState(_ => None);
+    };
     setConfirmPassword(_ => Form.target(event)##value);
   };
 
@@ -37,9 +54,6 @@ let make = () => {
     Js.Console.log2("Confirm Password:", confirmPassword);
   };
 
-  let usernameErrorText =
-    Belt.Option.map(usernameError, Validate.Username.to_string);
-
   <AuthCore
     register=true
     username
@@ -49,6 +63,8 @@ let make = () => {
     confirmPassword
     onConfirmPasswordChange
     onSubmit
-    usernameErrorText
+    usernameState
+    passwordState
+    confirmState
   />;
 };

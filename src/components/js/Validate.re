@@ -1,15 +1,5 @@
 module Username = {
-  type t =
-    | TooShort
-    | TooLong
-    | InvalidCharacter(string);
-
-  let to_string =
-    fun
-    | TooShort => "Must be more than 3 characters."
-    | TooLong => "Must be less than 16 characters."
-    | InvalidCharacter(c) =>
-      Printf.sprintf("'%s' is not a valid character.", c);
+  open AuthCore.UsernameState;
 
   let disallow_pattern = [%re "/[^A-Za-z0-9\\._]/g"];
 
@@ -35,4 +25,34 @@ module Username = {
     | Some(error) => Error(error)
     };
   };
+};
+
+module Password = {
+  open AuthCore.PasswordState;
+
+  let validate = (username: string, password: string) =>
+    if (String.length(password) < 8) {
+      TooShort;
+    } else {
+      let result = Zxcvbn.zxcvbn(~userInput=[|username|], password);
+      switch (result.score) {
+      | 0 => TooWeak
+      | 1 => VeryWeak
+      | 2 => Medium
+      | 3 => ModeratelyStrong
+      | 4 => VeryStrong
+      | _ => raise(Failure("Invalid state from zxcvbn"))
+      };
+    };
+};
+
+module Confirm = {
+  open AuthCore.ConfirmState;
+
+  let validate = (password: string, confirm: string) =>
+    if (password == confirm) {
+      Yes;
+    } else {
+      No;
+    };
 };
