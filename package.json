@@ -19,7 +19,8 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
