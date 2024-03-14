@@ -21,8 +21,8 @@ module Username = {
           );
     };
     switch (error^) {
-    | None => Ok(username)
-    | Some(error) => Error(error)
+    | None => Success
+    | Some(error) => error
     };
   };
 };

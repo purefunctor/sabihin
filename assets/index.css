@@ -173,6 +173,18 @@
     color: var(--offwhite);
 }
 
+.color-error {
+    color: var(--error);
+}
+
+.color-warning {
+    color: var(--warning);
+}
+
+.color-success {
+    color: var(--success);
+}
+
 .flip-v {
     transform: scaleX(-1);
 }
@@ -595,10 +607,17 @@ a {
     border: 2px solid var(--error);
 }
 
+.auth-field-input-warning {
+    border: 2px solid var(--warning);
+}
+
+.auth-field-input-success {
+    border: 2px solid var(--success);
+}
+
 .auth-field-error-message {
     padding-top: 0.5rem;
     padding-left: 1rem;
-    color: var(--error);
     font-size: 0.90rem;
 }
 

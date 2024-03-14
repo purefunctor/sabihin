@@ -13,10 +13,7 @@ let make = () => {
   let onUsernameChange = event => {
     let value = Form.target(event)##value;
     if (String.length(value) > 0) {
-      switch (Validate.Username.validate(value)) {
-      | Error(e) => setUsernameState(_ => Some(e))
-      | Ok(_) => setUsernameState(_ => None)
-      };
+      setUsernameState(_ => Some(Validate.Username.validate(value)));
     } else {
       setUsernameState(_ => None);
     };

@@ -49,7 +49,8 @@ module UsernameState = {
   type t =
     | TooShort
     | TooLong
-    | InvalidCharacter(string);
+    | InvalidCharacter(string)
+    | Success;
 
   let field_props: FieldProps.t = {
     name: "username",
@@ -63,20 +64,36 @@ module UsernameState = {
     | TooShort => "Must be more than 3 characters."
     | TooLong => "Must be less than 16 characters."
     | InvalidCharacter(c) =>
-      Printf.sprintf("'%s' is not a valid character.", c);
+      Printf.sprintf("'%s' is not a valid character.", c)
+    | Success => "Awesome! You're good to go!";
 
   let field_css =
-    fun
-    | None => None
-    | _ => Some("auth-field-input-error");
+    Option.map(
+      fun
+      | TooShort
+      | TooLong
+      | InvalidCharacter(_) => "auth-field-input-error"
+      | Success => "auth-field-input-success",
+    );
 
   let field_span =
     fun
     | None => React.null
-    | Some(t) =>
-      <span className="auth-field-error-message poppins-light">
-        {t->render->React.string}
-      </span>;
+    | Some(t) => {
+        let span_class =
+          switch (t) {
+          | TooShort
+          | TooLong
+          | InvalidCharacter(_) => " color-error"
+          | Success => " color-success"
+          };
+        <span
+          className={
+            "auth-field-error-message poppins-light color-error" ++ span_class
+          }>
+          {t->render->React.string}
+        </span>;
+      };
 };
 
 module UsernameField = MakeField(UsernameState);
@@ -107,17 +124,34 @@ module PasswordState = {
   };
 
   let field_css =
-    fun
-    | None => None
-    | _ => Some("auth-field-input-error");
+    Option.map(
+      fun
+      | TooShort
+      | TooWeak
+      | VeryWeak => "auth-field-input-error"
+      | Medium => "auth-field-input-warning"
+      | ModeratelyStrong
+      | VeryStrong => "auth-field-input-success",
+    );
 
   let field_span =
     fun
     | None => React.null
-    | Some(t) =>
-      <span className="auth-field-error-message poppins-light">
-        {t->render->React.string}
-      </span>;
+    | Some(t) => {
+        let span_color =
+          switch (t) {
+          | TooWeak
+          | TooShort
+          | VeryWeak => " color-error"
+          | Medium => " color-warning"
+          | ModeratelyStrong
+          | VeryStrong => " color-success"
+          };
+        <span
+          className={"auth-field-error-message poppins-light" ++ span_color}>
+          {t->render->React.string}
+        </span>;
+      };
 };
 
 module PasswordField = MakeField(PasswordState);
@@ -140,17 +174,26 @@ module ConfirmState = {
   };
 
   let field_css =
-    fun
-    | None => None
-    | Some(_) => Some("auth-field-input-error");
+    Option.map(
+      fun
+      | Yes => "auth-field-input-success"
+      | No => "auth-field-input-error",
+    );
 
   let field_span =
     fun
     | None => React.null
-    | Some(t) =>
-      <span className="auth-field-error-message poppins-light">
-        {t->render->React.string}
-      </span>;
+    | Some(t) => {
+        let span_color =
+          switch (t) {
+          | Yes => " color-success"
+          | No => " color-error"
+          };
+        <span
+          className={"auth-field-error-message poppins-light" ++ span_color}>
+          {t->render->React.string}
+        </span>;
+      };
 };
 
 module ConfirmField = MakeField(ConfirmState);
