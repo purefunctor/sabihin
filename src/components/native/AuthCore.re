@@ -89,7 +89,7 @@ module UsernameState = {
           };
         <span
           className={
-            "auth-field-error-message poppins-light color-error" ++ span_class
+            "auth-field-error-message poppins-light" ++ span_class
           }>
           {t->render->React.string}
         </span>;
