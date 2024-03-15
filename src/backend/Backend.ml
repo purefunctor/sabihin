@@ -58,5 +58,5 @@ let () =
              Dream.get "/register" (fun _ ->
                  [ "register" ] |> Pages.WithApp.render |> Dream.html);
            ];
-         Dream.scope "/api" [] [ Dream.get "/register" Api.handler ];
+         Api.route;
        ]

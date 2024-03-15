@@ -55,6 +55,25 @@ let make = () => {
     Js.Console.log2("Username:", username);
     Js.Console.log2("Password:", password);
     Js.Console.log2("Confirm Password:", confirmPassword);
+
+    let formData = Fetch.FormData.make();
+    Fetch.FormData.append("username", username, formData);
+    Js.Console.log(formData);
+
+    let _ =
+      Js.Promise.(
+        Fetch.fetchWithInit(
+          "/api/register",
+          Fetch.RequestInit.make(
+            ~method_=Post,
+            ~body=Fetch.BodyInit.makeWithFormData(formData),
+            (),
+          ),
+        )
+        |> then_(Fetch.Response.json)
+        |> then_(json => json |> Js.Json.stringify |> print_endline |> resolve)
+      );
+    ();
   };
 
   <AuthCore

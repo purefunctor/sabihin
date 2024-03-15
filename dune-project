@@ -30,6 +30,8 @@
    (>= "3.14"))
   (melange
    (>= "3.0.0"))
+  (melange-fetch
+   (>= "0.1.0"))
   (reason-react
    (>= "0.14.0"))
   (reason-react-ppx
