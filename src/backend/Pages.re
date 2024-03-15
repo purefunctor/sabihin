@@ -9,8 +9,8 @@ module Base = {
           content="width=device-width, initial-scale=1.0"
         />
         <title> {React.string("Sabihin")} </title>
-        <script type_="module" src="static/index.js" />
-        <link rel="stylesheet" href="assets/index.css" />
+        <script type_="module" src="/static/index.js" />
+        <link rel="stylesheet" href="/assets/index.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
