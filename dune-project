@@ -33,6 +33,10 @@
   (reason-react
    (>= "0.14.0"))
   (reason-react-ppx
-   (>= "0.14.0")))
+   (>= "0.14.0"))
+  (yojson
+   (>= "2.1.2"))
+  (ppx_yojson_conv
+   (>= "v0.16.0")))
  (tags
   (fullstack web)))

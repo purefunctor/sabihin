@@ -6,9 +6,10 @@
   components_native
   dream
   server-reason-react.react
-  server-reason-react.reactDom)
+  server-reason-react.reactDom
+  yojson)
  (preprocess
-  (pps server-reason-react.ppx)))
+  (pps lwt_ppx ppx_yojson_conv server-reason-react.ppx)))
 
 (rule
  (alias backend)
