@@ -14,6 +14,11 @@ let make = () => {
     let value = Form.target(event)##value;
     if (String.length(value) > 0) {
       setUsernameState(_ => Some(Validate.Username.validate(value)));
+      if (String.length(password) > 0) {
+        setPasswordState(_ =>
+          Some(Validate.Password.validate(value, password))
+        );
+      };
     } else {
       setUsernameState(_ => None);
     };
