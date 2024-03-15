@@ -109,10 +109,10 @@ module PasswordState = {
 
   let render: t => string =
     fun
-    | TooShort => "This password is too short."
+    | TooShort => "Password must at least be 8 characters."
     | TooWeak => "This password is too weak."
     | VeryWeak => "This password is very weak."
-    | Medium => "This password has medium strength."
+    | Medium => "This password has average strength."
     | ModeratelyStrong => "This password is moderately strong."
     | VeryStrong => "This password is very strong.";
 
