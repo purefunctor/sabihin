@@ -133,13 +133,13 @@ module Salt = {
 module MasterKey = {
   open WebCryptoAPI;
 
-  type t = {
+  type fresh_t = {
     master_key: crypto_key,
     client_random: Uint8Array.t,
     salt_buffer: ArrayBuffer.t,
   };
 
-  let create = (): Js.Promise.t(t) => {
+  let create = () => {
     let random_data = getRandomValues_impl(Uint8Array.fromLength(128));
     let client_random = getRandomValues_impl(Uint8Array.fromLength(128));
 
@@ -189,13 +189,13 @@ module MasterKey = {
 module DerivedKey = {
   open WebCryptoAPI;
 
-  type t = {
+  type fresh_t = {
     derived_encryption_key: crypto_key,
     hashed_authentication_key: ArrayBuffer.t,
     encryption_iv: Uint8Array.t,
   };
 
-  let create = (password: string, master_key: MasterKey.t) => {
+  let create = (password: string, salt_buffer: ArrayBuffer.t) => {
     let text_encoder = TextEncoder.create();
     let password_raw = TextEncoder.encode(text_encoder, password);
     let encryption_iv = getRandomValues_impl(Uint8Array.fromLength(12));
@@ -213,7 +213,7 @@ module DerivedKey = {
       let algorithm = {
         "name": "PBKDF2",
         "hash": "SHA-512",
-        "salt": master_key.salt_buffer,
+        "salt": salt_buffer,
         "iterations": 100_000,
       };
       let baseKey = base_key;
@@ -261,14 +261,14 @@ module DerivedKey = {
     );
   };
 
-  let wrap = (derived_key: t, master_key: MasterKey.t) => {
-    let key = master_key.master_key;
+  let wrap = (derived_key: fresh_t, master_key: crypto_key) => {
+    let key = master_key;
     let wrappingKey = derived_key.derived_encryption_key;
     let wrapAlgo = {"name": "AES-GCM", "iv": derived_key.encryption_iv};
     wrapKey_impl("raw", key, wrappingKey, wrapAlgo);
   };
 
-  let unwrap = (derived_key: t, encrypted_master_key: ArrayBuffer.t) => {
+  let unwrap = (derived_key: fresh_t, encrypted_master_key: ArrayBuffer.t) => {
     let format = "raw";
     let wrappedKey = encrypted_master_key;
     let unwrappingKey = derived_key.derived_encryption_key;
@@ -291,7 +291,7 @@ module DerivedKey = {
 module RsaKeyPair = {
   open WebCryptoAPI;
 
-  type t = crypto_key_pair;
+  type fresh_t = crypto_key_pair;
 
   let create = () => {
     let algorithm = {
@@ -304,12 +304,39 @@ module RsaKeyPair = {
     let keyUsages = [|"wrapKey", "unwrapKey"|];
     generateKeyPair_impl(algorithm, extractable, keyUsages);
   };
+
+  let wrap = (public_key: crypto_key, ephemeral_key: crypto_key) => {
+    let format = "raw";
+    let key = ephemeral_key;
+    let wrappingKey = public_key;
+    let wrapAlgo = {"name": "RSA-OAEP"};
+    wrapKey_impl(format, key, wrappingKey, wrapAlgo);
+  };
+
+  let unwrap = (private_key: crypto_key, ephemeral_key: ArrayBuffer.t) => {
+    let format = "raw";
+    let wrappedKey = ephemeral_key;
+    let unwrappingKey = private_key;
+    let unwrapAlgo = {"name": "RSA-OAEP"};
+    let unwrappedKeyAlgo = {"name": "AES-GCM"};
+    let extractable = true;
+    let keyUsages = [|"encrypt", "decrypt"|];
+    unwrapKey_impl(
+      format,
+      wrappedKey,
+      unwrappingKey,
+      unwrapAlgo,
+      unwrappedKeyAlgo,
+      extractable,
+      keyUsages,
+    );
+  };
 };
 
 module EphemeralKey = {
   open WebCryptoAPI;
 
-  type t = {
+  type fresh_t = {
     ephemeral_key: crypto_key,
     encryption_iv: Uint8Array.t,
   };
