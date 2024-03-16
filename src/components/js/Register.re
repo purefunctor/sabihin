@@ -6,49 +6,52 @@ let make = () => {
   let (password, setPassword) = React.useState(() => "");
   let (confirmPassword, setConfirmPassword) = React.useState(() => "");
 
-  let (usernameState, setUsernameState) = React.useState(() => None);
-  let (passwordState, setPasswordState) = React.useState(() => None);
-  let (confirmState, setConfirmState) = React.useState(() => None);
+  let usernameState =
+    React.useMemo1(
+      _ => {
+        if (String.length(username) > 0) {
+          Some(Validate.Username.validate(username));
+        } else {
+          None;
+        };
+      },
+      [|username|],
+    );
+
+  let passwordState =
+    React.useMemo2(
+      _ => {
+        let passwordState = ref(None);
+        if (String.length(password) > 0) {
+          passwordState :=
+            Some(Validate.Password.validate(username, password));
+        };
+        passwordState^;
+      },
+      (username, password),
+    );
+
+  let confirmState =
+    React.useMemo2(
+      _ => {
+        let confirmState = ref(None);
+        if (String.length(confirmPassword) > 0) {
+          confirmState :=
+            Some(Validate.Confirm.validate(password, confirmPassword));
+        };
+        confirmState^;
+      },
+      (password, confirmPassword),
+    );
 
   let onUsernameChange = event => {
-    let value = Form.target(event)##value;
-    if (String.length(value) > 0) {
-      setUsernameState(_ => Some(Validate.Username.validate(value)));
-      if (String.length(password) > 0) {
-        setPasswordState(_ =>
-          Some(Validate.Password.validate(value, password))
-        );
-      };
-    } else {
-      setUsernameState(_ => None);
-    };
-    setUsername(_ => value);
+    setUsername(_ => Form.target(event)##value);
   };
   let onPasswordChange = event => {
-    let value = Form.target(event)##value;
-    if (String.length(value) > 0) {
-      setPasswordState(_ =>
-        Some(Validate.Password.validate(username, value))
-      );
-      if (String.length(confirmPassword) > 0) {
-        setConfirmState(_ =>
-          Some(Validate.Confirm.validate(value, confirmPassword))
-        );
-      };
-    } else {
-      setPasswordState(_ => None);
-      setConfirmState(_ => None);
-    };
-    setPassword(_ => value);
+    setPassword(_ => Form.target(event)##value);
   };
   let onConfirmPasswordChange = event => {
-    let value = Form.target(event)##value;
-    if (String.length(value) > 0) {
-      setConfirmState(_ => Some(Validate.Confirm.validate(password, value)));
-    } else {
-      setConfirmState(_ => None);
-    };
-    setConfirmPassword(_ => value);
+    setConfirmPassword(_ => Form.target(event)##value);
   };
 
   let onSubmit = event => {
