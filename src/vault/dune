@@ -1,0 +1,7 @@
+(library
+ (name sabihin_vault)
+ (libraries melange.js)
+ (modes melange)
+ (wrapped false)
+ (preprocess
+  (pps melange.ppx)))

@@ -2,7 +2,7 @@
  (name components_js)
  (modes melange)
  (wrapped false)
- (libraries reason-react melange.belt melange-fetch)
+ (libraries reason-react sabihin_vault melange.belt melange-fetch)
  (preprocess
   (pps melange.ppx reason-react-ppx server-reason-react.browser_ppx -js)))
 

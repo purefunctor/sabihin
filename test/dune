@@ -1,0 +1,12 @@
+(melange.emit
+ (target output)
+ (alias sabihin_tests_emit)
+ (libraries sabihin_vault melange.belt)
+ (preprocess
+  (pps melange.ppx reason-react-ppx))
+ (module_systems commonjs))
+
+(cram
+ (deps
+  index.js
+  (alias sabihin_tests_emit)))
