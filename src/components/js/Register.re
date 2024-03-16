@@ -8,13 +8,12 @@ let make = () => {
 
   let usernameState =
     React.useMemo1(
-      _ => {
+      _ =>
         if (String.length(username) > 0) {
           Some(Validate.Username.validate(username));
         } else {
           None;
-        };
-      },
+        },
       [|username|],
     );
 
