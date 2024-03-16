@@ -261,18 +261,28 @@ module DerivedKey = {
     );
   };
 
-  let wrap = (derived_key: fresh_t, master_key: crypto_key) => {
+  let wrap =
+      (
+        derive_key: crypto_key,
+        encryption_iv: ArrayBuffer.t,
+        master_key: crypto_key,
+      ) => {
     let key = master_key;
-    let wrappingKey = derived_key.derived_encryption_key;
-    let wrapAlgo = {"name": "AES-GCM", "iv": derived_key.encryption_iv};
+    let wrappingKey = derive_key;
+    let wrapAlgo = {"name": "AES-GCM", "iv": encryption_iv};
     wrapKey_impl("raw", key, wrappingKey, wrapAlgo);
   };
 
-  let unwrap = (derived_key: fresh_t, encrypted_master_key: ArrayBuffer.t) => {
+  let unwrap =
+      (
+        derived_key: crypto_key,
+        encryption_iv: ArrayBuffer.t,
+        encrypted_master_key: ArrayBuffer.t,
+      ) => {
     let format = "raw";
     let wrappedKey = encrypted_master_key;
-    let unwrappingKey = derived_key.derived_encryption_key;
-    let unwrapAlgo = {"name": "AES-GCM", "iv": derived_key.encryption_iv};
+    let unwrappingKey = derived_key;
+    let unwrapAlgo = {"name": "AES-GCM", "iv": encryption_iv};
     let unwrappedKeyAlgo = {"name": "AES-GCM"};
     let extractable = true;
     let keyUsages = [|"wrapKey", "unwrapKey"|];
