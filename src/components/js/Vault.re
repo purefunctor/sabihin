@@ -36,6 +36,11 @@ module WebCryptoAPI = {
   };
 
   [@mel.scope "window.crypto.subtle"]
+  external decrypt_impl:
+    (Js.t({..}), crypto_key, ArrayBuffer.t) => Js.Promise.t(ArrayBuffer.t) =
+    "decrypt";
+
+  [@mel.scope "window.crypto.subtle"]
   external deriveBits_impl:
     (Js.t({..}), crypto_key, int) => Js.Promise.t(ArrayBuffer.t) =
     "deriveBits";
@@ -49,6 +54,11 @@ module WebCryptoAPI = {
   [@mel.scope "window.crypto.subtle"]
   external digest_impl: (string, Uint8Array.t) => Js.Promise.t(ArrayBuffer.t) =
     "digest";
+
+  [@mel.scope "window.crypto.subtle"]
+  external encrypt_impl:
+    (Js.t({..}), crypto_key, ArrayBuffer.t) => Js.Promise.t(ArrayBuffer.t) =
+    "encrypt";
 
   [@mel.scope "window.crypto.subtle"]
   external generateKey_impl:
