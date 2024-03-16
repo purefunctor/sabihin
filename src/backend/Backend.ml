@@ -53,6 +53,7 @@ let () =
          Dream.get "static/**" @@ Dream.static "dist";
          Dream.scope "/" []
            [
+             Dream.get "/" (fun _ -> [] |> Pages.WithApp.render |> Dream.html);
              Dream.get "/login" (fun _ ->
                  [ "login" ] |> Pages.WithApp.render |> Dream.html);
              Dream.get "/register" (fun _ ->
