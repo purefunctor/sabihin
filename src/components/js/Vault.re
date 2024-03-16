@@ -35,52 +35,52 @@ module WebCryptoAPI = {
     public_key: crypto_key,
   };
 
-  [@mel.scope "window.crypto.subtle"]
+  [@mel.scope "crypto.subtle"]
   external decrypt_impl:
     (Js.t({..}), crypto_key, ArrayBuffer.t) => Js.Promise.t(ArrayBuffer.t) =
     "decrypt";
 
-  [@mel.scope "window.crypto.subtle"]
+  [@mel.scope "crypto.subtle"]
   external deriveBits_impl:
     (Js.t({..}), crypto_key, int) => Js.Promise.t(ArrayBuffer.t) =
     "deriveBits";
 
-  [@mel.scope "window.crypto.subtle"]
+  [@mel.scope "crypto.subtle"]
   external deriveKey_impl:
     (Js.t({..}), crypto_key, Js.t({..}), bool, array(string)) =>
     Js.Promise.t(crypto_key) =
     "deriveKey";
 
-  [@mel.scope "window.crypto.subtle"]
+  [@mel.scope "crypto.subtle"]
   external digest_impl: (string, Uint8Array.t) => Js.Promise.t(ArrayBuffer.t) =
     "digest";
 
-  [@mel.scope "window.crypto.subtle"]
+  [@mel.scope "crypto.subtle"]
   external encrypt_impl:
     (Js.t({..}), crypto_key, ArrayBuffer.t) => Js.Promise.t(ArrayBuffer.t) =
     "encrypt";
 
-  [@mel.scope "window.crypto.subtle"]
+  [@mel.scope "crypto.subtle"]
   external generateKey_impl:
     (Js.t({..}), bool, array(string)) => Js.Promise.t(crypto_key) =
     "generateKey";
 
-  [@mel.scope "window.crypto.subtle"]
+  [@mel.scope "crypto.subtle"]
   external generateKeyPair_impl:
     (Js.t({..}), bool, array(string)) => Js.Promise.t(crypto_key_pair) =
     "generateKey";
 
-  [@mel.scope "window.crypto"]
+  [@mel.scope "crypto"]
   external getRandomValues_impl: Uint8Array.t => Uint8Array.t =
     "getRandomValues";
 
-  [@mel.scope "window.crypto.subtle"]
+  [@mel.scope "crypto.subtle"]
   external importKey_impl:
     (string, Uint8Array.t, 'a, bool, array(string)) =>
     Js.Promise.t(crypto_key) =
     "importKey";
 
-  [@mel.scope "window.crypto.subtle"]
+  [@mel.scope "crypto.subtle"]
   external unwrapKey_impl:
     (
       string,
@@ -94,7 +94,7 @@ module WebCryptoAPI = {
     Js.Promise.t(crypto_key) =
     "unwrapKey";
 
-  [@mel.scope "window.crypto.subtle"]
+  [@mel.scope "crypto.subtle"]
   external wrapKey_impl:
     (string, crypto_key, crypto_key, Js.t({..})) =>
     Js.Promise.t(ArrayBuffer.t) =
