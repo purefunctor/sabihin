@@ -143,8 +143,11 @@ module Salt = {
 module MasterKey = {
   open WebCryptoAPI;
 
+  type key_t =
+    | MasterKey(crypto_key);
+
   type fresh_t = {
-    master_key: crypto_key,
+    master_key: key_t,
     client_random: Uint8Array.t,
     salt_buffer: ArrayBuffer.t,
   };
@@ -184,7 +187,12 @@ module MasterKey = {
           keyUsages,
         )
         |> then_(master_key => {
-             resolve({master_key, client_random, salt_buffer})
+             let master_key = MasterKey(master_key);
+             resolve({
+               master_key,
+               client_random,
+               salt_buffer,
+             });
            })
       );
     };
@@ -199,8 +207,11 @@ module MasterKey = {
 module DerivedKey = {
   open WebCryptoAPI;
 
+  type key_t =
+    | DerivedKey(crypto_key);
+
   type fresh_t = {
-    derived_encryption_key: crypto_key,
+    derived_encryption_key: key_t,
     hashed_authentication_key: ArrayBuffer.t,
     encryption_iv: Uint8Array.t,
   };
@@ -255,11 +266,12 @@ module DerivedKey = {
           hash_authentication_key(key_bits),
         ))
         |> then_(((derived_encryption_key, hashed_authentication_key)) => {
+             let derived_encryption_key = DerivedKey(derived_encryption_key);
              resolve({
                derived_encryption_key,
                hashed_authentication_key,
                encryption_iv,
-             })
+             });
            })
       );
     };
