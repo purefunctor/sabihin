@@ -1,5 +1,5 @@
 module Username = {
-  open AuthCore.UsernameState;
+  open AuthForm.UsernameState;
 
   let disallow_pattern = [%re "/[^A-Za-z0-9\\._]/g"];
 
@@ -28,7 +28,7 @@ module Username = {
 };
 
 module Password = {
-  open AuthCore.PasswordState;
+  open AuthForm.PasswordState;
 
   let validate = (username: string, password: string) =>
     if (String.length(password) < 8) {
@@ -47,7 +47,7 @@ module Password = {
 };
 
 module Confirm = {
-  open AuthCore.ConfirmState;
+  open AuthForm.ConfirmState;
 
   let validate = (password: string, confirm: string) =>
     if (password == confirm) {

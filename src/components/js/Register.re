@@ -16,7 +16,6 @@ let make = () => {
         },
       [|username|],
     );
-
   let passwordState =
     React.useMemo2(
       _ => {
@@ -29,7 +28,6 @@ let make = () => {
       },
       (username, password),
     );
-
   let confirmState =
     React.useMemo2(
       _ => {
@@ -77,23 +75,25 @@ let make = () => {
             (),
           ),
         )
-        |> then_(Fetch.Response.json)
-        |> then_(json => json |> Js.Json.stringify |> print_endline |> resolve)
+        |> then_(Fetch.Response.text)
+        |> then_(json => json |> print_endline |> resolve)
       );
     ();
   };
 
-  <AuthCore
-    register=true
-    username
-    onUsernameChange
-    password
-    onPasswordChange
-    confirmPassword
-    onConfirmPasswordChange
-    onSubmit
-    usernameState
-    passwordState
-    confirmState
-  />;
+  <main className="login-register-content">
+    <AuthForm
+      register=true
+      username
+      onUsernameChange
+      password
+      onPasswordChange
+      confirmPassword
+      onConfirmPasswordChange
+      onSubmit
+      usernameState
+      passwordState
+      confirmState
+    />
+  </main>;
 };

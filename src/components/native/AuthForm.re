@@ -227,35 +227,33 @@ let make =
   let passwordState = Option.value(passwordState, ~default=None);
   let confirmState = Option.value(confirmState, ~default=None);
 
-  <div className="auth-container">
-    <form onSubmit className="auth-form">
-      <span className="auth-title josefin-sans-title">
-        {React.string(if (register) {"Register"} else {"Login"})}
-      </span>
-      <UsernameField
-        state=usernameState
-        value=username
-        onChange=onUsernameChange
-      />
-      <PasswordField
-        state=passwordState
-        value=password
-        onChange=onPasswordChange
-      />
-      {if (register) {
-         <ConfirmField
-           state=confirmState
-           value=confirmPassword
-           onChange=onConfirmPasswordChange
-         />;
-       } else {
-         React.null;
-       }}
-      <button className="auth-button button-primary poppins-regular">
-        {React.string(if (register) {"Register"} else {"Login"})}
-      </button>
-    </form>
-    <span className="poppins-regular">
+  <form onSubmit className="auth-form">
+    <span className="auth-title josefin-sans-title">
+      {React.string(if (register) {"Register"} else {"Login"})}
+    </span>
+    <UsernameField
+      state=usernameState
+      value=username
+      onChange=onUsernameChange
+    />
+    <PasswordField
+      state=passwordState
+      value=password
+      onChange=onPasswordChange
+    />
+    {if (register) {
+       <ConfirmField
+         state=confirmState
+         value=confirmPassword
+         onChange=onConfirmPasswordChange
+       />;
+     } else {
+       React.null;
+     }}
+    <button className="auth-button button-primary poppins-regular">
+      {React.string(if (register) {"Register"} else {"Login"})}
+    </button>
+    <span className="auth-redirect-message poppins-regular">
       {if (register) {
          <>
            {React.string("Already have an account? ")}
@@ -272,5 +270,5 @@ let make =
          </>;
        }}
     </span>
-  </div>;
+  </form>;
 };

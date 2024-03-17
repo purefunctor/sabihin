@@ -1,4 +1,6 @@
 [@react.component]
 let make = () => {
-  <AuthCore register=false />;
+  <main className="login-register-content">
+    <AuthForm register=false />
+  </main>;
 };

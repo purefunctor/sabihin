@@ -22,12 +22,14 @@ let make = () => {
     Js.Console.log2("Password:", password);
   };
 
-  <AuthCore
-    register=false
-    username
-    onUsernameChange
-    password
-    onPasswordChange
-    onSubmit
-  />;
+  <main className="login-register-content">
+    <AuthForm
+      register=false
+      username
+      onUsernameChange
+      password
+      onPasswordChange
+      onSubmit
+    />
+  </main>;
 };
