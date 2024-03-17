@@ -61,7 +61,8 @@ let () =
        [
          Dream.get "assets/**" @@ Dream.static "assets";
          Dream.get "static/**" @@ Dream.static "dist";
-         Dream.scope "/" []
+         Dream.scope "/"
+           [ Middleware.issue_csrf_cookie ]
            [
              Dream.get "/" (fun _ -> [] |> Pages.WithApp.render |> Dream.html);
              Dream.get "/login" (fun _ ->

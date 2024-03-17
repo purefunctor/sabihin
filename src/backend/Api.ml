@@ -6,4 +6,9 @@ module Register = struct
     | _ -> Dream.respond ~status:`Bad_Request "Bad Request."
 end
 
-let route = Dream.scope "/api" [] [ Dream.post "/register" Register.handler ]
+let route =
+  Dream.scope "/api"
+    [ Middleware.verify_csrf_cookie ]
+    [
+      Dream.post "/register" Register.handler;
+    ]
