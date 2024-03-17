@@ -2,5 +2,11 @@
  (name backend_lib)
  (modes native)
  (wrapped false)
- (libraries components_native dream server-reason-react.react server-reason-react.reactDom yojson)
- (preprocess (pps lwt_ppx ppx_yojson_conv server-reason-react.ppx)))
+ (libraries
+  components_native
+  dream
+  server-reason-react.react
+  server-reason-react.reactDom
+  yojson)
+ (preprocess
+  (pps lwt_ppx ppx_yojson_conv server-reason-react.ppx)))
