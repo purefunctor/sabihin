@@ -1,15 +1,7 @@
 (executable
  (name backend)
  (public_name backend)
- (modes native)
- (libraries
-  components_native
-  dream
-  server-reason-react.react
-  server-reason-react.reactDom
-  yojson)
- (preprocess
-  (pps lwt_ppx ppx_yojson_conv server-reason-react.ppx)))
+ (libraries backend_lib))
 
 (rule
  (alias backend)
