@@ -44,9 +44,18 @@ let error_template _ _ suggested_response =
 let error_handler = Dream.error_template error_template
 let interface = "0.0.0.0"
 
+let server_secret =
+  match Sys.getenv_opt "SERVER_SECRET" with
+  | Some server_secret ->
+      Dream.info (fun log -> log "SERVER_SECRET: Production Mode");
+      server_secret
+  | None ->
+      Dream.warning (fun log -> log "SERVER_SECRET: Development Mode");
+      Dream.to_base64url (Dream.random 128)
+
 let () =
   Dream.run ~error_handler ~interface
-  @@ Dream.logger
+  @@ Dream.set_secret server_secret
   @@ Dream.router
        [
          Dream.get "assets/**" @@ Dream.static "assets";
