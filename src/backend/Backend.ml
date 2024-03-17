@@ -56,6 +56,7 @@ let server_secret =
 let () =
   Dream.run ~error_handler ~interface
   @@ Dream.set_secret server_secret
+  @@ Dream.logger @@ Dream.cookie_sessions
   @@ Dream.router
        [
          Dream.get "assets/**" @@ Dream.static "assets";
