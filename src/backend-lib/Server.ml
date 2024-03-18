@@ -69,7 +69,6 @@ let server_handler =
              Dream.get "/register" (fun _ ->
                  [ "register" ] |> Pages.WithApp.render |> Dream.html);
            ];
-         Api.route;
        ]
 
 let run () = Dream.run ~error_handler ~interface server_handler
