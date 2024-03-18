@@ -1,4 +1,4 @@
-module Base = {
+module Page = {
   [@react.component]
   let make = (~children) => {
     <html lang="en">
@@ -27,10 +27,10 @@ module Base = {
   };
 };
 
-module WithApp = {
+module AppPage = {
   [@react.component]
   let make = (~path) => {
-    <Base> <App serverUrl={path, hash: "", search: ""} /> </Base>;
+    <Page> <App serverUrl={path, hash: "", search: ""} /> </Page>;
   };
 
   let render = path => ReactDOM.renderToStaticMarkup(make(~path, ()));

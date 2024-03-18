@@ -18,7 +18,7 @@ let error_template _ _ suggested_response =
   match code with
   | 404 ->
       Dream.set_header suggested_response "Content-Type" Dream.text_html;
-      Dream.set_body suggested_response @@ Pages.WithApp.render [ "not-found" ];
+      Dream.set_body suggested_response @@ Render.AppPage.render [ "not-found" ];
       Lwt.return suggested_response
   | _ -> (
       match Dream.header suggested_response "Content-Type" with
@@ -56,20 +56,7 @@ let server_secret =
 let server_handler =
   Dream.set_secret server_secret
   @@ Dream.logger @@ Dream.cookie_sessions
-  @@ Dream.router
-       [
-         Dream.get "assets/**" @@ Dream.static "assets";
-         Dream.get "static/**" @@ Dream.static "dist";
-         Dream.scope "/"
-           [ Middleware.issue_csrf_cookie ]
-           [
-             Dream.get "/" (fun _ -> [] |> Pages.WithApp.render |> Dream.html);
-             Dream.get "/login" (fun _ ->
-                 [ "login" ] |> Pages.WithApp.render |> Dream.html);
-             Dream.get "/register" (fun _ ->
-                 [ "register" ] |> Pages.WithApp.render |> Dream.html);
-           ];
-       ]
+  @@ Dream.router [ Routes.Static.route; Routes.Index.route; Routes.Api.route ]
 
 let run () = Dream.run ~error_handler ~interface server_handler
 let serve () = Dream.serve ~error_handler ~interface server_handler
