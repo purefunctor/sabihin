@@ -56,7 +56,7 @@ let server_secret =
 let server_handler =
   Dream.set_secret server_secret
   @@ Dream.logger @@ Dream.cookie_sessions
-  @@ Dream.router [ Routes.Static.route; Routes.Index.route; Routes.Api.route ]
+  @@ Dream.router [ Routes.Static.route; Routes.Pages.route; Routes.Api.route ]
 
 let run () = Dream.run ~error_handler ~interface server_handler
 let serve () = Dream.serve ~error_handler ~interface server_handler
