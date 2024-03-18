@@ -1,5 +1,13 @@
 open Js.Typed_array;
 
+module PromiseLet = {
+  open Js.Promise;
+
+  let resolve = resolve;
+
+  let ( let* ) = (x, f) => x |> then_(f);
+};
+
 module TextEncoder = {
   type t;
 
@@ -171,6 +179,8 @@ module MasterKey = {
   };
 
   let create = () => {
+    open PromiseLet;
+
     let random_data = getRandomValues_impl(Uint8Array.fromLength(128));
     let client_random = getRandomValues_impl(Uint8Array.fromLength(128));
     let protection_private_encryption_iv =
@@ -178,7 +188,7 @@ module MasterKey = {
     let verification_private_encryption_iv =
       VerificationIv(getRandomValues_impl(Uint8Array.fromLength(12)));
 
-    let import_random_as_base_key = {
+    let* base_key = {
       let format = "raw";
       let keyData = random_data;
       let algorithm = "HKDF";
@@ -187,44 +197,36 @@ module MasterKey = {
       importKey_impl(format, keyData, algorithm, extractable, keyUsages);
     };
 
-    let compute_salt = Salt.compute(client_random);
+    let* salt_buffer = Salt.compute(client_random);
 
-    let derive_master_key = ((base_key, salt_buffer)) => {
-      let algoritm = {
-        "name": "HKDF",
-        "hash": "SHA-512",
-        "salt": salt_buffer,
-        "info": Uint8Array.make([||]),
-      };
-      let baseKey = base_key;
-      let derivedKeyAlgorithm = {"name": "AES-GCM", "length": 256};
-      let extractable = true;
-      let keyUsages = [|"wrapKey", "unwrapKey"|];
-      Js.Promise.(
-        deriveKey_impl(
-          algoritm,
-          baseKey,
-          derivedKeyAlgorithm,
-          extractable,
-          keyUsages,
-        )
-        |> then_(master_key => {
-             let master_key = MasterKey(master_key);
-             resolve({
-               master_key,
-               client_random,
-               salt_buffer,
-               protection_private_encryption_iv,
-               verification_private_encryption_iv,
-             });
-           })
-      );
+    let algoritm = {
+      "name": "HKDF",
+      "hash": "SHA-512",
+      "salt": salt_buffer,
+      "info": Uint8Array.make([||]),
     };
+    let baseKey = base_key;
+    let derivedKeyAlgorithm = {"name": "AES-GCM", "length": 256};
+    let extractable = true;
+    let keyUsages = [|"wrapKey", "unwrapKey"|];
 
-    Js.Promise.(
-      all2((import_random_as_base_key, compute_salt))
-      |> then_(derive_master_key)
-    );
+    let* master_key =
+      deriveKey_impl(
+        algoritm,
+        baseKey,
+        derivedKeyAlgorithm,
+        extractable,
+        keyUsages,
+      );
+
+    let master_key = MasterKey(master_key);
+    resolve({
+      master_key,
+      client_random,
+      salt_buffer,
+      protection_private_encryption_iv,
+      verification_private_encryption_iv,
+    });
   };
 };
 
@@ -244,12 +246,14 @@ module DerivedKey = {
   };
 
   let create = (password: string, salt_buffer: ArrayBuffer.t) => {
+    open PromiseLet;
+
     let text_encoder = TextEncoder.create();
     let password_raw = TextEncoder.encode(text_encoder, password);
     let master_encryption_iv =
       MasterIv(getRandomValues_impl(Uint8Array.fromLength(12)));
 
-    let import_password_as_base_key = {
+    let* base_key = {
       let format = "raw";
       let keyData = password_raw;
       let algorithm = "PBKDF2";
@@ -258,7 +262,7 @@ module DerivedKey = {
       importKey_impl(format, keyData, algorithm, extractable, keyUsages);
     };
 
-    let derive_bits_from_base_key = base_key => {
+    let* key_bits = {
       let algorithm = {
         "name": "PBKDF2",
         "hash": "SHA-512",
@@ -270,7 +274,7 @@ module DerivedKey = {
       deriveBits_impl(algorithm, baseKey, length);
     };
 
-    let derive_encryption_key = key_bits => {
+    let* derived_encryption_key = {
       let derived_encryption_key_raw =
         Uint8Array.fromBuffer(~off=0, ~len=16, key_bits, ());
       let format = "raw";
@@ -281,34 +285,18 @@ module DerivedKey = {
       importKey_impl(format, keyData, algorithm, extractable, keyUsages);
     };
 
-    let hash_authentication_key = key_bits => {
+    let* hashed_authentication_key = {
       let derived_authentication_key =
         Uint8Array.fromBuffer(~off=16, ~len=16, key_bits, ());
       digest_impl("SHA-256", derived_authentication_key);
     };
 
-    let derive_encryption_hash_authentication = key_bits => {
-      Js.Promise.(
-        all2((
-          derive_encryption_key(key_bits),
-          hash_authentication_key(key_bits),
-        ))
-        |> then_(((derived_encryption_key, hashed_authentication_key)) => {
-             let derived_encryption_key = DerivedKey(derived_encryption_key);
-             resolve({
-               derived_encryption_key,
-               hashed_authentication_key,
-               master_encryption_iv,
-             });
-           })
-      );
-    };
-
-    Js.Promise.(
-      import_password_as_base_key
-      |> then_(derive_bits_from_base_key)
-      |> then_(derive_encryption_hash_authentication)
-    );
+    let derived_encryption_key = DerivedKey(derived_encryption_key);
+    resolve({
+      derived_encryption_key,
+      hashed_authentication_key,
+      master_encryption_iv,
+    });
   };
 };
 
@@ -326,6 +314,8 @@ module ProtectionKeyPair = {
   };
 
   let create = (): Js.Promise.t(fresh_t) => {
+    open PromiseLet;
+
     let algorithm = {
       "name": "RSA-OAEP",
       "modulusLength": 4096,
@@ -334,14 +324,12 @@ module ProtectionKeyPair = {
     };
     let extractable = true;
     let keyUsages = [|"wrapKey", "unwrapKey"|];
-    Js.Promise.(
-      generateKeyPair_impl(algorithm, extractable, keyUsages)
-      |> then_((key_pair: crypto_key_pair) => {
-           let private_key = PrivateKey(key_pair.private_key);
-           let public_key = PublicKey(key_pair.public_key);
-           resolve({private_key, public_key});
-         })
-    );
+
+    let* key_pair = generateKeyPair_impl(algorithm, extractable, keyUsages);
+
+    let private_key = PrivateKey(key_pair.private_key);
+    let public_key = PublicKey(key_pair.public_key);
+    resolve({private_key, public_key});
   };
 };
 
@@ -359,6 +347,8 @@ module VerificationKeyPair = {
   };
 
   let create = () => {
+    open PromiseLet;
+
     let algorithm = {
       "name": "RSA-PSS",
       "modulusLength": 4096,
@@ -367,14 +357,12 @@ module VerificationKeyPair = {
     };
     let extractable = true;
     let keyUsages = [|"sign", "verify"|];
-    Js.Promise.(
-      generateKeyPair_impl(algorithm, extractable, keyUsages)
-      |> then_((key_pair: crypto_key_pair) => {
-           let private_key = PrivateKey(key_pair.private_key);
-           let public_key = PublicKey(key_pair.public_key);
-           resolve({private_key, public_key});
-         })
-    );
+
+    let* key_pair = generateKeyPair_impl(algorithm, extractable, keyUsages);
+
+    let private_key = PrivateKey(key_pair.private_key);
+    let public_key = PublicKey(key_pair.public_key);
+    resolve({private_key, public_key});
   };
 };
 
@@ -393,18 +381,18 @@ module EphemeralKey = {
   };
 
   let create = () => {
+    open PromiseLet;
+
     let message_encryption_iv =
       MessageIv(getRandomValues_impl(Uint8Array.fromLength(12)));
     let algorithm = {"name": "AES-GCM", "length": "256"};
     let extractable = true;
     let keyUsages = [|"encrypt", "decrypt"|];
-    Js.Promise.(
-      generateKey_impl(algorithm, extractable, keyUsages)
-      |> then_(ephemeral_key => {
-           let ephemeral_key = EphemeralKey(ephemeral_key);
-           resolve({ephemeral_key, message_encryption_iv});
-         })
-    );
+
+    let* ephemeral_key = generateKey_impl(algorithm, extractable, keyUsages);
+
+    let ephemeral_key = EphemeralKey(ephemeral_key);
+    resolve({ephemeral_key, message_encryption_iv});
   };
 };
 
@@ -433,6 +421,8 @@ module Operations = {
         MasterIv(encryption_iv),
         encrypted_master_key: ArrayBuffer.t,
       ) => {
+    open PromiseLet;
+
     let format = "raw";
     let wrappedKey = encrypted_master_key;
     let unwrappingKey = derived_key;
@@ -440,7 +430,8 @@ module Operations = {
     let unwrappedKeyAlgo = {"name": "AES-GCM"};
     let extractable = true;
     let keyUsages = [|"wrapKey", "unwrapKey"|];
-    Js.Promise.(
+
+    let* master_key =
       unwrapKey_impl(
         format,
         wrappedKey,
@@ -449,9 +440,9 @@ module Operations = {
         unwrappedKeyAlgo,
         extractable,
         keyUsages,
-      )
-      |> then_(master_key => resolve(MasterKey(master_key)))
-    );
+      );
+
+    resolve(MasterKey(master_key));
   };
 
   let wrap_protection_private_key =
@@ -473,6 +464,8 @@ module Operations = {
         ProtectionIv(encryption_iv),
         encrypted_private_key: ArrayBuffer.t,
       ) => {
+    open PromiseLet;
+
     let format = "pkcs8";
     let wrappedKey = encrypted_private_key;
     let unwrappingKey = master_key;
@@ -480,7 +473,8 @@ module Operations = {
     let unwrappedKeyAlgo = {"name": "RSA-OAEP", "hash": "SHA-512"};
     let extractable = true;
     let keyUsages = [|"unwrapKey"|];
-    Js.Promise.(
+
+    let* private_key =
       unwrapKey_impl(
         format,
         wrappedKey,
@@ -489,11 +483,9 @@ module Operations = {
         unwrappedKeyAlgo,
         extractable,
         keyUsages,
-      )
-      |> then_(private_key =>
-           resolve(ProtectionKeyPair.PrivateKey(private_key))
-         )
-    );
+      );
+
+    resolve(ProtectionKeyPair.PrivateKey(private_key));
   };
 
   let wrap_verification_private_key =
@@ -515,6 +507,8 @@ module Operations = {
         VerificationIv(encryption_iv),
         encrypted_private_key,
       ) => {
+    open PromiseLet;
+
     let format = "pkcs8";
     let wrappedKey = encrypted_private_key;
     let unwrappingKey = master_key;
@@ -522,7 +516,8 @@ module Operations = {
     let unwrappedKeyAlgo = {"name": "RSA-OAEP", "hash": "SHA-512"};
     let extractable = true;
     let keyUsages = [|"unwrapKey"|];
-    Js.Promise.(
+
+    let* private_key =
       unwrapKey_impl(
         format,
         wrappedKey,
@@ -531,11 +526,9 @@ module Operations = {
         unwrappedKeyAlgo,
         extractable,
         keyUsages,
-      )
-      |> then_(private_key =>
-           resolve(VerificationKeyPair.PrivateKey(private_key))
-         )
-    );
+      );
+
+    resolve(VerificationKeyPair.PrivateKey(private_key));
   };
 
   let wrap_ephemeral_key =
@@ -552,6 +545,8 @@ module Operations = {
         ProtectionKeyPair.PrivateKey(private_key),
         encrypted_ephemeral_key: ArrayBuffer.t,
       ) => {
+    open PromiseLet;
+
     let format = "raw";
     let wrappedKey = encrypted_ephemeral_key;
     let unwrappingKey = private_key;
@@ -559,7 +554,8 @@ module Operations = {
     let unwrappedKeyAlgo = {"name": "AES-GCM"};
     let extractable = true;
     let keyUsages = [|"encrypt", "decrypt"|];
-    Js.Promise.(
+
+    let* ephemeral_key =
       unwrapKey_impl(
         format,
         wrappedKey,
@@ -568,9 +564,9 @@ module Operations = {
         unwrappedKeyAlgo,
         extractable,
         keyUsages,
-      )
-      |> then_(ephemeral_key => {resolve(EphemeralKey(ephemeral_key))})
-    );
+      );
+
+    resolve(EphemeralKey(ephemeral_key));
   };
 
   let encrypt_data =
