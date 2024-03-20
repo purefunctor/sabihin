@@ -151,7 +151,7 @@ module Salt = {
   // From: https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
   let toHash: ArrayBuffer.t => string = [%mel.raw
     {|
-    function toHash(data) {
+    (data) => {
       const data_array = Array.from(new Uint8Array(data));
       return data_array.map((c) => c.toString(16).padStart(2, "0")).join("");
     }
