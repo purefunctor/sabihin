@@ -10,13 +10,17 @@ let connect_pool () =
   | Ok p -> Lwt.return p
   | Error e -> raise (Caqti_error.Exn e)
 
-let make_test_case action pool switch () =
-  let inner db =
-    let open Lwt_result.Syntax in
-    let (module Db : Caqti_lwt.CONNECTION) = db in
+let make_test_case ?(speed : Alcotest.speed_level option) message action pool =
+  let speed = Option.value speed ~default:`Quick in
+  let test switch () =
+    let transaction db =
+      let open Lwt_result.Syntax in
+      let (module Db : Caqti_lwt.CONNECTION) = db in
 
-    Lwt_switch.add_hook (Some switch) (fun () -> perish @@ Db.rollback ());
-    let* _ = Db.start () in
-    action db
+      Lwt_switch.add_hook (Some switch) (fun () -> perish @@ Db.rollback ());
+      let* _ = Db.start () in
+      action db
+    in
+    perish @@ Caqti_lwt.Pool.use transaction pool
   in
-  perish @@ Caqti_lwt.Pool.use inner pool
+  Alcotest_lwt.test_case message speed test

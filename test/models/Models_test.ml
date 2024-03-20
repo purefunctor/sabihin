@@ -8,7 +8,10 @@ let () =
     [
       ( "User",
         [
-          Alcotest_lwt.test_case "initialize" `Quick @@ User.initialize pool;
-          Alcotest_lwt.test_case "insert" `Quick @@ User.insert pool;
+          User.initialize pool;
+          User.insert pool;
+          User.insert_existing pool;
+          User.get_by_id pool;
+          User.get_by_username pool;
         ] );
     ]
