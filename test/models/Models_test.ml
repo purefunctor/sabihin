@@ -20,5 +20,6 @@ let () =
           PrivateKeys.insert pool;
           PrivateKeys.insert_existing pool;
           PrivateKeys.get_by_user_id pool;
+          PrivateKeys.get_by_username pool;
         ] );
     ]

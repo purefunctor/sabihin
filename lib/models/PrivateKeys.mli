@@ -36,6 +36,12 @@ val get_by_user_id :
   (t, [> Caqti_error.call_or_retrieve ]) result Lwt.t
 (** [get_by_user_id ~user_id db] obtains a {!PrivateKeys.t} using an [~user_id]. *)
 
+val get_by_username :
+  username:string ->
+  (module Rapper_helper.CONNECTION) ->
+  (t, [> Caqti_error.call_or_retrieve ]) result Lwt.t
+(** [get_by_username ~username db] obtains a {!PrivateKeys.t} using a [~username]. *)
+
 val insert :
   user_id:int32 ->
   client_random_value:bytes ->
