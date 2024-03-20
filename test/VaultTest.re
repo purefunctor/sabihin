@@ -32,14 +32,14 @@ let wrap_unwrap_protection_private_key = () => {
   let* encrypted_private_key =
     Vault.Operations.wrap_protection_private_key(
       master_key.master_key,
-      master_key.protection_private_encryption_iv,
+      master_key.protection_key_iv,
       protection_key_pair.private_key,
     );
   Js.Console.log("wrap_protection_private_key: Finished");
   let* _ =
     Vault.Operations.unwrap_protection_private_key(
       master_key.master_key,
-      master_key.protection_private_encryption_iv,
+      master_key.protection_key_iv,
       encrypted_private_key,
     );
   Js.Console.log("unwrap_protection_private_key: Finished");
@@ -53,14 +53,14 @@ let wrap_unwrap_verification_private_key = () => {
   let* encrypted_private_key =
     Vault.Operations.wrap_verification_private_key(
       master_key.master_key,
-      master_key.verification_private_encryption_iv,
+      master_key.verification_key_iv,
       verification_key_pair.private_key,
     );
   Js.Console.log("wrap_verification_private_key: Finished");
   let* _ =
     Vault.Operations.unwrap_verification_private_key(
       master_key.master_key,
-      master_key.verification_private_encryption_iv,
+      master_key.verification_key_iv,
       encrypted_private_key,
     );
   Js.Console.log("unwrap_verification_private_key: Finished");
@@ -102,14 +102,14 @@ let encrypt_decrypt_message = () => {
   let* encrypted_data =
     Vault.Operations.encrypt_data(
       ephemeral_key.ephemeral_key,
-      ephemeral_key.message_encryption_iv,
+      ephemeral_key.message_iv,
       encoded_data,
     );
   Js.Console.log("  encrypt_data: Finished");
   let* decrypted_data =
     Vault.Operations.decrypt_data(
       ephemeral_key.ephemeral_key,
-      ephemeral_key.message_encryption_iv,
+      ephemeral_key.message_iv,
       encrypted_data,
     );
   Js.Console.log("  decrypt_data: Finished");

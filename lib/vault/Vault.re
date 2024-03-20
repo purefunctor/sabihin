@@ -174,8 +174,8 @@ module MasterKey = {
     master_key: key_t,
     client_random: Uint8Array.t,
     salt_buffer: ArrayBuffer.t,
-    protection_private_encryption_iv: protection_iv_t,
-    verification_private_encryption_iv: verification_iv_t,
+    protection_key_iv: protection_iv_t,
+    verification_key_iv: verification_iv_t,
   };
 
   let create = () => {
@@ -183,9 +183,9 @@ module MasterKey = {
 
     let random_data = getRandomValues_impl(Uint8Array.fromLength(128));
     let client_random = getRandomValues_impl(Uint8Array.fromLength(128));
-    let protection_private_encryption_iv =
+    let protection_key_iv =
       ProtectionIv(getRandomValues_impl(Uint8Array.fromLength(12)));
-    let verification_private_encryption_iv =
+    let verification_key_iv =
       VerificationIv(getRandomValues_impl(Uint8Array.fromLength(12)));
 
     let* base_key = {
@@ -224,8 +224,8 @@ module MasterKey = {
       master_key,
       client_random,
       salt_buffer,
-      protection_private_encryption_iv,
-      verification_private_encryption_iv,
+      protection_key_iv,
+      verification_key_iv,
     });
   };
 };
@@ -377,13 +377,13 @@ module EphemeralKey = {
 
   type fresh_t = {
     ephemeral_key: key_t,
-    message_encryption_iv: message_iv_t,
+    message_iv: message_iv_t,
   };
 
   let create = () => {
     open PromiseLet;
 
-    let message_encryption_iv =
+    let message_iv =
       MessageIv(getRandomValues_impl(Uint8Array.fromLength(12)));
     let algorithm = {"name": "AES-GCM", "length": "256"};
     let extractable = true;
@@ -392,7 +392,7 @@ module EphemeralKey = {
     let* ephemeral_key = generateKey_impl(algorithm, extractable, keyUsages);
 
     let ephemeral_key = EphemeralKey(ephemeral_key);
-    resolve({ephemeral_key, message_encryption_iv});
+    resolve({ephemeral_key, message_iv});
   };
 };
 
