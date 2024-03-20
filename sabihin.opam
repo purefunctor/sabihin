@@ -20,6 +20,7 @@ depends: [
   "ppx_rapper_lwt" {>= "3.1.0"}
   "reason-react" {>= "0.14.0"}
   "reason-react-ppx" {>= "0.14.0"}
+  "server-reason-react"
   "yojson" {>= "2.1.2"}
   "ppx_yojson_conv" {>= "v0.16.0"}
   "alcotest" {with-test & >= "1.7.0"}
