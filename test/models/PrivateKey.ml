@@ -96,8 +96,7 @@ let get_by_user_id =
           "encrypted master key is equivalent" private_keys.encrypted_master_key
           encrypted_master_key;
         Alcotest.(check bytes)
-          "master key iv is equivalent" private_keys.master_key_iv
-          master_key_iv;
+          "master key iv is equivalent" private_keys.master_key_iv master_key_iv;
         Alcotest.(check bytes)
           "encrypted protection key is equivalent"
           private_keys.encrypted_protection_key encrypted_protection_key;
