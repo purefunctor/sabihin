@@ -1,0 +1,38 @@
+name: Build and Test
+
+on:
+  pull_request:
+  push:
+
+permissions: read-all
+
+jobs:
+  build_and_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+        - macos-latest
+        - ubuntu-latest
+        ocaml-compiler:
+        - "5.1"
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set-up OCaml ${{ matrix.ocaml-compiler }}
+      uses: ocaml/setup-ocaml@v2
+      with:
+        ocaml-compiler: ${{ matrix.ocaml-compiler }}
+
+    - name: Install Dependencies
+      run: opam install . --deps-only --with-test
+
+    - name: Build Project
+      run: opam exec -- dune build
+
+    - name: Run Tests
+      run: opam exec -- dune runtest
