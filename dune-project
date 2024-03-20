@@ -32,6 +32,10 @@
    (>= "3.0.0"))
   (melange-fetch
    (>= "0.1.0"))
+  (ppx_rapper
+   (>= "3.1.0"))
+  (ppx_rapper_lwt
+   (>= "3.1.0"))
   (reason-react
    (>= "0.14.0"))
   (reason-react-ppx

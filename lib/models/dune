@@ -1,0 +1,6 @@
+(library
+ (name models)
+ (public_name sabihin.models)
+ (libraries lwt ppx_rapper_lwt)
+ (preprocess
+  (pps ppx_rapper)))
