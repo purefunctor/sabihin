@@ -1,0 +1,11 @@
+(test
+ (name models_test)
+ (libraries
+  alcotest
+  alcotest-lwt
+  caqti-driver-postgresql
+  lwt
+  models
+  ppx_rapper_lwt)
+ (preprocess
+  (pps ppx_rapper)))

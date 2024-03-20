@@ -22,6 +22,8 @@
  (description "Anonymous and Secure Confessions.")
  (depends
   ocaml
+  (caqti-driver-postgresql
+   (>= "1.9.0"))
   (dream
    (>= "1.0.0~alpha5"))
   (reason
@@ -43,6 +45,12 @@
   (yojson
    (>= "2.1.2"))
   (ppx_yojson_conv
-   (>= "v0.16.0")))
+   (>= "v0.16.0"))
+  (alcotest 
+   (and :with-test
+    (>= 1.7.0)))
+  (alcotest-lwt
+   (and :with-test
+    (>= 1.7.0))))
  (tags
   (fullstack web)))
