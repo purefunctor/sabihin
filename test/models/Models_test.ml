@@ -16,9 +16,9 @@ let () =
         ] );
       ( "PrivateKey",
         [
-          PrivateKey.initialize pool;
-          PrivateKey.insert pool;
-          PrivateKey.insert_existing pool;
-          PrivateKey.get_by_user_id pool;
+          PrivateKeys.initialize pool;
+          PrivateKeys.insert pool;
+          PrivateKeys.insert_existing pool;
+          PrivateKeys.get_by_user_id pool;
         ] );
     ]
