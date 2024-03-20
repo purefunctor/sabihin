@@ -81,4 +81,4 @@ let get_by_username =
     let _ = Alcotest.(check int32) "id is equivalent" user.id id in
     Lwt.return_ok ()
   in
-  make_test_case "get by id" inner
+  make_test_case "get by username" inner
