@@ -1,0 +1,3 @@
+pin-depends: [
+  ["server-reason-react.dev" "https://github.com/ml-in-barcelona/server-reason-react/archive/b8756a5c71345e5e8f087a9ec7209b43a066d5f0.tar.gz"]
+]
