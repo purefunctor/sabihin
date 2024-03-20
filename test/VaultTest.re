@@ -1,8 +1,23 @@
 open Js.Typed_array;
+open Vault;
 open Vault.PromiseLet;
 open Vault.MasterKey;
 open Vault.DerivedKey;
 open Vault.EphemeralKey;
+
+let salt_test = () => {
+  let text_encoder = TextEncoder.create();
+  let text_decoder = TextDecoder.create();
+
+  let encoded_text = TextEncoder.encode(text_encoder, "ABCDEF0123456789");
+  let salt_base = Salt.compute_base(encoded_text);
+  let decoded_salt = TextDecoder.decode(text_decoder, salt_base);
+
+  assert(Uint8Array.length(salt_base) == 256);
+  Js.Console.log2("compute_salt:", decoded_salt);
+
+  resolve();
+};
 
 let wrap_unwrap_master_key = () => {
   let* master_key = Vault.MasterKey.create();
@@ -156,6 +171,7 @@ let run_sequential = actions => {
 
 let run = () => {
   run_sequential([|
+    salt_test,
     wrap_unwrap_master_key,
     wrap_unwrap_protection_private_key,
     wrap_unwrap_verification_private_key,

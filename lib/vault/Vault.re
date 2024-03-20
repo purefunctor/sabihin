@@ -123,29 +123,33 @@ module WebCryptoAPI = {
 module Salt = {
   open WebCryptoAPI;
 
-  let compute = (salt: Uint8Array.t) => {
-    let salt_length = Uint8Array.length(salt);
+  let compute_base = (salt: Uint8Array.t) => {
+    assert(Uint8Array.length(salt) == 16);
     let text_encoder = TextEncoder.create();
-    let salt_buffer = Uint8Array.make(Array.make(256 + salt_length, 0));
+    let salt_buffer = Uint8Array.make(Array.make(256, 0));
 
     // Encode first 10 bytes.
     TextEncoder.encodeInto(text_encoder, "sabihin.ph", salt_buffer);
 
-    // Encode next 246 bytes.
-    for (index in 10 to 256) {
+    // Encode next 230 bytes.
+    for (index in 10 to 240) {
       Uint8Array.unsafe_set(salt_buffer, index, Char.code('L'));
     };
 
-    // Encode next `salt_length` bytes.
-    for (index in 0 to salt_length) {
+    // Encode next 16 bytes.
+    for (index in 0 to 16) {
       Uint8Array.unsafe_set(
         salt_buffer,
-        index + 256,
+        index + 240,
         Uint8Array.unsafe_get(salt, index),
       );
     };
 
-    digest_impl("SHA-256", salt_buffer);
+    salt_buffer;
+  };
+
+  let compute_digest = (salt: Uint8Array.t) => {
+    digest_impl("SHA-256", compute_base(salt));
   };
 
   // From: https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
@@ -182,7 +186,7 @@ module MasterKey = {
     open PromiseLet;
 
     let random_data = getRandomValues_impl(Uint8Array.fromLength(128));
-    let client_random = getRandomValues_impl(Uint8Array.fromLength(128));
+    let client_random = getRandomValues_impl(Uint8Array.fromLength(16));
     let protection_key_iv =
       ProtectionIv(getRandomValues_impl(Uint8Array.fromLength(12)));
     let verification_key_iv =
@@ -197,7 +201,7 @@ module MasterKey = {
       importKey_impl(format, keyData, algorithm, extractable, keyUsages);
     };
 
-    let* salt_buffer = Salt.compute(client_random);
+    let* salt_buffer = Salt.compute_digest(client_random);
 
     let algoritm = {
       "name": "HKDF",
