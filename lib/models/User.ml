@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 let get_by_id =
   [%rapper
-    get_one
+    get_opt
       {sql|
 SELECT
   @int32{id},
@@ -29,7 +29,7 @@ WHERE
 
 let get_by_username =
   [%rapper
-    get_one
+    get_opt
       {sql|
 SELECT
   @int32{id},

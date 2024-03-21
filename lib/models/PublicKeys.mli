@@ -19,8 +19,14 @@ val create_table :
 val get_by_user_id :
   user_id:int32 ->
   (module Rapper_helper.CONNECTION) ->
-  (t, [> Caqti_error.call_or_retrieve ]) result Lwt.t
-(** [get_by_owner ~owner db] obtains a {!PrivateKeys.t} using an [~owner]. *)
+  (t option, [> Caqti_error.call_or_retrieve ]) result Lwt.t
+(** [get_by_user_id ~user_id db] obtains a {!PublicKeys.t} using an [~user_id]. *)
+
+val get_by_username :
+  username:string ->
+  (module Rapper_helper.CONNECTION) ->
+  (t option, [> Caqti_error.call_or_retrieve ]) result Lwt.t
+(** [get_by_username ~username db] obtains a {!PublicKeys.t} using an [~username]. *)
 
 val insert :
   user_id:int32 ->
@@ -28,4 +34,4 @@ val insert :
   verification_key:bytes ->
   (module Rapper_helper.CONNECTION) ->
   (unit, [> Caqti_error.call_or_retrieve ]) result Lwt.t
-(** [insert ... db] inserts a new row in the [private_keys] table. *)
+(** [insert ... db] inserts a new row in the [public_keys] table. *)

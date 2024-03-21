@@ -1,4 +1,7 @@
-let uri = Uri.of_string "postgresql://localhost:5432/sabihin_tests"
+let uri =
+  Uri.of_string
+  @@ Option.value ~default:"postgresql://localhost:5432/sabihin_tests"
+  @@ Sys.getenv_opt "DATABASE_URL"
 
 let perish action =
   Lwt.bind action (function
@@ -12,14 +15,17 @@ let connect_pool () =
 
 let make_test_case ?(speed : Alcotest.speed_level option) message action pool =
   let speed = Option.value speed ~default:`Quick in
-  let test switch () =
+  let test _ () =
     let transaction db =
       let open Lwt_result.Syntax in
       let (module Db : Caqti_lwt.CONNECTION) = db in
 
-      Lwt_switch.add_hook (Some switch) (fun () -> perish @@ Db.rollback ());
       let* _ = Db.start () in
-      action db
+      Lwt.bind (action db) (function
+        | Ok _ -> Db.rollback ()
+        | Error e ->
+            let* _ = Db.rollback () in
+            raise (Caqti_error.Exn e))
     in
     perish @@ Caqti_lwt.Pool.use transaction pool
   in

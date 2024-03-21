@@ -1,0 +1,54 @@
+name: Build and Test
+
+on:
+  pull_request:
+  push:
+
+permissions: read-all
+
+jobs:
+  build_and_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+        - macos-latest
+        - ubuntu-latest
+        ocaml-compiler:
+        - "5.1"
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Install PostgreSQL
+      uses: ikalnytskyi/action-setup-postgres@v5
+      with:
+        username: purefunctor
+        password: purefunctor
+        database: sabihin_tests
+        port: 5432
+      id: postgres
+
+    - name: Install Node 21
+      uses: actions/setup-node@v4
+      with:
+        node-version: 21
+
+    - name: Install OCaml ${{ matrix.ocaml-compiler }}
+      uses: ocaml/setup-ocaml@v2
+      with:
+        ocaml-compiler: ${{ matrix.ocaml-compiler }}
+
+    - name: Install Dependencies
+      run: opam install . --deps-only --with-test
+
+    - name: Build Project
+      run: opam exec -- dune build
+
+    - name: Run Tests
+      run: opam exec -- dune runtest
+      env: 
+        DATABASE_URL: ${{ steps.postgres.outputs.connection-uri }}
