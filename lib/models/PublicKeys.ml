@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public_keys (
 let get_by_user_id =
   let open Utils in
   [%rapper
-    get_one
+    get_opt
       {sql|
 SELECT
   @int32{user_id},
@@ -25,6 +25,26 @@ FROM
   public_keys
 WHERE
   user_id = %int32{user_id};
+      |sql}
+      record_out]
+
+let get_by_username =
+  let open Utils in
+  [%rapper
+    get_opt
+      {sql|
+SELECT
+  @int32{user_id},
+  @ByteOctets{protection_key},
+  @ByteOctets{verification_key}
+FROM
+  public_keys
+JOIN
+  users
+ON
+  users.id = public_keys.user_id
+WHERE
+  username = %string{username};
       |sql}
       record_out]
 

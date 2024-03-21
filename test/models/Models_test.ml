@@ -28,4 +28,16 @@ let () =
             PrivateKeys_test.get_by_username;
             PrivateKeys_test.get_missing;
           ] );
+      ( "PublicKeys",
+        List.map
+          (fun f -> f pool)
+          PublicKeys_test.
+            [
+              initialize;
+              insert;
+              insert_existing;
+              get_by_user_id;
+              get_by_username;
+              get_missing;
+            ] );
     ]
