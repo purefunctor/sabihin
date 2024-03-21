@@ -1,4 +1,9 @@
-type t = { id : int32; username : string; auth_token : string }
+type t = {
+  id : int32;
+  public_id : string;
+  username : string;
+  auth_token : string;
+}
 
 let create_table =
   [%rapper
@@ -6,6 +11,7 @@ let create_table =
       {sql|
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
+  public_id VARCHAR(12) DEFAULT nanoid(12, '0123456789abcdefghijklmnopqrstuvwxyz'),
   username VARCHAR(16) UNIQUE NOT NULL,
   auth_token VARCHAR(128) NOT NULL
 );
@@ -18,6 +24,7 @@ let get_by_id =
       {sql|
 SELECT
   @int32{id},
+  @string{public_id},
   @string{username},
   @string{auth_token}
 FROM 
@@ -33,6 +40,7 @@ let get_by_username =
       {sql|
 SELECT
   @int32{id},
+  @string{public_id},
   @string{username},
   @string{auth_token}
 FROM
@@ -55,5 +63,6 @@ VALUES(
   %string{auth_token}
 )
 RETURNING 
-  @int32{id};
+  @int32{id},
+  @string{public_id}
       |sql}]

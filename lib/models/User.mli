@@ -2,6 +2,9 @@
 
 type t = {
   id : int32;
+  public_id : string;
+      (** A Nano ID used to publicly and anonymously 
+          identify a user. *)
   username : string;
   auth_token : string;
       (** A SHA-512 hash representing the authentication
@@ -30,6 +33,6 @@ val insert :
   username:string ->
   auth_token:string ->
   (module Rapper_helper.CONNECTION) ->
-  (int32, [> Caqti_error.call_or_retrieve ]) result Lwt.t
+  (int32 * string, [> Caqti_error.call_or_retrieve ]) result Lwt.t
 (** [insert ~username ~auth_token db] insert a new row in the [users] table,
     returning the user's [id]. *)

@@ -33,12 +33,12 @@ let insert =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* first_id =
+    let* first_id, _ =
       let username = "maho.akashi" in
       let auth_token = String.make 128 ' ' in
       User.insert ~username ~auth_token db
     in
-    let* second_id =
+    let* second_id, _ =
       let username = "rinku.aimoto" in
       let auth_token = String.make 128 ' ' in
       User.insert ~username ~auth_token db
@@ -69,8 +69,8 @@ let get_by_id =
     let* _ = Initialize.initialize db in
     let username = "maho.akashi" in
     let auth_token = String.make 128 ' ' in
-    let* id = User.insert ~username ~auth_token db in
-    let expected = User.{ id; username; auth_token } in
+    let* id, public_id = User.insert ~username ~auth_token db in
+    let expected = User.{ id; public_id; username; auth_token } in
     let* actual = User.get_by_id ~id db in
     let _ =
       Alcotest.(check @@ option (module User))
@@ -86,8 +86,8 @@ let get_by_username =
     let* _ = Initialize.initialize db in
     let username = "maho.akashi" in
     let auth_token = String.make 128 ' ' in
-    let* id = User.insert ~username ~auth_token db in
-    let expected = User.{ id; username; auth_token } in
+    let* id, public_id = User.insert ~username ~auth_token db in
+    let expected = User.{ id; public_id; username; auth_token } in
     let* actual = User.get_by_username ~username db in
     let _ =
       Alcotest.(check @@ option (module User))

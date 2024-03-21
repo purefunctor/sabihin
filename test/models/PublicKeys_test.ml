@@ -36,7 +36,7 @@ let insert =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* user_id =
+    let* user_id, _ =
       let username = "insert.test" in
       let auth_token = String.make 128 ' ' in
       User.insert ~username ~auth_token db
@@ -54,7 +54,7 @@ let insert_existing =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* user_id =
+    let* user_id, _ =
       let username = "insert.test" in
       let auth_token = String.make 128 ' ' in
       User.insert ~username ~auth_token db
@@ -75,7 +75,7 @@ let get_by_user_id =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* user_id =
+    let* user_id, _ =
       let username = "insert.test" in
       let auth_token = String.make 128 ' ' in
       User.insert ~username ~auth_token db
@@ -98,7 +98,7 @@ let get_by_username =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
     let username = "insert.test" in
-    let* user_id =
+    let* user_id, _ =
       let auth_token = String.make 128 ' ' in
       User.insert ~username ~auth_token db
     in
