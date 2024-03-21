@@ -8,11 +8,12 @@ let () =
     [
       ( "User",
         [
-          User.initialize pool;
-          User.insert pool;
-          User.insert_existing pool;
-          User.get_by_id pool;
-          User.get_by_username pool;
+          User_test.initialize pool;
+          User_test.insert pool;
+          User_test.insert_existing pool;
+          User_test.get_by_id pool;
+          User_test.get_by_username pool;
+          User_test.get_missing pool;
         ] );
       ( "PrivateKey",
         [
