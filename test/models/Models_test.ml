@@ -7,20 +7,25 @@ let () =
   Alcotest_lwt.run "Models"
     [
       ( "User",
-        [
-          User_test.initialize pool;
-          User_test.insert pool;
-          User_test.insert_existing pool;
-          User_test.get_by_id pool;
-          User_test.get_by_username pool;
-          User_test.get_missing pool;
-        ] );
+        List.map
+          (fun f -> f pool)
+          [
+            User_test.initialize;
+            User_test.insert;
+            User_test.insert_existing;
+            User_test.get_by_id;
+            User_test.get_by_username;
+            User_test.get_missing;
+          ] );
       ( "PrivateKey",
-        [
-          PrivateKeys_test.initialize pool;
-          PrivateKeys_test.insert pool;
-          PrivateKeys_test.insert_existing pool;
-          PrivateKeys_test.get_by_user_id pool;
-          PrivateKeys_test.get_by_username pool;
-        ] );
+        List.map
+          (fun f -> f pool)
+          [
+            PrivateKeys_test.initialize;
+            PrivateKeys_test.insert;
+            PrivateKeys_test.insert_existing;
+            PrivateKeys_test.get_by_user_id;
+            PrivateKeys_test.get_by_username;
+            PrivateKeys_test.get_missing;
+          ] );
     ]

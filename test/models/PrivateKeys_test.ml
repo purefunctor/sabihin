@@ -188,3 +188,21 @@ let get_by_username =
     Lwt.return_ok ()
   in
   make_test_case "get by username" inner
+
+let get_missing =
+  let inner db =
+    let open Lwt_result.Syntax in
+    let* _ = Initialize.initialize db in
+    let* by_id = PrivateKeys.get_by_user_id ~user_id:0l db in
+    let* by_username = PrivateKeys.get_by_username ~username:"purefunctor" db in
+    let _ =
+      [
+        Alcotest.(check @@ option (module PrivateKeys))
+          "by user id is none" by_id None;
+        Alcotest.(check @@ option (module PrivateKeys))
+          "by username is none" by_username None;
+      ]
+    in
+    Lwt.return_ok ()
+  in
+  make_test_case "get missing" inner
