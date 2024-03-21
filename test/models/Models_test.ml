@@ -42,4 +42,5 @@ let () =
               get_by_username;
               get_missing;
             ] );
+      ("Nanoid", [ Nanoid_test.simple pool ]);
     ]
