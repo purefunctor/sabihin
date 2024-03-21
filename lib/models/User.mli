@@ -17,13 +17,13 @@ val create_table :
 val get_by_id :
   id:int32 ->
   (module Rapper_helper.CONNECTION) ->
-  (t, [> Caqti_error.call_or_retrieve ]) result Lwt.t
+  (t option, [> Caqti_error.call_or_retrieve ]) result Lwt.t
 (** [get_by_id ~id db] obtains a {!User.t} using an [~id]. *)
 
 val get_by_username :
   username:string ->
   (module Rapper_helper.CONNECTION) ->
-  (t, [> Caqti_error.call_or_retrieve ]) result Lwt.t
+  (t option, [> Caqti_error.call_or_retrieve ]) result Lwt.t
 (** [get_by_username ~username db] obtains a {!User.t} using a [~username]. *)
 
 val insert :
