@@ -40,6 +40,7 @@ let () =
               insert_existing;
               get_by_user_id;
               get_by_username;
+              get_by_public_id;
               get_missing;
             ] );
       ("Nanoid", [ Nanoid_test.simple pool ]);

@@ -20,13 +20,19 @@ val get_by_user_id :
   user_id:int32 ->
   (module Rapper_helper.CONNECTION) ->
   (t option, [> Caqti_error.call_or_retrieve ]) result Lwt.t
-(** [get_by_user_id ~user_id db] obtains a {!PublicKeys.t} using an [~user_id]. *)
+(** [get_by_user_id ~user_id db] obtains a {!PublicKeys.t} using a [~user_id]. *)
 
 val get_by_username :
   username:string ->
   (module Rapper_helper.CONNECTION) ->
   (t option, [> Caqti_error.call_or_retrieve ]) result Lwt.t
-(** [get_by_username ~username db] obtains a {!PublicKeys.t} using an [~username]. *)
+(** [get_by_username ~username db] obtains a {!PublicKeys.t} using a [~username]. *)
+
+val get_by_public_id :
+  public_id:string ->
+  (module Rapper_helper.CONNECTION) ->
+  (t option, [> Caqti_error.call_or_retrieve ]) result Lwt.t
+(** [get_by_public_id ~public_id db] obtains a {!PublicKeys.t} using a [~public_id]. *)
 
 val insert :
   user_id:int32 ->

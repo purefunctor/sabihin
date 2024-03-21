@@ -48,6 +48,26 @@ WHERE
       |sql}
       record_out]
 
+let get_by_public_id =
+  let open Utils in
+  [%rapper
+    get_opt
+      {sql|
+SELECT
+  @int32{user_id},
+  @ByteOctets{protection_key},
+  @ByteOctets{verification_key}
+FROM
+  public_keys
+JOIN
+  users
+ON
+  users.id = public_keys.user_id
+WHERE
+  public_id = %string{public_id};
+      |sql}
+      record_out]
+
 let insert =
   let open Utils in
   [%rapper

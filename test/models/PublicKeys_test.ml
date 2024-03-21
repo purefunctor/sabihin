@@ -115,18 +115,45 @@ let get_by_username =
   in
   make_test_case "get by username" inner
 
+let get_by_public_id =
+  let inner db =
+    let open Lwt_result.Syntax in
+    let* _ = Initialize.initialize db in
+    let username = "insert.test" in
+    let* user_id, public_id =
+      let auth_token = String.make 128 ' ' in
+      User.insert ~username ~auth_token db
+    in
+    let protection_key = Bytes.make 128 ' ' in
+    let verification_key = Bytes.make 128 ' ' in
+    let* _ = PublicKeys.insert ~user_id ~protection_key ~verification_key db in
+    let* actual = PublicKeys.get_by_public_id ~public_id db in
+    let expected = PublicKeys.{ user_id; protection_key; verification_key } in
+    let _ =
+      Alcotest.(check @@ option (module PublicKeys))
+        "public keys are equivalent" actual (Some expected)
+    in
+    Lwt.return_ok ()
+  in
+  make_test_case "get by public id" inner
+
 let get_missing =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
     let* by_id = PublicKeys.get_by_user_id ~user_id:0l db in
     let* by_username = PublicKeys.get_by_username ~username:"purefunctor" db in
+    let* by_public_id =
+      PublicKeys.get_by_public_id ~public_id:"abcdef012345" db
+    in
     let _ =
       [
         Alcotest.(check @@ option (module PublicKeys))
           "by user id is none" by_id None;
         Alcotest.(check @@ option (module PublicKeys))
           "by username is none" by_username None;
+        Alcotest.(check @@ option (module PublicKeys))
+          "by public id is none" by_public_id None;
       ]
     in
     Lwt.return_ok ()
