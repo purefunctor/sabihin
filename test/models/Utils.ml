@@ -1,4 +1,7 @@
-let uri = Uri.of_string "postgresql://localhost:5432/sabihin_tests"
+let uri =
+  Uri.of_string
+  @@ Option.value ~default:"postgresql://localhost:5432/sabihin_tests"
+  @@ Sys.getenv_opt "DATABASE_URL"
 
 let perish action =
   Lwt.bind action (function

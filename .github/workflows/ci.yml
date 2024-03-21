@@ -23,7 +23,21 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set-up OCaml ${{ matrix.ocaml-compiler }}
+    - name: Install PostgreSQL
+      uses: ikalnytskyi/action-setup-postgres@v5
+      with:
+        username: purefunctor
+        password: purefunctor
+        database: sabihin_tests
+        port: 5432
+      id: postgres
+
+    - name: Install Node 21
+      uses: actions/setup-node@v4
+      with:
+        node-version: 21
+
+    - name: Install OCaml ${{ matrix.ocaml-compiler }}
       uses: ocaml/setup-ocaml@v2
       with:
         ocaml-compiler: ${{ matrix.ocaml-compiler }}
@@ -36,3 +50,5 @@ jobs:
 
     - name: Run Tests
       run: opam exec -- dune runtest
+      env: 
+        DATABASE_URL: ${{ steps.postgres.outputs.connection-uri }}
