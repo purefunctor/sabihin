@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS private_keys (
 let get_by_user_id =
   let open Utils in
   [%rapper
-    get_one
+    get_opt
       {sql|
 SELECT
   @int32{user_id},
@@ -58,7 +58,7 @@ WHERE
 let get_by_username =
   let open Utils in
   [%rapper
-    get_one
+    get_opt
       {sql|
 SELECT
   @int32{user_id},
