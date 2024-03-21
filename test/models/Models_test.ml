@@ -18,7 +18,7 @@ let () =
               get_by_username;
               get_missing;
             ] );
-      ( "PrivateKey",
+      ( "PrivateKeys",
         List.map
           (fun f -> f pool)
           PrivateKeys_test.
