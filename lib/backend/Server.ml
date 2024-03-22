@@ -59,4 +59,4 @@ let server_handler =
   @@ Dream.router [ Routes.Static.route; Routes.Pages.route; Routes.Api.route ]
 
 let run () = Dream.run ~error_handler ~interface server_handler
-let serve () = Dream.serve ~error_handler ~interface server_handler
+let serve ?stop () = Dream.serve ?stop ~error_handler ~interface server_handler
