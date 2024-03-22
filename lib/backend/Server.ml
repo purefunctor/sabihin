@@ -44,7 +44,7 @@ let error_template _ _ suggested_response =
 let error_handler = Dream.error_template error_template
 let interface = "0.0.0.0"
 
-let server_secret =
+let get_server_secret () =
   match Sys.getenv_opt "SERVER_SECRET" with
   | Some server_secret ->
       Dream.info (fun log -> log "SERVER_SECRET: Production Mode");
@@ -53,10 +53,13 @@ let server_secret =
       Dream.warning (fun log -> log "SERVER_SECRET: Development Mode");
       Dream.to_base64url (Dream.random 128)
 
-let server_handler =
+let get_server_handler () =
+  let server_secret = get_server_secret () in
   Dream.set_secret server_secret
   @@ Dream.logger @@ Dream.cookie_sessions
   @@ Dream.router [ Routes.Static.route; Routes.Pages.route; Routes.Api.route ]
 
-let run () = Dream.run ~error_handler ~interface server_handler
-let serve ?stop () = Dream.serve ?stop ~error_handler ~interface server_handler
+let run () = Dream.run ~error_handler ~interface @@ get_server_handler ()
+
+let serve ?stop () =
+  Dream.serve ?stop ~error_handler ~interface @@ get_server_handler ()
