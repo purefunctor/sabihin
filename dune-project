@@ -52,6 +52,12 @@
     (>= 1.7.0)))
   (alcotest-lwt
    (and :with-test
-    (>= 1.7.0))))
+    (>= 1.7.0)))
+  (cohttp
+   (and :with-test
+    (>= 5.3.1)))
+  (cohttp-lwt-unix
+   (and :with-test
+    (>= 5.3.0))))
  (tags
   (fullstack web)))

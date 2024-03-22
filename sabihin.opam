@@ -25,6 +25,8 @@ depends: [
   "ppx_yojson_conv" {>= "v0.16.0"}
   "alcotest" {with-test & >= "1.7.0"}
   "alcotest-lwt" {with-test & >= "1.7.0"}
+  "cohttp" {with-test & >= "5.3.1"}
+  "cohttp-lwt-unix" {with-test & >= "5.3.0"}
   "odoc" {with-doc}
 ]
 build: [

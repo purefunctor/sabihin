@@ -1,0 +1,5 @@
+(test
+ (name backend_test)
+ (libraries alcotest alcotest-lwt backend_lib cohttp-lwt-unix dream)
+ (preprocess
+  (pps lwt_ppx)))
