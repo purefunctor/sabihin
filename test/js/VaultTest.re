@@ -1,9 +1,6 @@
 open Js.Typed_array;
 open Vault;
 open Vault.PromiseLet;
-open Vault.MasterKey;
-open Vault.DerivedKey;
-open Vault.EphemeralKey;
 
 let salt_test = () => {
   let text_encoder = TextEncoder.create();
