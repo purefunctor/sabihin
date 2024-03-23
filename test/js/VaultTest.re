@@ -163,7 +163,7 @@ let sign_verify_message = () => {
 let base64_utils = () => {
   let* fresh_master_key = MasterKey.create();
   let* fresh_derived_key =
-        Vault.DerivedKey.create("password", fresh_master_key.salt_buffer);
+    Vault.DerivedKey.create("password", fresh_master_key.salt_buffer);
 
   let* wrapped_master_key =
     Vault.Operations.wrap_master_key(
@@ -173,14 +173,17 @@ let base64_utils = () => {
     );
 
   let base64 = Base64Utils.array_buffer_to_base64(wrapped_master_key);
-  let base64' = base64|>Base64Utils.base64_to_array_buffer|>Base64Utils.array_buffer_to_base64;
+  let base64' =
+    base64
+    |> Base64Utils.base64_to_array_buffer
+    |> Base64Utils.array_buffer_to_base64;
 
   assert(base64 == base64');
 
   Js.Console.log("base64_utils: Finished");
 
   resolve();
-}
+};
 
 let run_sequential = actions => {
   Belt.Array.reduce(actions, Js.Promise.resolve(), (current, next) => {
