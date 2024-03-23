@@ -1,5 +1,5 @@
 (library
- (name sabihin_vault)
+ (name vault_js)
  (libraries melange.js)
  (modes melange)
  (wrapped false)
