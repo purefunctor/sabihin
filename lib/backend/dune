@@ -3,7 +3,6 @@
 (library
  (name backend_lib)
  (modes native)
- (wrapped false)
  (libraries
   components_native
   dream

@@ -1,7 +1,7 @@
 let make_test_case name ?(speed : Alcotest.speed_level = `Quick) action =
   let inner _ () =
     let stop_promise, stop_resolver = Lwt.wait () in
-    let server = Server.serve ~stop:stop_promise () in
+    let server = Backend_lib.Server.serve ~stop:stop_promise () in
     action ();%lwt
     Lwt.wakeup_later stop_resolver ();
     server
