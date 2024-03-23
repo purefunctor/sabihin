@@ -106,6 +106,10 @@ module WebCryptoAPI = {
     "getRandomValues";
 
   [@mel.scope "crypto.subtle"]
+  external exportKey_impl: (string, crypto_key) => Js.Promise.t(ArrayBuffer.t) =
+    "exportKey";
+
+  [@mel.scope "crypto.subtle"]
   external importKey_impl:
     (string, Uint8Array.t, 'a, bool, array(string)) =>
     Js.Promise.t(crypto_key) =
@@ -515,6 +519,12 @@ module Operations = {
     resolve(ProtectionKeyPair.PrivateKey(private_key));
   };
 
+  let export_protection_public_key =
+      (ProtectionKeyPair.PublicKey(public_key)) => {
+    let format = "spki";
+    exportKey_impl(format, public_key);
+  };
+
   let wrap_verification_private_key =
       (
         MasterKey(master_key),
@@ -556,6 +566,12 @@ module Operations = {
       );
 
     resolve(VerificationKeyPair.PrivateKey(private_key));
+  };
+
+  let export_verification_public_key =
+      (VerificationKeyPair.PublicKey(public_key)) => {
+    let format = "spki";
+    exportKey_impl(format, public_key);
   };
 
   let wrap_ephemeral_key =
