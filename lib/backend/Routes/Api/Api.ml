@@ -1,3 +1,6 @@
+module Register = Register
+module Login = Login
+
 let route =
   Dream.scope "/api"
     [ Middleware.verify_csrf_cookie ]

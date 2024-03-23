@@ -35,3 +35,11 @@ let get_cookie_headers () =
     |> Cookie.Cookie_hdr.serialize |> Fun.flip List.cons [] |> Header.of_list
   in
   Lwt.return headers
+
+let post_json cookie_headers json url =
+  let open Cohttp_lwt_unix in
+  let headers =
+    Cohttp.Header.add cookie_headers "Content-Type" "application/json"
+  in
+  let body = json |> Yojson.Safe.to_string |> Cohttp_lwt.Body.of_string in
+  Client.post ~headers ~body (Uri.of_string url)
