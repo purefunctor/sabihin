@@ -2,6 +2,7 @@
 
 (library
  (name backend_lib)
+ (public_name sabihin.backend)
  (modes native)
  (libraries
   components_native
