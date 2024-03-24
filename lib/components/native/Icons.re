@@ -1,8 +1,6 @@
 module Book = {
   [@react.component]
-  let make = (~size=?, ~className=?) => {
-    let size = Option.value(size, ~default="1rem");
-    let className = Option.value(className, ~default="");
+  let make = (~size="1rem", ~className="") => {
     <svg
       className
       xmlns="http://www.w3.org/2000/svg"
@@ -19,9 +17,7 @@ module Book = {
 
 module Chat = {
   [@react.component]
-  let make = (~size=?, ~className=?) => {
-    let size = Option.value(size, ~default="1rem");
-    let className = Option.value(className, ~default="");
+  let make = (~size="1rem", ~className="") => {
     <svg
       className
       xmlns="http://www.w3.org/2000/svg"
@@ -38,9 +34,7 @@ module Chat = {
 
 module ChatHeart = {
   [@react.component]
-  let make = (~size=?, ~className=?) => {
-    let size = Option.value(size, ~default="1rem");
-    let className = Option.value(className, ~default="");
+  let make = (~size="1rem", ~className="") => {
     <svg
       className
       xmlns="http://www.w3.org/2000/svg"
@@ -57,9 +51,7 @@ module ChatHeart = {
 
 module ChatPrivate = {
   [@react.component]
-  let make = (~size=?, ~className=?) => {
-    let size = Option.value(size, ~default="1rem");
-    let className = Option.value(className, ~default="");
+  let make = (~size="1rem", ~className="") => {
     <svg
       className
       xmlns="http://www.w3.org/2000/svg"
@@ -93,9 +85,7 @@ module CheckFill = {
 
 module DoorLock = {
   [@react.component]
-  let make = (~size=?, ~className=?) => {
-    let size = Option.value(size, ~default="1rem");
-    let className = Option.value(className, ~default="");
+  let make = (~size="1rem", ~className="") => {
     <svg
       className
       xmlns="http://www.w3.org/2000/svg"
@@ -112,9 +102,7 @@ module DoorLock = {
 
 module GitPr = {
   [@react.component]
-  let make = (~size=?, ~className=?) => {
-    let size = Option.value(size, ~default="1rem");
-    let className = Option.value(className, ~default="");
+  let make = (~size="1rem", ~className="") => {
     <svg
       className
       xmlns="http://www.w3.org/2000/svg"
@@ -131,9 +119,7 @@ module GitPr = {
 
 module OCamlLogo = {
   [@react.component]
-  let make = (~size=?, ~className=?) => {
-    let size = Option.value(size, ~default="1rem");
-    let className = Option.value(className, ~default="");
+  let make = (~size="1rem", ~className="") => {
     <svg
       className
       xmlns="http://www.w3.org/2000/svg"
@@ -150,9 +136,7 @@ module OCamlLogo = {
 
 module LockPassword = {
   [@react.component]
-  let make = (~size=?, ~className=?) => {
-    let size = Option.value(size, ~default="1rem");
-    let className = Option.value(className, ~default="");
+  let make = (~size="1rem", ~className="") => {
     <svg
       className
       xmlns="http://www.w3.org/2000/svg"
@@ -217,9 +201,7 @@ module RingResize = {
 
 module User = {
   [@react.component]
-  let make = (~size=?, ~className=?) => {
-    let size = Option.value(size, ~default="1rem");
-    let className = Option.value(className, ~default="");
+  let make = (~size="1rem", ~className="") => {
     <svg
       className
       xmlns="http://www.w3.org/2000/svg"
@@ -236,9 +218,7 @@ module User = {
 
 module Sparkle = {
   [@react.component]
-  let make = (~size=?, ~className=?) => {
-    let size = Option.value(size, ~default="1rem");
-    let className = Option.value(className, ~default="");
+  let make = (~size="1rem", ~className="") => {
     <svg
       className
       xmlns="http://www.w3.org/2000/svg"
