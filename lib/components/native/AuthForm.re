@@ -213,9 +213,9 @@ let make =
     ) => {
   // Since we use `option` to represent the state of non-validation, and the
   // `xState` props are also optional, we have to manually unwrap them here.
-  let usernameState = Belt.Option.getWithDefault(usernameState, None);
-  let passwordState = Belt.Option.getWithDefault(passwordState, None);
-  let confirmState = Belt.Option.getWithDefault(confirmState, None);
+  let usernameState = Option.join(usernameState);
+  let passwordState = Option.join(passwordState);
+  let confirmState = Option.join(confirmState);
 
   <form onSubmit className="auth-form">
     <span className="auth-title josefin-sans-title">
