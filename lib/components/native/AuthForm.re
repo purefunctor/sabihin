@@ -200,32 +200,22 @@ module ConfirmField = MakeField(ConfirmState);
 let make =
     (
       ~register: bool,
-      ~username: option(string)=?,
-      ~onUsernameChange: option(Form.t => unit)=?,
-      ~password: option(string)=?,
-      ~onPasswordChange: option(Form.t => unit)=?,
-      ~confirmPassword: option(string)=?,
-      ~onConfirmPasswordChange: option(Form.t => unit)=?,
-      ~onSubmit: option(Form.t => unit)=?,
+      ~username: string="",
+      ~onUsernameChange: Form.t => unit=_ => (),
+      ~password: string="",
+      ~onPasswordChange: Form.t => unit=_ => (),
+      ~confirmPassword: string="",
+      ~onConfirmPasswordChange: Form.t => unit=_ => (),
+      ~onSubmit: Form.t => unit=_ => (),
       ~usernameState: option(option(UsernameState.t))=?,
       ~passwordState: option(option(PasswordState.t))=?,
       ~confirmState: option(option(ConfirmState.t))=?,
     ) => {
-  let username = Option.value(username, ~default="");
-  let onUsernameChange = Option.value(onUsernameChange, ~default=_ => ());
-
-  let password = Option.value(password, ~default="");
-  let onPasswordChange = Option.value(onPasswordChange, ~default=_ => ());
-
-  let confirmPassword = Option.value(confirmPassword, ~default="");
-  let onConfirmPasswordChange =
-    Option.value(onConfirmPasswordChange, ~default=_ => ());
-
-  let onSubmit = Option.value(onSubmit, ~default=_ => ());
-
-  let usernameState = Option.value(usernameState, ~default=None);
-  let passwordState = Option.value(passwordState, ~default=None);
-  let confirmState = Option.value(confirmState, ~default=None);
+  // Since we use `option` to represent the state of non-validation, and the
+  // `xState` props are also optional, we have to manually unwrap them here.
+  let usernameState = Belt.Option.getWithDefault(usernameState, None);
+  let passwordState = Belt.Option.getWithDefault(passwordState, None);
+  let confirmState = Belt.Option.getWithDefault(confirmState, None);
 
   <form onSubmit className="auth-form">
     <span className="auth-title josefin-sans-title">
