@@ -22,20 +22,20 @@ let validateConfirm = (password, confirmPassword) =>
   };
 
 [@react.component]
-let make = (~registerState: RegisterState.t, ~nextRegisterStep) => {
-  let username = registerState.username;
+let make = (~formState: RegisterFormState.t, ~nextRegisterStep) => {
+  let username = formState.username;
   let onUsernameChange = event => {
-    registerState.setUsername(_ => Form.target(event)##value);
+    formState.setUsername(_ => Form.target(event)##value);
   };
 
-  let password = registerState.password;
+  let password = formState.password;
   let onPasswordChange = event => {
-    registerState.setPassword(_ => Form.target(event)##value);
+    formState.setPassword(_ => Form.target(event)##value);
   };
 
-  let confirmPassword = registerState.confirmPassword;
+  let confirmPassword = formState.confirmPassword;
   let onConfirmPasswordChange = event => {
-    registerState.setConfirmPassword(_ => Form.target(event)##value);
+    formState.setConfirmPassword(_ => Form.target(event)##value);
   };
 
   let usernameState =

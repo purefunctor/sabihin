@@ -91,13 +91,13 @@ module GenerateSteps = {
 [@react.component]
 let make =
     (
-      ~registerState: RegisterState.t,
+      ~formState: RegisterFormState.t,
       ~generateState: RegisterGenerateState.t,
       ~nextRegisterStep,
     ) => {
   let (generateStep, nextGenerateStep) = RegisterGenerateState.useStep();
 
-  let _ = registerState;
+  let _ = formState;
   let _ = generateState;
 
   let _ = nextRegisterStep;
