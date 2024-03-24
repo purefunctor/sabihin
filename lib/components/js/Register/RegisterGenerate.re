@@ -1,6 +1,12 @@
 [@react.component]
-let make = (~registerState: RegisterState.t, ~nextStep) => {
-  let _ = nextStep;
+let make =
+    (
+      ~registerState: RegisterState.t,
+      ~generateState: RegisterGenerateState.t,
+      ~nextRegisterStep,
+    ) => {
+  let _ = generateState;
+  let _ = nextRegisterStep;
 
   React.useEffect0(() => {
     open Vault;

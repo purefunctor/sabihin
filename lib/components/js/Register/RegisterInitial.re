@@ -22,7 +22,7 @@ let validateConfirm = (password, confirmPassword) =>
   };
 
 [@react.component]
-let make = (~registerState: RegisterState.t, ~nextStep) => {
+let make = (~registerState: RegisterState.t, ~nextRegisterStep) => {
   let username = registerState.username;
   let onUsernameChange = event => {
     registerState.setUsername(_ => Form.target(event)##value);
@@ -53,11 +53,11 @@ let make = (~registerState: RegisterState.t, ~nextStep) => {
 
   let onSubmit = event => {
     Form.preventDefault(event);
-    nextStep();
+    nextRegisterStep();
   };
 
   React.useEffect0(() => {
-    nextStep();
+    nextRegisterStep();
     None;
   });
 
