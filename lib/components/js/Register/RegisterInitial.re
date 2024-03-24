@@ -56,6 +56,11 @@ let make = (~registerState: RegisterState.t, ~nextStep) => {
     nextStep();
   };
 
+  React.useEffect0(() => {
+    nextStep();
+    None;
+  });
+
   <AuthForm
     register=true
     username

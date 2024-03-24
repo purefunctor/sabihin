@@ -656,4 +656,41 @@ a {
     gap: 1rem;
 }
 
+.register-generate-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media screen and (min-width: 768px) {
+    .register-generate-content {
+        max-width: 48rem;
+    }
+}
+
+.generate-title {
+    font-size: 3rem;   
+    text-align: center;
+}
+
+.register-generate-steps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.register-generate-step {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.register-generate-hint {
+    margin: unset;
+    text-align: center;
+}
+
 /* #endregion */

@@ -74,6 +74,23 @@ module ChatPrivate = {
   };
 };
 
+module CheckFill = {
+  [@react.component]
+  let make = (~size="1rem", ~className="") => {
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="m10 15.17l9.192-9.191l1.414 1.414L10 17.999l-6.364-6.364l1.414-1.414z"
+      />
+    </svg>;
+  };
+};
+
 module DoorLock = {
   [@react.component]
   let make = (~size=?, ~className=?) => {
@@ -146,6 +163,54 @@ module LockPassword = {
         fill="currentColor"
         d="M18 8h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2V7a6 6 0 1 1 12 0zM5 10v10h14V10zm6 4h2v2h-2zm-4 0h2v2H7zm8 0h2v2h-2zm1-6V7a4 4 0 0 0-8 0v1z"
       />
+    </svg>;
+  };
+};
+
+module RingResize = {
+  [@react.component]
+  let make = (~size="1rem", ~className="") => {
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <g stroke="currentColor">
+        <circle
+          cx="12"
+          cy="12"
+          r="9.5"
+          fill="none"
+          strokeLinecap="round"
+          strokeWidth="3">
+          <animate
+            attributeName="stroke-dasharray"
+            calcMode="spline"
+            dur="1.5s"
+            keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1"
+            keyTimes="0;0.475;0.95;1"
+            repeatCount="indefinite"
+            values="0 150;42 150;42 150;42 150"
+          />
+          <animate
+            attributeName="stroke-dashoffset"
+            calcMode="spline"
+            dur="1.5s"
+            keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1"
+            keyTimes="0;0.475;0.95;1"
+            repeatCount="indefinite"
+            values="0;-16;-59;-59"
+          />
+        </circle>
+        <animateTransform
+          attributeName="transform"
+          dur="2s"
+          repeatCount="indefinite"
+          type_="rotate"
+          values="0 12 12;360 12 12"
+        />
+      </g>
     </svg>;
   };
 };
