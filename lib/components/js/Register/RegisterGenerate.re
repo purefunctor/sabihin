@@ -1,3 +1,93 @@
+module GenerateSteps = {
+  open RegisterGenerateState;
+
+  let to_index = (generateStep: RegisterGenerateState.step_t) =>
+    switch (generateStep) {
+    | Master => 0
+    | Derived => 1
+    | Protection => 2
+    | Verification => 3
+    | EncryptingKeys => 4
+    | ExportingKeys => 5
+    };
+
+  let step_text = [|
+    "Master Key",
+    "Derived Key",
+    "Protection Key",
+    "Verification Key",
+    "Encrypting Keys",
+    "Exporting Keys",
+  |];
+
+  let to_text = (generateStep: RegisterGenerateState.step_t) => {
+    generateStep |> to_index |> Belt.Array.getUnsafe(step_text);
+  };
+
+  let make_step = (~previous, text) => {
+    let className = if (previous) {" color-offwhite"} else {""};
+    let icon =
+      if (previous) {
+        <Icons.CheckFill size="1rem" className="color-success" />;
+      } else {
+        <Icons.RingResize size="1rem" className="color-primary" />;
+      };
+    <span
+      className={"poppins-regular register-generate-step" ++ className}
+      key=text>
+      {React.string(text)}
+      icon
+    </span>;
+  };
+
+  let make_finished = text => {
+    <span
+      className="poppins-regular register-generate-step color-offwhite"
+      key=text>
+      {React.string(text)}
+      <Icons.CheckFill size="1rem" className="color-success" />
+    </span>;
+  };
+
+  [@react.component]
+  let make = (~generateStep: RegisterGenerateState.step_t) => {
+    let previousSteps =
+      Hooks.useMemoPrevious(
+        [||],
+        prev_elements => {
+          let prev_elements = Belt.Array.copy(prev_elements);
+
+          let index = to_index(generateStep);
+          if (index > 0) {
+            let prev_index = index - 1;
+            let prev_text = Belt.Array.getUnsafe(step_text, prev_index);
+
+            let prev_step = make_step(~previous=true, prev_text);
+            Belt.Array.push(prev_elements, prev_step);
+          };
+
+          prev_elements;
+        },
+        [|generateStep|],
+      );
+
+    let currentStep =
+      React.useMemo1(
+        () => {
+          let index = to_index(generateStep);
+          let text = Belt.Array.getUnsafe(step_text, index);
+          make_step(~previous=false, text);
+        },
+        [|generateStep|],
+      );
+
+    <div className="register-generate-steps">
+      {React.array(previousSteps)}
+      currentStep
+    </div>;
+  };
+};
+
 [@react.component]
 let make =
     (
@@ -5,112 +95,30 @@ let make =
       ~generateState: RegisterGenerateState.t,
       ~nextRegisterStep,
     ) => {
+  let (generateStep, nextGenerateStep) = RegisterGenerateState.useStep();
+
+  let _ = registerState;
   let _ = generateState;
+
   let _ = nextRegisterStep;
+  let _ = nextGenerateStep;
 
-  React.useEffect0(() => {
-    open Vault;
-    open Vault.PromiseLet;
-
-    let _ = {
-      Js.Console.log("Generating Master Key");
-      let* fresh_master_key = MasterKey.create();
-      Js.Console.log(fresh_master_key);
-
-      Js.Console.log("Generating Derived Key");
-      let* fresh_derived_key =
-        DerivedKey.create(
-          registerState.password,
-          fresh_master_key.salt_buffer,
-        );
-      Js.Console.log(fresh_derived_key);
-
-      // Js.Console.log("Generating Protection Key Pair");
-      // let* fresh_protection_key_pair = ProtectionKeyPair.create();
-      // Js.Console.log(fresh_protection_key_pair);
-
-      // Js.Console.log("Generating Verification Key Pair");
-      // let* fresh_verification_key_pair = VerificationKeyPair.create();
-      // Js.Console.log(fresh_verification_key_pair);
-
-      Js.Console.log("Wrapping Master Key");
-      let* wrapped_master_key =
-        Operations.wrap_master_key(
-          fresh_derived_key.derived_encryption_key,
-          fresh_derived_key.master_encryption_iv,
-          fresh_master_key.master_key,
-        );
-      let wrapped_master_key =
-        Base64Utils.array_buffer_to_base64(wrapped_master_key);
-      Js.Console.log(wrapped_master_key);
-
-      // Js.Console.log("Wrapping Private Protection Key");
-      // let* wrapped_protection_private_key =
-      //   Operations.wrap_protection_private_key(
-      //     fresh_master_key.master_key,
-      //     fresh_master_key.protection_key_iv,
-      //     fresh_protection_key_pair.private_key,
-      //   );
-      // let wrapped_protection_private_key =
-      //   Base64Utils.array_buffer_to_base64(wrapped_protection_private_key);
-      // Js.Console.log(wrapped_protection_private_key);
-
-      // Js.Console.log("Export Public Protection Key");
-      // let* exported_protection_public_key =
-      //   Operations.export_protection_public_key(
-      //     fresh_protection_key_pair.public_key,
-      //   );
-      // let exported_protection_public_key =
-      //   Base64Utils.array_buffer_to_base64(exported_protection_public_key);
-      // Js.Console.log(exported_protection_public_key);
-
-      // Js.Console.log("Wrapping Private Verification Key");
-      // let* wrapped_verification_private_key =
-      //   Operations.wrap_verification_private_key(
-      //     fresh_master_key.master_key,
-      //     fresh_master_key.verification_key_iv,
-      //     fresh_verification_key_pair.private_key,
-      //   );
-      // let wrapped_verification_private_key =
-      //   Base64Utils.array_buffer_to_base64(wrapped_verification_private_key);
-      // Js.Console.log(wrapped_verification_private_key);
-
-      // Js.Console.log("Export Public Verification Key");
-      // let* exported_verification_public_key =
-      //   Operations.export_verification_public_key(
-      //     fresh_verification_key_pair.public_key,
-      //   );
-      // let exported_verification_public_key =
-      //   Base64Utils.array_buffer_to_base64(exported_verification_public_key);
-      // Js.Console.log(exported_verification_public_key);
-
-      resolve();
-    };
-
-    None;
-  });
+  React.useEffect1(
+    () => {
+      switch (generateStep) {
+      | RegisterGenerateState.ExportingKeys => ()
+      | _ => ignore(Js.Global.setTimeout(~f=nextGenerateStep, 500))
+      };
+      None;
+    },
+    [|generateStep|],
+  );
 
   <div className="register-generate-content">
     <span className="josefin-sans-title generate-title">
       {React.string("Making Your Keys")}
     </span>
-    // <Icons.RingResize size="6rem" className="color-primary" />
-    <div className="register-generate-steps">
-      <span className="poppins-regular register-generate-step">
-        {React.string("Verification Key Pair")}
-        <Icons.RingResize size="1rem" className="color-primary" />
-      </span>
-      {[|"Master Key", "Derived Key", "Protection Key Pair"|]
-       |> Belt.Array.reverse
-       |> Array.map(step => {
-            <span
-              className="poppins-regular register-generate-step color-offwhite">
-              {React.string(step)}
-              <Icons.CheckFill size="1rem" className="color-success" />
-            </span>
-          })
-       |> React.array}
-    </div>
+    <GenerateSteps generateStep />
     <p className="poppins-regular register-generate-hint">
       {React.string(
          "Once finished, your encrypted private keys, public keys, and other metadata will be submitted to the server to finalize your registration.",
