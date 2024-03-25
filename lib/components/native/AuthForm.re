@@ -201,15 +201,15 @@ let make =
     (
       ~register: bool,
       ~username: string="",
-      ~onUsernameChange: Form.t => unit=_ => (),
       ~password: string="",
-      ~onPasswordChange: Form.t => unit=_ => (),
       ~confirmPassword: string="",
+      ~onUsernameChange: Form.t => unit=_ => (),
+      ~onPasswordChange: Form.t => unit=_ => (),
       ~onConfirmPasswordChange: Form.t => unit=_ => (),
-      ~onSubmit: Form.t => unit=_ => (),
       ~usernameState: option(option(UsernameState.t))=?,
       ~passwordState: option(option(PasswordState.t))=?,
       ~confirmState: option(option(ConfirmState.t))=?,
+      ~onSubmit: Form.t => unit=_ => (),
     ) => {
   // Since we use `option` to represent the state of non-validation, and the
   // `xState` props are also optional, we have to manually unwrap them here.
