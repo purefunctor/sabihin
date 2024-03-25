@@ -1,5 +1,5 @@
-let useMemoPrevious = (initial, compute, dependencies) => {
-  let (previousValue, setPreviousValue) = React.useState(() => initial);
+let useMemoPrevious = (makeInitial, compute, dependencies) => {
+  let (previousValue, setPreviousValue) = React.useState(makeInitial);
   React.useEffect1(
     () => {
       setPreviousValue(previousValue => compute(previousValue));

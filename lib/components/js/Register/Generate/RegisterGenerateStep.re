@@ -58,7 +58,7 @@ let useKeys = generateStep => {
   // proper component re-render instead of solely relying on each
   // generateStep change.
   Hooks.useMemoPrevious(
-    Belt.(Array.make(Array.length(keysText), React.null)),
+    () => Belt.(Array.make(Array.length(keysText), React.null)),
     keysElements => {
       let keysElements = Belt.Array.copy(keysElements);
 
