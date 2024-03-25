@@ -27,7 +27,7 @@ let use = () => {
   {package, setPackage};
 };
 
-type step_t =
+type keys_t =
   | Master
   | Derived
   | Protection
@@ -35,18 +35,26 @@ type step_t =
   | EncryptingKeys
   | ExportingKeys;
 
+type step_t =
+  | Keys(keys_t)
+  | Finished;
+
 let useStep = () => {
   React.useReducer(
     (step: step_t, ()) => {
       switch (step) {
-      | Master => Derived
-      | Derived => Protection
-      | Protection => Verification
-      | Verification => EncryptingKeys
-      | EncryptingKeys => ExportingKeys
-      | ExportingKeys => raise(Failure("No more states!"))
+      | Keys(keys) =>
+        switch (keys) {
+        | Master => Keys(Derived)
+        | Derived => Keys(Protection)
+        | Protection => Keys(Verification)
+        | Verification => Keys(EncryptingKeys)
+        | EncryptingKeys => Keys(ExportingKeys)
+        | ExportingKeys => Finished
+        }
+      | Finished => raise(Failure("No more states!"))
       }
     },
-    Master,
+    Keys(Master),
   );
 };

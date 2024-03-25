@@ -57,7 +57,7 @@ let make = (~formState: RegisterFormState.t, ~nextRegisterStep) => {
   };
 
   React.useEffect0(() => {
-    nextRegisterStep();
+    let _ = Js.Global.setTimeout(~f=nextRegisterStep, 1000);
     None;
   });
 
