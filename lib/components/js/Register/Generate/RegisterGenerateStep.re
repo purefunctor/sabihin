@@ -28,11 +28,16 @@ let makeStep = (~finished=false, text) => {
     } else {
       <Icons.RingResize size="1rem" className="color-primary" />;
     };
-  <span
-    className={"poppins-regular register-generate-step" ++ className} key=text>
+
+  <FramerMotion.span
+    initial={"y": 100, "opacity": 0.0}
+    animate={"y": 0, "opacity": 1.0}
+    transition={"ease": "easeOut"}
+    className={"poppins-regular register-generate-step" ++ className}
+    key=text>
     {React.string(text)}
     icon
-  </span>;
+  </FramerMotion.span>;
 };
 
 let useKeys = generateStep => {

@@ -56,11 +56,6 @@ let make = (~formState: RegisterFormState.t, ~nextRegisterStep) => {
     nextRegisterStep();
   };
 
-  React.useEffect0(() => {
-    let _ = Js.Global.setTimeout(~f=nextRegisterStep, 1000);
-    None;
-  });
-
   <AuthForm
     register=true
     username
