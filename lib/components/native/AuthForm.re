@@ -1,46 +1,62 @@
 open React.Event;
 
-module FieldProps = {
-  type t = {
-    name: string,
-    type_: string,
-    placeholder: string,
-    iconFn: unit => React.element,
+type props_t = {
+  name: string,
+  type_: string,
+  placeholder: string,
+};
+
+module Validated = {
+  type t('a) =
+    | Validated('a)
+    | NotValidated;
+
+  let mapOr = (default: 'b, f: 'a => 'b, validated: t('a)) => {
+    switch (validated) {
+    | Validated(v) => f(v)
+    | NotValidated => default
+    };
+  };
+
+  let mapOrNone = (f: 'a => 'b, validated: t('a)) => {
+    mapOr(None, v => Some(f(v)), validated);
   };
 };
 
 module type FieldState = {
   type t;
 
-  let field_props: FieldProps.t;
+  let fieldProps: props_t;
 
-  let field_css: option(t) => option(string);
+  let fieldCss: Validated.t(t) => option(string);
 
-  let field_span: option(t) => React.element;
+  let fieldIcon: React.element;
+
+  let fieldComment: Validated.t(t) => React.element;
 };
 
 module MakeField = (S: FieldState) => {
   [@react.component]
   let make = (~state, ~value, ~onChange) => {
-    let field_css =
-      switch (S.field_css(state)) {
+    let fieldCss =
+      switch (S.fieldCss(state)) {
       | Some(e) => "auth-field-input " ++ e
       | None => "auth-field-input"
       };
     <div className="auth-field-container">
-      <div className=field_css>
-        {S.field_props.iconFn()}
+      <div className=fieldCss>
+        S.fieldIcon
         <input
-          name={S.field_props.name}
-          type_={S.field_props.type_}
-          placeholder={S.field_props.placeholder}
+          name={S.fieldProps.name}
+          type_={S.fieldProps.type_}
+          placeholder={S.fieldProps.placeholder}
           required=true
           autoComplete="off"
           value
           onChange
         />
       </div>
-      {S.field_span(state)}
+      {S.fieldComment(state)}
     </div>;
   };
 };
@@ -52,12 +68,7 @@ module UsernameState = {
     | InvalidCharacter(string)
     | Success;
 
-  let field_props: FieldProps.t = {
-    name: "username",
-    type_: "text",
-    placeholder: "Username",
-    iconFn: () => <Icons.User size="1em" />,
-  };
+  let fieldProps = {name: "username", type_: "text", placeholder: "Username"};
 
   let render =
     fun
@@ -67,8 +78,8 @@ module UsernameState = {
       Printf.sprintf("'%s' is not a valid character.", c)
     | Success => "Awesome! You're good to go!";
 
-  let field_css =
-    Option.map(
+  let fieldCss =
+    Validated.mapOrNone(
       fun
       | TooShort
       | TooLong
@@ -76,11 +87,13 @@ module UsernameState = {
       | Success => "auth-field-input-success",
     );
 
-  let field_span =
-    fun
-    | None => React.null
-    | Some(t) => {
-        let span_class =
+  let fieldIcon = <Icons.User size="1em" />;
+
+  let fieldComment =
+    Validated.mapOr(
+      React.null,
+      t => {
+        let commentCss =
           switch (t) {
           | TooShort
           | TooLong
@@ -88,10 +101,11 @@ module UsernameState = {
           | Success => " color-success"
           };
         <span
-          className={"auth-field-error-message poppins-light" ++ span_class}>
+          className={"auth-field-error-message poppins-light" ++ commentCss}>
           {t->render->React.string}
         </span>;
-      };
+      },
+    );
 };
 
 module UsernameField = MakeField(UsernameState);
@@ -114,15 +128,14 @@ module PasswordState = {
     | ModeratelyStrong => "This password is moderately strong."
     | VeryStrong => "This password is very strong.";
 
-  let field_props: FieldProps.t = {
+  let fieldProps = {
     name: "password",
     type_: "password",
     placeholder: "Password",
-    iconFn: () => <Icons.LockPassword size="1em" />,
   };
 
-  let field_css =
-    Option.map(
+  let fieldCss =
+    Validated.mapOrNone(
       fun
       | TooShort
       | TooWeak
@@ -132,11 +145,13 @@ module PasswordState = {
       | VeryStrong => "auth-field-input-success",
     );
 
-  let field_span =
-    fun
-    | None => React.null
-    | Some(t) => {
-        let span_color =
+  let fieldIcon = <Icons.LockPassword size="1em" />;
+
+  let fieldComment =
+    Validated.mapOr(
+      React.null,
+      t => {
+        let commentCss =
           switch (t) {
           | TooWeak
           | TooShort
@@ -146,10 +161,11 @@ module PasswordState = {
           | VeryStrong => " color-success"
           };
         <span
-          className={"auth-field-error-message poppins-light" ++ span_color}>
+          className={"auth-field-error-message poppins-light" ++ commentCss}>
           {t->render->React.string}
         </span>;
-      };
+      },
+    );
 };
 
 module PasswordField = MakeField(PasswordState);
@@ -164,34 +180,36 @@ module ConfirmState = {
     | Yes => "Passwords match. You're good to go!"
     | No => "Passwords do not match.";
 
-  let field_props: FieldProps.t = {
+  let fieldProps = {
     name: "confirmPassword",
     type_: "password",
     placeholder: "Confirm Password",
-    iconFn: () => <Icons.LockPassword size="1em" />,
   };
 
-  let field_css =
-    Option.map(
+  let fieldCss =
+    Validated.mapOrNone(
       fun
       | Yes => "auth-field-input-success"
       | No => "auth-field-input-error",
     );
 
-  let field_span =
-    fun
-    | None => React.null
-    | Some(t) => {
-        let span_color =
+  let fieldIcon = <Icons.LockPassword size="1em" />;
+
+  let fieldComment =
+    Validated.mapOr(
+      React.null,
+      t => {
+        let commentCss =
           switch (t) {
           | Yes => " color-success"
           | No => " color-error"
           };
         <span
-          className={"auth-field-error-message poppins-light" ++ span_color}>
+          className={"auth-field-error-message poppins-light" ++ commentCss}>
           {t->render->React.string}
         </span>;
-      };
+      },
+    );
 };
 
 module ConfirmField = MakeField(ConfirmState);
@@ -206,17 +224,11 @@ let make =
       ~onUsernameChange: Form.t => unit=_ => (),
       ~onPasswordChange: Form.t => unit=_ => (),
       ~onConfirmPasswordChange: Form.t => unit=_ => (),
-      ~usernameState: option(option(UsernameState.t))=?,
-      ~passwordState: option(option(PasswordState.t))=?,
-      ~confirmState: option(option(ConfirmState.t))=?,
+      ~usernameState: Validated.t(UsernameState.t)=Validated.NotValidated,
+      ~passwordState: Validated.t(PasswordState.t)=Validated.NotValidated,
+      ~confirmState: Validated.t(ConfirmState.t)=Validated.NotValidated,
       ~onSubmit: Form.t => unit=_ => (),
     ) => {
-  // Since we use `option` to represent the state of non-validation, and the
-  // `xState` props are also optional, we have to manually unwrap them here.
-  let usernameState = Option.join(usernameState);
-  let passwordState = Option.join(passwordState);
-  let confirmState = Option.join(confirmState);
-
   <form onSubmit className="auth-form">
     <span className="auth-title josefin-sans-title">
       {React.string(if (register) {"Register"} else {"Login"})}

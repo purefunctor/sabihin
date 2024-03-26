@@ -1,25 +1,16 @@
 open React.Event;
 
-let validateUsername = username =>
-  if (String.length(username) > 0) {
-    Some(Validate.Username.validate(username));
-  } else {
-    None;
-  };
+let validateUsername = username => {
+  Validate.Username.validate(username);
+};
 
-let validatePassword = (username, password) =>
-  if (String.length(password) > 0) {
-    Some(Validate.Password.validate(username, password));
-  } else {
-    None;
-  };
+let validatePassword = (username, password) => {
+  Validate.Password.validate(username, password);
+};
 
-let validateConfirm = (password, confirmPassword) =>
-  if (String.length(confirmPassword) > 0) {
-    Some(Validate.Confirm.validate(password, confirmPassword));
-  } else {
-    None;
-  };
+let validateConfirm = (password, confirmPassword) => {
+  Validate.Confirm.validate(password, confirmPassword);
+};
 
 [@react.component]
 let make = (~formState: RegisterFormState.t, ~nextRegisterStep) => {

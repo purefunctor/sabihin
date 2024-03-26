@@ -1,9 +1,10 @@
 module Username = {
+  open AuthForm.Validated;
   open AuthForm.UsernameState;
 
   let disallow_pattern = [%re "/[^A-Za-z0-9\\._]/g"];
 
-  let validate = (username: string) => {
+  let validateCore = (username: string) => {
     let error = ref(None);
     if (String.length(username) <= 3) {
       error := Some(TooShort);
@@ -25,12 +26,20 @@ module Username = {
     | Some(error) => error
     };
   };
+
+  let validate = (username: string) =>
+    if (String.length(username) > 0) {
+      Validated(validateCore(username));
+    } else {
+      NotValidated;
+    };
 };
 
 module Password = {
+  open AuthForm.Validated;
   open AuthForm.PasswordState;
 
-  let validate = (username: string, password: string) =>
+  let validateCore = (username: string, password: string) =>
     if (String.length(password) < 8) {
       TooShort;
     } else {
@@ -44,15 +53,30 @@ module Password = {
       | _ => raise(Failure("Invalid state from zxcvbn"))
       };
     };
+
+  let validate = (username: string, password: string) =>
+    if (String.length(password) > 0) {
+      Validated(validateCore(username, password));
+    } else {
+      NotValidated;
+    };
 };
 
 module Confirm = {
+  open AuthForm.Validated;
   open AuthForm.ConfirmState;
 
-  let validate = (password: string, confirm: string) =>
+  let validateCore = (password: string, confirm: string) =>
     if (password == confirm) {
       Yes;
     } else {
       No;
+    };
+
+  let validate = (password, confirmPassword) =>
+    if (String.length(confirmPassword) > 0) {
+      Validated(validateCore(password, confirmPassword));
+    } else {
+      NotValidated;
     };
 };
