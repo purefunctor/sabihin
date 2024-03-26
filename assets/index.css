@@ -443,7 +443,14 @@ a {
 @media screen and (min-width: 1024px) {
     .index-banner {
         flex-direction: row;
-        justify-content: space-evenly;
+        gap: 12rem;
+        justify-content: center;
+    }
+}
+
+@media screen and (min-width: 1536px) {
+    .index-banner-header > h2 {
+        font-size: 5.25rem;
     }
 }
 
@@ -463,7 +470,13 @@ a {
 
 @media screen and (min-width: 768px) {
     .index-banner-graphic {
-        flex:  0 0;
+        flex: 0 0;
+    }
+}
+
+@media screen and (min-width: 1536px) {
+    .index-banner-graphic {
+        font-size: 10rem;
     }
 }
 
