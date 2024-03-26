@@ -26,13 +26,15 @@ module Validated = {
 module type FieldState = {
   type t;
 
+  let renderComment: t => string;
+
   let fieldProps: props_t;
 
   let fieldCss: Validated.t(t) => option(string);
 
   let fieldIcon: React.element;
 
-  let fieldComment: Validated.t(t) => React.element;
+  let commentCss: t => string;
 };
 
 module MakeField = (S: FieldState) => {
@@ -56,7 +58,15 @@ module MakeField = (S: FieldState) => {
           onChange
         />
       </div>
-      {S.fieldComment(state)}
+      {switch (state) {
+       | NotValidated => React.null
+       | Validated(t) =>
+         let commentCss =
+           "auth-field-error-message poppins-light " ++ S.commentCss(t);
+         <span className=commentCss>
+           {S.renderComment(t)->React.string}
+         </span>;
+       }}
     </div>;
   };
 };
@@ -70,7 +80,7 @@ module UsernameState = {
 
   let fieldProps = {name: "username", type_: "text", placeholder: "Username"};
 
-  let render =
+  let renderComment =
     fun
     | TooShort => "Must be more than 3 characters."
     | TooLong => "Must be less than 16 characters."
@@ -89,23 +99,12 @@ module UsernameState = {
 
   let fieldIcon = <Icons.User size="1em" />;
 
-  let fieldComment =
-    Validated.mapOr(
-      React.null,
-      t => {
-        let commentCss =
-          switch (t) {
-          | TooShort
-          | TooLong
-          | InvalidCharacter(_) => " color-error"
-          | Success => " color-success"
-          };
-        <span
-          className={"auth-field-error-message poppins-light" ++ commentCss}>
-          {t->render->React.string}
-        </span>;
-      },
-    );
+  let commentCss =
+    fun
+    | TooShort
+    | TooLong
+    | InvalidCharacter(_) => "color-error"
+    | Success => "color-success";
 };
 
 module UsernameField = MakeField(UsernameState);
@@ -119,7 +118,7 @@ module PasswordState = {
     | ModeratelyStrong
     | VeryStrong;
 
-  let render: t => string =
+  let renderComment: t => string =
     fun
     | TooShort => "Password must at least be 8 characters."
     | TooWeak => "This password is too weak."
@@ -147,25 +146,14 @@ module PasswordState = {
 
   let fieldIcon = <Icons.LockPassword size="1em" />;
 
-  let fieldComment =
-    Validated.mapOr(
-      React.null,
-      t => {
-        let commentCss =
-          switch (t) {
-          | TooWeak
-          | TooShort
-          | VeryWeak => " color-error"
-          | Medium => " color-warning"
-          | ModeratelyStrong
-          | VeryStrong => " color-success"
-          };
-        <span
-          className={"auth-field-error-message poppins-light" ++ commentCss}>
-          {t->render->React.string}
-        </span>;
-      },
-    );
+  let commentCss =
+    fun
+    | TooWeak
+    | TooShort
+    | VeryWeak => "color-error"
+    | Medium => "color-warning"
+    | ModeratelyStrong
+    | VeryStrong => "color-success";
 };
 
 module PasswordField = MakeField(PasswordState);
@@ -175,7 +163,7 @@ module ConfirmState = {
     | Yes
     | No;
 
-  let render =
+  let renderComment =
     fun
     | Yes => "Passwords match. You're good to go!"
     | No => "Passwords do not match.";
@@ -195,21 +183,10 @@ module ConfirmState = {
 
   let fieldIcon = <Icons.LockPassword size="1em" />;
 
-  let fieldComment =
-    Validated.mapOr(
-      React.null,
-      t => {
-        let commentCss =
-          switch (t) {
-          | Yes => " color-success"
-          | No => " color-error"
-          };
-        <span
-          className={"auth-field-error-message poppins-light" ++ commentCss}>
-          {t->render->React.string}
-        </span>;
-      },
-    );
+  let commentCss =
+    fun
+    | Yes => " color-success"
+    | No => " color-error";
 };
 
 module ConfirmField = MakeField(ConfirmState);
