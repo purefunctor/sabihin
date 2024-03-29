@@ -23,14 +23,14 @@ let wrap_unwrap_master_key = () => {
   let* encrypted_master_key =
     Vault.Operations.wrap_master_key(
       derived_key.derived_encryption_key,
-      derived_key.master_encryption_iv,
+      derived_key.master_key_iv,
       master_key.master_key,
     );
   Js.Console.log("wrap_master_key: Finished");
   let* _ =
     Vault.Operations.unwrap_master_key(
       derived_key.derived_encryption_key,
-      derived_key.master_encryption_iv,
+      derived_key.master_key_iv,
       encrypted_master_key,
     );
   Js.Console.log("unwrap_master_key: Finished");
@@ -168,7 +168,7 @@ let base64_utils = () => {
   let* wrapped_master_key =
     Vault.Operations.wrap_master_key(
       fresh_derived_key.derived_encryption_key,
-      fresh_derived_key.master_encryption_iv,
+      fresh_derived_key.master_key_iv,
       fresh_master_key.master_key,
     );
 

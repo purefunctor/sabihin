@@ -273,7 +273,7 @@ module DerivedKey = {
   type fresh_t = {
     derived_encryption_key: key_t,
     hashed_authentication_key: ArrayBuffer.t,
-    master_encryption_iv: master_iv_t,
+    master_key_iv: master_iv_t,
   };
 
   let create = (password: string, salt_buffer: ArrayBuffer.t) => {
@@ -281,7 +281,7 @@ module DerivedKey = {
 
     let text_encoder = TextEncoder.create();
     let password_raw = TextEncoder.encode(text_encoder, password);
-    let master_encryption_iv =
+    let master_key_iv =
       MasterIv(getRandomValues_impl(Uint8Array.fromLength(12)));
 
     let* base_key = {
@@ -326,7 +326,7 @@ module DerivedKey = {
     resolve({
       derived_encryption_key,
       hashed_authentication_key,
-      master_encryption_iv,
+      master_key_iv,
     });
   };
 };
