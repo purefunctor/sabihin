@@ -2,8 +2,10 @@ type package_t = {
   encrypted_master_key: string,
   master_key_iv: string,
   encrypted_protection_key: string,
+  exported_protection_key: string,
   protection_key_iv: string,
   encrypted_verification_key: string,
+  exported_verification_key: string,
   verification_key_iv: string,
 };
 
@@ -19,8 +21,10 @@ let use = () => {
         encrypted_master_key: "",
         master_key_iv: "",
         encrypted_protection_key: "",
+        exported_protection_key: "",
         protection_key_iv: "",
         encrypted_verification_key: "",
+        exported_verification_key: "",
         verification_key_iv: "",
       }
     );

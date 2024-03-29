@@ -88,8 +88,28 @@ let useKeys = generateStep => {
   );
 };
 
+let useFinal = generateStep => {
+  React.useMemo1(
+    () => {
+      switch (generateStep) {
+      | Finished =>
+        <FramerMotion.span
+          initial={"y": 100, "opacity": 0.0}
+          animate={"y": 0, "opacity": 1.0}
+          transition={"ease": "easeOut"}
+          className="poppins-regular">
+          {React.string("Done!")}
+        </FramerMotion.span>
+      | _ => React.null
+      }
+    },
+    [|generateStep|],
+  );
+};
+
 [@react.component]
 let make = (~generateStep) => {
   let keys = useKeys(generateStep);
-  <div className="register-generate-steps"> {React.array(keys)} </div>;
+  let final = useFinal(generateStep);
+  <div className="register-generate-steps"> {React.array(keys)} final </div>;
 };
