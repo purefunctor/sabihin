@@ -6,23 +6,6 @@ type props_t = {
   placeholder: string,
 };
 
-module Validated = {
-  type t('a) =
-    | Validated('a)
-    | NotValidated;
-
-  let mapOr = (default: 'b, f: 'a => 'b, validated: t('a)) => {
-    switch (validated) {
-    | Validated(v) => f(v)
-    | NotValidated => default
-    };
-  };
-
-  let mapOrNone = (f: 'a => 'b, validated: t('a)) => {
-    mapOr(None, v => Some(f(v)), validated);
-  };
-};
-
 module type FieldState = {
   type t;
 
@@ -30,7 +13,7 @@ module type FieldState = {
 
   let fieldProps: props_t;
 
-  let fieldCss: Validated.t(t) => option(string);
+  let fieldCss: ValidationResult.t(t) => option(string);
 
   let fieldIcon: React.element;
 
@@ -72,11 +55,7 @@ module MakeField = (S: FieldState) => {
 };
 
 module UsernameState = {
-  type t =
-    | TooShort
-    | TooLong
-    | InvalidCharacter(string)
-    | Success;
+  include ValidationCore.Username;
 
   let fieldProps = {name: "username", type_: "text", placeholder: "Username"};
 
@@ -89,7 +68,7 @@ module UsernameState = {
     | Success => "Awesome! You're good to go!";
 
   let fieldCss =
-    Validated.mapOrNone(
+    ValidationResult.map_or_none(
       fun
       | TooShort
       | TooLong
@@ -110,13 +89,7 @@ module UsernameState = {
 module UsernameField = MakeField(UsernameState);
 
 module PasswordState = {
-  type t =
-    | TooShort
-    | TooWeak
-    | VeryWeak
-    | Medium
-    | ModeratelyStrong
-    | VeryStrong;
+  include ValidationCore.Password;
 
   let renderComment: t => string =
     fun
@@ -134,7 +107,7 @@ module PasswordState = {
   };
 
   let fieldCss =
-    Validated.mapOrNone(
+    ValidationResult.map_or_none(
       fun
       | TooShort
       | TooWeak
@@ -159,9 +132,7 @@ module PasswordState = {
 module PasswordField = MakeField(PasswordState);
 
 module ConfirmState = {
-  type t =
-    | Yes
-    | No;
+  include ValidationCore.PasswordConfirm;
 
   let renderComment =
     fun
@@ -175,7 +146,7 @@ module ConfirmState = {
   };
 
   let fieldCss =
-    Validated.mapOrNone(
+    ValidationResult.map_or_none(
       fun
       | Yes => "auth-field-input-success"
       | No => "auth-field-input-error",
@@ -201,9 +172,9 @@ let make =
       ~onUsernameChange: Form.t => unit=_ => (),
       ~onPasswordChange: Form.t => unit=_ => (),
       ~onConfirmPasswordChange: Form.t => unit=_ => (),
-      ~usernameState: Validated.t(UsernameState.t)=Validated.NotValidated,
-      ~passwordState: Validated.t(PasswordState.t)=Validated.NotValidated,
-      ~confirmState: Validated.t(ConfirmState.t)=Validated.NotValidated,
+      ~usernameState: ValidationResult.t(UsernameState.t)=NotValidated,
+      ~passwordState: ValidationResult.t(PasswordState.t)=NotValidated,
+      ~confirmState: ValidationResult.t(ConfirmState.t)=NotValidated,
       ~onSubmit: Form.t => unit=_ => (),
     ) => {
   <form onSubmit className="auth-form">

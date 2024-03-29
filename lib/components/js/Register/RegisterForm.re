@@ -1,15 +1,15 @@
 open React.Event;
 
 let validateUsername = username => {
-  Validate.Username.validate(username);
+  ValidationUsername.validate(username);
 };
 
 let validatePassword = (username, password) => {
-  Validate.Password.validate(username, password);
+  ValidationPassword.validate(username, password);
 };
 
 let validateConfirm = (password, confirmPassword) => {
-  Validate.Confirm.validate(password, confirmPassword);
+  ValidationPasswordConfirm.validate(password, confirmPassword);
 };
 
 [@react.component]

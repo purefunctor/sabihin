@@ -1,0 +1,7 @@
+(library
+ (name validation_universal)
+ (public_name sabihin.validation_universal)
+ (libraries server-reason-react.js server-reason-react.belt)
+ (wrapped false)
+ (preprocess
+  (pps server-reason-react.melange_ppx)))

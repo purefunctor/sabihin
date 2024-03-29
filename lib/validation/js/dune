@@ -1,0 +1,11 @@
+(library
+ (name validation_js)
+ (modes melange)
+ (libraries melange.belt)
+ (wrapped false)
+ (preprocess
+  (pps melange.ppx)))
+
+(copy_files#
+ (mode fallback)
+ (files "../universal/**.{re,rei}"))
