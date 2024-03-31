@@ -31,9 +31,20 @@ let it_fails =
     let%lwt response, body =
       Client.post (Uri.of_string "http://localhost:8080/api/register")
     in
-    Cohttp_lwt.Body.drain_body body;%lwt
+    let%lwt parsed =
+      let%lwt body = Cohttp_lwt.Body.to_string body in
+      try
+        let _ = error_response_t_of_string body in
+        Lwt.return true
+      with _ -> Lwt.return false
+    in
+
     let code = Response.status response |> Code.code_of_status in
-    let _ = Alcotest.(check int) "status code is 403" code 403 in
+    let _ =
+      Alcotest.(check int) "status code is 403" code 403;
+      Alcotest.(check bool) "response is parsed" parsed true
+    in
+
     Lwt.return ()
   in
   make_test_case "it fails" inner
