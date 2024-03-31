@@ -19,9 +19,20 @@ let it_works =
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in
-    Cohttp_lwt.Body.drain_body body;%lwt
+    let%lwt parsed =
+      let%lwt body = Cohttp_lwt.Body.to_string body in
+      try
+        let _ = register_response_t_of_string body in
+        Lwt.return true
+      with _ -> Lwt.return false
+    in
+
     let code = Response.status response |> Code.code_of_status in
-    let _ = Alcotest.(check int) "status code is 200" code 200 in
+    let _ =
+      Alcotest.(check int) "status code is 200" 200 code;
+      Alcotest.(check bool) "response is parsed" true parsed
+    in
+
     Lwt.return ()
   in
   make_test_case "it works" inner
@@ -41,8 +52,8 @@ let it_fails =
 
     let code = Response.status response |> Code.code_of_status in
     let _ =
-      Alcotest.(check int) "status code is 403" code 403;
-      Alcotest.(check bool) "response is parsed" parsed true
+      Alcotest.(check int) "status code is 403" 403 code;
+      Alcotest.(check bool) "response is parsed" true parsed
     in
 
     Lwt.return ()

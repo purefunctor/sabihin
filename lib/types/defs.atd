@@ -25,3 +25,7 @@ type register_keys_payload_t = {
   exported_verification_key: string;
   verification_key_iv: string;
 }
+
+type register_response_t = {
+  public_id: string;
+}

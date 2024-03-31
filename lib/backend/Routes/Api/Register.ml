@@ -8,8 +8,9 @@ let handler request =
           Models.User.insert ~username ~auth_token connection)
     in
     match insert_result with
-    | Ok (id, public_id) ->
-        Dream.respond @@ Printf.sprintf "%li;%s" id public_id
+    | Ok (_, public_id) ->
+        Dream.info (fun log -> log "Created User: %s" public_id);
+        Dream.json @@ string_of_register_response_t { public_id }
     | Error e ->
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
         Dream.respond ~code:422 "Could not register user."
