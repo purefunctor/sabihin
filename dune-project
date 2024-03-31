@@ -22,6 +22,8 @@
  (description "Anonymous and Secure Confessions.")
  (depends
   ocaml
+  (atdgen
+   (>= "2.15.0"))
   (caqti-driver-postgresql
    (>= "1.9.0"))
   (dream
@@ -34,6 +36,8 @@
    (>= "3.0.0"))
   (melange-fetch
    (>= "0.1.0"))
+  (melange-atdgen-codec-runtime
+   (>= "3.0.0"))
   (ppx_rapper
    (>= "3.1.0"))
   (ppx_rapper_lwt

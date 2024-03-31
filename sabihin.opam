@@ -10,12 +10,14 @@ homepage: "https://github.com/purefunctor/sabihin"
 bug-reports: "https://github.com/purefunctor/sabihin/issues"
 depends: [
   "ocaml"
+  "atdgen" {>= "2.15.0"}
   "caqti-driver-postgresql" {>= "1.9.0"}
   "dream" {>= "1.0.0~alpha5"}
   "reason" {>= "3.11.0"}
   "dune" {>= "3.14" & >= "3.14"}
   "melange" {>= "3.0.0"}
   "melange-fetch" {>= "0.1.0"}
+  "melange-atdgen-codec-runtime" {>= "3.0.0"}
   "ppx_rapper" {>= "3.1.0"}
   "ppx_rapper_lwt" {>= "3.1.0"}
   "reason-react" {>= "0.14.0"}

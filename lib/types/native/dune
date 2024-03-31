@@ -1,0 +1,19 @@
+(library
+ (name types_native)
+ (public_name sabihin.types_native)
+ (libraries atdgen))
+
+(copy_files
+ (files "../*.{atd}"))
+
+(rule
+ (targets register_t.ml register_t.mli)
+ (deps register.atd)
+ (action
+  (run atdgen -t %{deps})))
+
+(rule
+ (targets register_j.ml register_j.mli)
+ (deps register.atd)
+ (action
+  (run atdgen -j %{deps})))
