@@ -90,5 +90,5 @@ let post_json cookie_headers json url =
   let headers =
     Cohttp.Header.add cookie_headers "Content-Type" "application/json"
   in
-  let body = json |> Yojson.Safe.to_string |> Cohttp_lwt.Body.of_string in
+  let body = Cohttp_lwt.Body.of_string json in
   Client.post ~headers ~body (Uri.of_string url)

@@ -1,16 +1,8 @@
 open HigherOrderHandlers
-
-module Fields = struct
-  open Ppx_yojson_conv_lib.Yojson_conv.Primitives
-
-  type t = { username : string; auth_token : string } [@@deriving yojson]
-
-  let from_string_opt value =
-    try Some (value |> Yojson.Safe.from_string |> t_of_yojson) with _ -> None
-end
+open Types_native.Register_j
 
 let handler request =
-  let inner Fields.{ username; auth_token } =
+  let inner { username; auth_token } =
     let%lwt insert_result =
       Dream.sql request (fun connection ->
           Models.User.insert ~username ~auth_token connection)
@@ -22,4 +14,4 @@ let handler request =
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
         Dream.respond ~code:422 "Could not register user."
   in
-  with_json_body request Fields.from_string_opt inner
+  with_json_body request register_payload_t_of_string inner

@@ -1,5 +1,6 @@
 open Cohttp
 open Cohttp_lwt_unix
+open Types_native.Register_j
 open Utils
 
 let double_hmac data =
@@ -12,12 +13,9 @@ let it_works =
   let inner () =
     let%lwt cookie_headers = get_cookie_headers () in
     let%lwt response, body =
-      let json : Yojson.Safe.t =
-        `Assoc
-          [
-            ("username", `String "purefunctor");
-            ("auth_token", `String (double_hmac "auth_token"));
-          ]
+      let json =
+        string_of_register_payload_t
+          { username = "purefunctor"; auth_token = double_hmac "auth_token" }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in

@@ -4,7 +4,13 @@
  (name components_js)
  (modes melange)
  (wrapped false)
- (libraries reason-react vault_js melange.belt melange-fetch validation_js)
+ (libraries
+  reason-react
+  melange.belt
+  melange-fetch
+  types_js
+  validation_js
+  vault_js)
  (preprocess
   (pps melange.ppx reason-react-ppx server-reason-react.browser_ppx -js)))
 

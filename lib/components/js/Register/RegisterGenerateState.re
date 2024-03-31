@@ -1,13 +1,6 @@
-type package_t = {
-  encrypted_master_key: string,
-  master_key_iv: string,
-  encrypted_protection_key: string,
-  exported_protection_key: string,
-  protection_key_iv: string,
-  encrypted_verification_key: string,
-  exported_verification_key: string,
-  verification_key_iv: string,
-};
+open Types_js.Register_bs;
+
+type package_t = register_keys_payload_t;
 
 type t = {
   package: package_t,
