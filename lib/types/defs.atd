@@ -4,11 +4,13 @@ type error_content_t =
   | Raw of string
   ] 
 
-type error_response_t = {
+type 'content base_error_response_t = {
   code: int;
   reason: string;
-  content: error_content_t;
+  content: 'content;
 }
+
+type raw_error_response_t = string base_error_response_t
 
 type register_payload_t = {
   username: string;

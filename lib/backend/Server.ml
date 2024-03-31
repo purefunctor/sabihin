@@ -14,13 +14,15 @@ let error_template _ _ suggested_response =
       let%lwt content = Dream.body suggested_response in
 
       let content =
+        string_of_error_content_t
+        @@
         match content_type with
         | Some "application/json" -> `JSON content
         | Some content_type -> `ContentType (content, content_type)
         | None -> `Raw content
       in
 
-      let body = string_of_error_response_t { code; reason; content } in
+      let body = string_of_raw_error_response_t { code; reason; content } in
       Dream.set_body suggested_response body;
 
       if Option.is_none content_type then

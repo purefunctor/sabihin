@@ -39,7 +39,7 @@ let it_fails =
     in
 
     let code = Response.status response |> Code.code_of_status in
-    let%lwt parsed = is_parsed_by body error_response_t_of_string in
+    let%lwt parsed = is_parsed_by body raw_error_response_t_of_string in
 
     let _ =
       Alcotest.(check int) "status code is 403" 403 code;

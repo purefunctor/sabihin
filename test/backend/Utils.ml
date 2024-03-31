@@ -95,6 +95,7 @@ let post_json cookie_headers json url =
 
 let is_parsed_by body parser =
   let%lwt body = Cohttp_lwt.Body.to_string body in
+  Logs.info (fun log -> log "Parsing: %s" body);
   try
     let _ = parser body in
     Lwt.return true
