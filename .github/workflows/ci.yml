@@ -8,6 +8,9 @@ permissions: read-all
 
 jobs:
   build_and_test:
+    env:
+      DATABASE_USERNAME: purefunctor
+      DATABASE_PASSWORD: purefunctor
     strategy:
       fail-fast: false
       matrix:
@@ -26,8 +29,8 @@ jobs:
     - name: Install PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v5
       with:
-        username: purefunctor
-        password: purefunctor
+        username: ${{ env.DATABASE_USERNAME }}
+        password: ${{ env.DATABASE_PASSWORD }}
         database: sabihin_tests
         port: 5432
       id: postgres
@@ -50,5 +53,5 @@ jobs:
 
     - name: Run Tests
       run: opam exec -- dune runtest
-      env: 
+      env:
         DATABASE_URL: ${{ steps.postgres.outputs.connection-uri }}

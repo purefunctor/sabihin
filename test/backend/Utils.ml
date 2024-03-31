@@ -1,4 +1,17 @@
-let default_db_url = "postgresql://localhost:5432/"
+let make_database_url name =
+  let credentials =
+    let ( let* ) = Option.bind in
+    let* username = Sys.getenv_opt "DATABASE_USERNAME" in
+    let* password = Sys.getenv_opt "DATABASE_PASSWORD" in
+    Some (username, password)
+  in
+  match credentials with
+  | Some (username, password) ->
+      Printf.sprintf "postgresql://%s:%s@localhost:5432/%s" username password
+        name
+  | None -> Printf.sprintf "postgresql://localhost:5432/%s" name
+
+let default_db_url = make_database_url ""
 let server_secret = "a_totally_legit_server_secret_you_should_use"
 
 let create_database (db : Caqti_lwt.connection) name =
@@ -32,9 +45,7 @@ let make_test_case name ?(speed : Alcotest.speed_level = `Quick) action =
     |> Cstruct.to_hex_string
     |> Printf.sprintf "sabihin_backend_test_%s"
   in
-  let database_url =
-    Printf.sprintf "postgresql://localhost:5432/%s" database_name
-  in
+  let database_url = make_database_url database_name in
   let initialize () =
     with_connection default_db_url (fun connection ->
         let open Lwt_result.Infix in
