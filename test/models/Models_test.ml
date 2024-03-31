@@ -4,6 +4,7 @@ let () =
   Lwt_main.run
   @@
   let* pool = Utils.connect_pool () in
+  let* () = Utils.initialize () in
   Alcotest_lwt.run "Models"
     [
       ( "User",

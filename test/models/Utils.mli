@@ -4,6 +4,8 @@ val connect_pool :
   unit ->
   (Caqti_lwt.connection, [> Caqti_error.connect ]) Caqti_lwt.Pool.t Lwt.t
 
+val initialize : unit -> unit Lwt.t
+
 val make_test_case :
   ?speed:Alcotest.speed_level ->
   string ->
