@@ -92,3 +92,10 @@ let post_json cookie_headers json url =
   in
   let body = Cohttp_lwt.Body.of_string json in
   Client.post ~headers ~body (Uri.of_string url)
+
+let is_parsed_by body parser =
+  let%lwt body = Cohttp_lwt.Body.to_string body in
+  try
+    let _ = parser body in
+    Lwt.return true
+  with _ -> Lwt.return false
