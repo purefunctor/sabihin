@@ -31,7 +31,7 @@ jobs:
       with:
         username: ${{ env.DATABASE_USERNAME }}
         password: ${{ env.DATABASE_PASSWORD }}
-        database: sabihin_tests
+        database: ${{ env.DATABASE_USERNAME }}
         port: 5432
       id: postgres
 
