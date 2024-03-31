@@ -11,7 +11,7 @@ let double_hmac data =
 let it_works =
   let inner () =
     let%lwt cookie_headers = get_cookie_headers () in
-    let%lwt response, _ =
+    let%lwt response, body =
       let json : Yojson.Safe.t =
         `Assoc
           [
@@ -21,6 +21,7 @@ let it_works =
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in
+    Cohttp_lwt.Body.drain_body body;%lwt
     let code = Response.status response |> Code.code_of_status in
     let _ = Alcotest.(check int) "status code is 200" code 200 in
     Lwt.return ()
@@ -29,9 +30,10 @@ let it_works =
 
 let it_fails =
   let inner () =
-    let%lwt response, _ =
+    let%lwt response, body =
       Client.post (Uri.of_string "http://localhost:8080/api/register")
     in
+    Cohttp_lwt.Body.drain_body body;%lwt
     let code = Response.status response |> Code.code_of_status in
     let _ = Alcotest.(check int) "status code is 403" code 403 in
     Lwt.return ()

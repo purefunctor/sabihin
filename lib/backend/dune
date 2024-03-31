@@ -5,8 +5,10 @@
  (public_name sabihin.backend)
  (modes native)
  (libraries
+  caqti-driver-postgresql
   components_native
   dream
+  models
   server-reason-react.react
   server-reason-react.reactDom
   yojson)

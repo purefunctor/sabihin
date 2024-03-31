@@ -1,17 +1,66 @@
+let default_db_url = "postgresql://localhost:5432/"
+let server_secret = "a_totally_legit_server_secret_you_should_use"
+
+let create_database (db : Caqti_lwt.connection) name =
+  let (module Db) = db in
+  let open Caqti_request.Infix in
+  let open Caqti_type.Std in
+  let inner =
+    (unit ->. unit) ~oneshot:true (Printf.sprintf "CREATE DATABASE %s" name)
+  in
+  Db.exec inner ()
+
+let drop_database (db : Caqti_lwt.connection) name =
+  let (module Db) = db in
+  let open Caqti_request.Infix in
+  let open Caqti_type.Std in
+  let inner =
+    (unit ->. unit) ~oneshot:true
+      (Printf.sprintf "DROP DATABASE IF EXISTS %s" name)
+  in
+  Db.exec inner ()
+
+let with_connection url action =
+  let%lwt result = Caqti_lwt.with_connection (Uri.of_string url) action in
+  match result with
+  | Ok () -> Lwt.return ()
+  | Error e -> Lwt.reraise (Caqti_error.Exn e)
+
 let make_test_case name ?(speed : Alcotest.speed_level = `Quick) action =
+  let database_name =
+    Cstruct.of_string name |> Mirage_crypto.Hash.SHA256.digest
+    |> Cstruct.to_hex_string
+    |> Printf.sprintf "sabihin_backend_test_%s"
+  in
+  let database_url =
+    Printf.sprintf "postgresql://localhost:5432/%s" database_name
+  in
+  let initialize () =
+    with_connection default_db_url (fun connection ->
+        let open Lwt_result.Infix in
+        drop_database connection database_name >>= fun _ ->
+        create_database connection database_name)
+  in
   let inner _ () =
+    initialize ();%lwt
+    with_connection database_url (fun connection ->
+        Models.Initialize.initialize connection);%lwt
     let stop_promise, stop_resolver = Lwt.wait () in
-    let server = Backend_lib.Server.serve ~stop:stop_promise () in
+    let wait_for_server =
+      Backend_lib.Server.serve ~stop:stop_promise ~database_url ~server_secret
+        ()
+    in
     action ();%lwt
     Lwt.wakeup_later stop_resolver ();
-    server
+    wait_for_server
   in
   Alcotest_lwt.test_case name speed inner
 
 let get_cookie_headers () =
   let open Cohttp in
   let open Cohttp_lwt_unix in
-  let%lwt response, _ = Client.get (Uri.of_string "http://localhost:8080") in
+  let%lwt response, body = Client.get (Uri.of_string "http://localhost:8080") in
+  Cohttp_lwt.Body.drain_body body;%lwt
   let code = Response.status response |> Code.code_of_status in
   let set_cookies =
     Response.headers response |> Cookie.Set_cookie_hdr.extract
