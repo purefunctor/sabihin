@@ -1,6 +1,6 @@
 open Cohttp
 open Cohttp_lwt_unix
-open Types_native.Register_j
+open Types_native.Defs_j
 open Utils
 
 let double_hmac data =

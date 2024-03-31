@@ -1,4 +1,4 @@
-open Types_js.Register_bs;
+open Types_js.Defs_bs;
 
 type package_t = register_keys_payload_t;
 

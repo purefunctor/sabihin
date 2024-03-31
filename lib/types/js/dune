@@ -1,19 +1,19 @@
 (library
  (name types_js)
  (modes melange)
- (libraries melange-atdgen-codec-runtime))
+ (libraries melange-atdgen-codec-runtime melange.js))
 
 (copy_files
  (files "../*.{atd}"))
 
 (rule
- (targets register_t.ml register_t.mli)
- (deps register.atd)
+ (targets defs_t.ml defs_t.mli)
+ (deps defs.atd)
  (action
   (run atdgen -t %{deps})))
 
 (rule
- (targets register_bs.ml register_bs.mli)
- (deps register.atd)
+ (targets defs_bs.ml defs_bs.mli)
+ (deps defs.atd)
  (action
   (run atdgen -bs %{deps})))

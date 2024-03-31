@@ -1,3 +1,15 @@
+type error_content_t =
+  [ ContentType of (string * string)
+  | JSON of string
+  | Raw of string
+  ] 
+
+type error_response_t = {
+  code: int;
+  reason: string;
+  content: error_content_t;
+}
+
 type register_payload_t = {
   username: string;
   auth_token: string;

@@ -1,5 +1,5 @@
 open HigherOrderHandlers
-open Types_native.Register_j
+open Types_native.Defs_j
 
 let handler request =
   let inner { username; auth_token } =
