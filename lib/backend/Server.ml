@@ -1,4 +1,5 @@
 open Types_native.Defs_j
+open Types_native.Dynamic
 
 let error_template _ _ suggested_response =
   let status = Dream.status suggested_response in
@@ -14,7 +15,7 @@ let error_template _ _ suggested_response =
       let%lwt content = Dream.body suggested_response in
 
       let content =
-        string_of_error_content_t
+        string_of_unparsed_error_content
         @@
         match content_type with
         | Some "application/json" -> `JSON content
@@ -22,7 +23,7 @@ let error_template _ _ suggested_response =
         | None -> `Raw content
       in
 
-      let body = string_of_raw_error_response_t { code; reason; content } in
+      let body = string_of_unparsed_error_response { code; reason; content } in
       Dream.set_body suggested_response body;
 
       if Option.is_none content_type then

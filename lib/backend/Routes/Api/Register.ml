@@ -13,6 +13,7 @@ let handler request =
         Dream.json @@ string_of_register_response_t { public_id }
     | Error e ->
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
-        Dream.respond ~code:422 "Could not register user."
+        Dream.json ~code:422
+        @@ string_of_register_error_variant_t `CouldNotRegister
   in
   with_json_body request register_payload_t_of_string inner
