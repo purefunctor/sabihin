@@ -631,6 +631,10 @@ a {
     border: 2px solid var(--success);
 }
 
+.auth-field-label {
+    padding-bottom: 0.5rem;
+}
+
 .auth-field-error-message {
     padding-top: 0.5rem;
     padding-left: 1rem;

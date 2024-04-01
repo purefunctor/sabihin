@@ -3,6 +3,7 @@ open React.Event;
 type props_t = {
   name: string,
   type_: string,
+  label: string,
   placeholder: string,
 };
 
@@ -29,9 +30,13 @@ module MakeField = (S: FieldState) => {
       | None => "auth-field-input"
       };
     <div className="auth-field-container">
+      <label htmlFor={S.fieldProps.name} className="poppins-regular auth-field-label">
+        {React.string(S.fieldProps.label)}
+      </label>
       <div className=fieldCss>
         S.fieldIcon
         <input
+          id={S.fieldProps.name}
           name={S.fieldProps.name}
           type_={S.fieldProps.type_}
           placeholder={S.fieldProps.placeholder}
@@ -57,7 +62,12 @@ module MakeField = (S: FieldState) => {
 module UsernameState = {
   include ValidationCore.Username;
 
-  let fieldProps = {name: "username", type_: "text", placeholder: "Username"};
+  let fieldProps = {
+    name: "username",
+    type_: "text",
+    label: "Username",
+    placeholder: "Username (e.g. aimoto_rinku)",
+  };
 
   let renderComment =
     fun
@@ -103,7 +113,8 @@ module PasswordState = {
   let fieldProps = {
     name: "password",
     type_: "password",
-    placeholder: "Password",
+    label: "Password",
+    placeholder: "Password (min. 8 characters)",
   };
 
   let fieldCss =
@@ -142,7 +153,8 @@ module ConfirmState = {
   let fieldProps = {
     name: "confirmPassword",
     type_: "password",
-    placeholder: "Confirm Password",
+    label: "Confirm Password",
+    placeholder: "Confirm Password (remember it!)",
   };
 
   let fieldCss =
