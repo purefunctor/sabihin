@@ -1,10 +1,5 @@
 [@react.component]
-let make =
-    (
-      ~formState: RegisterFormState.t,
-      ~generateState: RegisterGenerateState.t,
-      ~nextRegisterStep,
-    ) => {
+let make = (~generateState: RegisterGenerateState.t, ~nextRegisterStep) => {
   let (generateStep, nextGenerateStep) = RegisterGenerateState.useStep();
 
   React.useEffect1(
@@ -12,14 +7,19 @@ let make =
       open Vault.PromiseLet;
 
       let _ = {
-        let* fresh_master_key = Vault.MasterKey.create();
-        nextGenerateStep();
+        let fresh_derived_key =
+          switch (generateState.derivedKey) {
+          | Some(derivedKey) => derivedKey
+          | None => failwith("invariant violated: derivedKey was not set.")
+          };
 
-        let* fresh_derived_key =
-          Vault.DerivedKey.create(
-            formState.password,
-            fresh_master_key.salt_buffer,
-          );
+        let* salt_buffer =
+          switch (generateState.clientRandom) {
+          | Some(clientRandom) => Vault.Salt.compute_digest(clientRandom)
+          | None => failwith("invariant violated: clientRandom was not set.")
+          };
+
+        let* fresh_master_key = Vault.MasterKey.create(salt_buffer);
         nextGenerateStep();
 
         let* fresh_protection_keys = Vault.ProtectionKeyPair.create();

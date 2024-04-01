@@ -7,9 +7,10 @@ let make = () => {
 
   <main className="login-register-content">
     {switch (registerStep) {
-     | RegisterFormState.Initial => <RegisterForm formState nextRegisterStep />
+     | RegisterFormState.Initial =>
+       <RegisterForm formState nextRegisterStep generateState />
      | RegisterFormState.Generate =>
-       <RegisterGenerate formState nextRegisterStep generateState />
+       <RegisterGenerate nextRegisterStep generateState />
      | RegisterFormState.Finish => <RegisterFinish formState generateState />
      }}
   </main>;

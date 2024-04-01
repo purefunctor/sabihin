@@ -13,7 +13,12 @@ let validateConfirm = (password, confirmPassword) => {
 };
 
 [@react.component]
-let make = (~formState: RegisterFormState.t, ~nextRegisterStep) => {
+let make =
+    (
+      ~formState: RegisterFormState.t,
+      ~nextRegisterStep,
+      ~generateState: RegisterGenerateState.t,
+    ) => {
   let username = formState.username;
   let password = formState.password;
   let confirmPassword = formState.confirmPassword;
@@ -49,8 +54,21 @@ let make = (~formState: RegisterFormState.t, ~nextRegisterStep) => {
         let allowPassword = ValidationPassword.allow(passwordState);
         let allowConfirm = ValidationPasswordConfirm.allow(confirmState);
         if (allowUsername && allowPassword && allowConfirm) {
-          Js.Console.log("Success!");
-          nextRegisterStep();
+          open RegisterGenerateState;
+          open Vault.PromiseLet;
+          let _ = {
+            let clientRandom = Vault.ClientRandom.create();
+            let* saltBuffer = Vault.Salt.compute_digest(clientRandom);
+            let* freshDerivedKey =
+              Vault.DerivedKey.create(password, saltBuffer);
+
+            generateState.setClientRandom(_ => Some(clientRandom));
+            generateState.setDerivedKey(_ => Some(freshDerivedKey));
+
+            nextRegisterStep();
+            resolve();
+          };
+          ();
         };
       },
       (usernameState, passwordState, confirmState),

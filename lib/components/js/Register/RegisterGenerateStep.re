@@ -3,17 +3,15 @@ open RegisterGenerateState;
 let keysToIndex = (keys: keys_t) => {
   switch (keys) {
   | Master => 0
-  | Derived => 1
-  | Protection => 2
-  | Verification => 3
-  | EncryptingKeys => 4
-  | ExportingKeys => 5
+  | Protection => 1
+  | Verification => 2
+  | EncryptingKeys => 3
+  | ExportingKeys => 4
   };
 };
 
 let keysText = [|
   "Master Key",
-  "Derived Key",
   "Protection Key",
   "Verification Key",
   "Encrypting Keys",

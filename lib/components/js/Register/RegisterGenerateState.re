@@ -1,10 +1,17 @@
+open Js.Typed_array;
 open Types_js.Defs_bs;
 
+type client_random_t = option(Uint8Array.t);
+type derived_key_t = option(Vault.DerivedKey.fresh_t);
 type package_t = register_keys_payload_t;
 
 type t = {
   package: package_t,
   setPackage: (package_t => package_t) => unit,
+  clientRandom: client_random_t,
+  setClientRandom: (client_random_t => client_random_t) => unit,
+  derivedKey: derived_key_t,
+  setDerivedKey: (derived_key_t => derived_key_t) => unit,
 };
 
 let use = () => {
@@ -21,12 +28,20 @@ let use = () => {
         verification_key_iv: "",
       }
     );
-  {package, setPackage};
+  let (clientRandom, setClientRandom) = React.useState(() => None);
+  let (derivedKey, setDerivedKey) = React.useState(() => None);
+  {
+    package,
+    setPackage,
+    clientRandom,
+    setClientRandom,
+    derivedKey,
+    setDerivedKey,
+  };
 };
 
 type keys_t =
   | Master
-  | Derived
   | Protection
   | Verification
   | EncryptingKeys
@@ -42,8 +57,7 @@ let useStep = () => {
       switch (step) {
       | Keys(keys) =>
         switch (keys) {
-        | Master => Keys(Derived)
-        | Derived => Keys(Protection)
+        | Master => Keys(Protection)
         | Protection => Keys(Verification)
         | Verification => Keys(EncryptingKeys)
         | EncryptingKeys => Keys(ExportingKeys)
