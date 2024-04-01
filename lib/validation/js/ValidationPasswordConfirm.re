@@ -5,7 +5,7 @@ let validate_core: (string, string) => ValidationResult.t(t) =
     if (password == confirm) {
       Validated(Yes);
     } else {
-      Validated(Yes);
+      Validated(No);
     };
 
 let validate: (string, string) => ValidationResult.t(t) =
