@@ -1,10 +1,8 @@
-open Types_native.Defs_j
 open Types_native.Dynamic
 
 let error_template _ _ suggested_response =
   let status = Dream.status suggested_response in
   let code = Dream.status_to_int status in
-  let reason = Dream.status_to_string status in
   match code with
   | 404 ->
       Dream.set_header suggested_response "Content-Type" Dream.text_html;
@@ -14,8 +12,8 @@ let error_template _ _ suggested_response =
       let content_type = Dream.header suggested_response "Content-Type" in
       let%lwt content = Dream.body suggested_response in
 
-      let content =
-        string_of_unparsed_error_content
+      let body =
+        string_of_unparsed_error_response
         @@
         match content_type with
         | Some "application/json" -> `JSON content
@@ -23,7 +21,6 @@ let error_template _ _ suggested_response =
         | None -> `Raw content
       in
 
-      let body = string_of_unparsed_error_response { code; reason; content } in
       Dream.set_body suggested_response body;
 
       if Option.is_none content_type then

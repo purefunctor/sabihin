@@ -1,14 +1,8 @@
-type 'json base_error_content_t =
+type 'json base_error_response_t =
   [ ContentType of (string * string)
   | JSON of 'json
   | Raw of string
-  ] 
-
-type 'content base_error_response_t = {
-  code: int;
-  reason: string;
-  content: 'content;
-}
+  ]
 
 type register_payload_t = {
   username: string;
@@ -30,6 +24,5 @@ type register_response_t = {
   public_id: string;
 }
 
-type register_error_variant_t = [ CouldNotRegister ]
-type register_error_content_t = register_error_variant_t base_error_content_t
+type register_error_content_t = [ CouldNotRegister ]
 type register_error_response_t = register_error_content_t base_error_response_t

@@ -14,6 +14,6 @@ let handler request =
     | Error e ->
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
         Dream.json ~code:422
-        @@ string_of_register_error_variant_t `CouldNotRegister
+        @@ string_of_register_error_content_t `CouldNotRegister
   in
   with_json_body request register_payload_t_of_string inner
