@@ -190,6 +190,14 @@ module Salt = {
   ];
 };
 
+module ClientRandom = {
+  open WebCryptoAPI;
+
+  let create = () => {
+    getRandomValues_impl(Uint8Array.fromLength(16));
+  };
+};
+
 module MasterKey = {
   open WebCryptoAPI;
 
@@ -203,17 +211,14 @@ module MasterKey = {
 
   type fresh_t = {
     master_key: key_t,
-    client_random: Uint8Array.t,
-    salt_buffer: ArrayBuffer.t,
     protection_key_iv: protection_iv_t,
     verification_key_iv: verification_iv_t,
   };
 
-  let create = () => {
+  let create = (salt_buffer: ArrayBuffer.t) => {
     open PromiseLet;
 
     let random_data = getRandomValues_impl(Uint8Array.fromLength(128));
-    let client_random = getRandomValues_impl(Uint8Array.fromLength(16));
     let protection_key_iv =
       ProtectionIv(getRandomValues_impl(Uint8Array.fromLength(12)));
     let verification_key_iv =
@@ -227,8 +232,6 @@ module MasterKey = {
       let keyUsages = [|"deriveKey"|];
       importKey_impl(format, keyData, algorithm, extractable, keyUsages);
     };
-
-    let* salt_buffer = Salt.compute_digest(client_random);
 
     let algoritm = {
       "name": "HKDF",
@@ -251,13 +254,7 @@ module MasterKey = {
       );
 
     let master_key = MasterKey(master_key);
-    resolve({
-      master_key,
-      client_random,
-      salt_buffer,
-      protection_key_iv,
-      verification_key_iv,
-    });
+    resolve({master_key, protection_key_iv, verification_key_iv});
   };
 };
 

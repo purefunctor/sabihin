@@ -17,9 +17,10 @@ let salt_test = () => {
 };
 
 let wrap_unwrap_master_key = () => {
-  let* master_key = Vault.MasterKey.create();
-  let* derived_key =
-    Vault.DerivedKey.create("Maho_Akashi_9_20", master_key.salt_buffer);
+  let client_random = Vault.ClientRandom.create();
+  let* salt_buffer = Vault.Salt.compute_digest(client_random);
+  let* master_key = Vault.MasterKey.create(salt_buffer);
+  let* derived_key = Vault.DerivedKey.create("Maho_Akashi_9_20", salt_buffer);
   let* encrypted_master_key =
     Vault.Operations.wrap_master_key(
       derived_key.derived_encryption_key,
@@ -39,7 +40,9 @@ let wrap_unwrap_master_key = () => {
 
 let wrap_unwrap_protection_private_key = () => {
   open Vault.ProtectionKeyPair;
-  let* master_key = Vault.MasterKey.create();
+  let client_random = Vault.ClientRandom.create();
+  let* salt_buffer = Vault.Salt.compute_digest(client_random);
+  let* master_key = Vault.MasterKey.create(salt_buffer);
   let* protection_key_pair = Vault.ProtectionKeyPair.create();
   let* encrypted_private_key =
     Vault.Operations.wrap_protection_private_key(
@@ -60,7 +63,9 @@ let wrap_unwrap_protection_private_key = () => {
 
 let wrap_unwrap_verification_private_key = () => {
   open Vault.VerificationKeyPair;
-  let* master_key = Vault.MasterKey.create();
+  let client_random = Vault.ClientRandom.create();
+  let* salt_buffer = Vault.Salt.compute_digest(client_random);
+  let* master_key = Vault.MasterKey.create(salt_buffer);
   let* verification_key_pair = Vault.VerificationKeyPair.create();
   let* encrypted_private_key =
     Vault.Operations.wrap_verification_private_key(
@@ -161,9 +166,10 @@ let sign_verify_message = () => {
 };
 
 let base64_utils = () => {
-  let* fresh_master_key = MasterKey.create();
-  let* fresh_derived_key =
-    Vault.DerivedKey.create("password", fresh_master_key.salt_buffer);
+  let client_random = Vault.ClientRandom.create();
+  let* salt_buffer = Vault.Salt.compute_digest(client_random);
+  let* fresh_master_key = Vault.MasterKey.create(salt_buffer);
+  let* fresh_derived_key = Vault.DerivedKey.create("password", salt_buffer);
 
   let* wrapped_master_key =
     Vault.Operations.wrap_master_key(
