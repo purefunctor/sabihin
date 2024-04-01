@@ -1,18 +1,6 @@
-let make_database_url name =
-  let credentials =
-    let ( let* ) = Option.bind in
-    let* username = Sys.getenv_opt "DATABASE_USERNAME" in
-    let* password = Sys.getenv_opt "DATABASE_PASSWORD" in
-    Some (username, password)
-  in
-  match credentials with
-  | Some (username, password) ->
-      Printf.sprintf "postgresql://%s:%s@localhost:5432/%s" username password
-        name
-  | None -> Printf.sprintf "postgresql://localhost:5432/%s" name
-
-let default_db_url = make_database_url ""
-let uri = Uri.of_string (make_database_url "sabihin_models_test")
+let options = Test_toolbox.Database.get_options_from_env ()
+let default_db_uri = Test_toolbox.Database.make_url ~options ""
+let test_db_name = "sabihin_models_test"
 
 let perish action =
   Lwt.bind action (function
@@ -20,18 +8,17 @@ let perish action =
     | Error e -> raise (Caqti_error.Exn e))
 
 let connect_pool () =
-  match Caqti_lwt.connect_pool ~max_size:5 uri with
+  let test_db_uri =
+    Test_toolbox.Database.make_url ~options test_db_name |> Uri.of_string
+  in
+  match Caqti_lwt.connect_pool ~max_size:5 test_db_uri with
   | Ok p -> Lwt.return p
   | Error e -> raise (Caqti_error.Exn e)
 
 let initialize () =
   perish
-  @@ Caqti_lwt.with_connection (Uri.of_string default_db_url) (fun connection ->
-         let open Lwt_result.Infix in
-         [%rapper execute "DROP DATABASE IF EXISTS sabihin_models_test"]
-           () connection
-         >>= fun _ ->
-         [%rapper execute "CREATE DATABASE sabihin_models_test"] () connection)
+  @@ Caqti_lwt.with_connection (Uri.of_string default_db_uri) (fun connection ->
+         Test_toolbox.Database.Q.initialize_database connection test_db_name)
 
 let make_test_case ?(speed : Alcotest.speed_level option) message action pool =
   let speed = Option.value speed ~default:`Quick in

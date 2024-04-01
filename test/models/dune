@@ -6,6 +6,7 @@
   caqti-driver-postgresql
   lwt
   models
-  ppx_rapper_lwt)
+  ppx_rapper_lwt
+  test_toolbox)
  (preprocess
   (pps ppx_rapper)))

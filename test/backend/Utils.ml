@@ -1,43 +1,11 @@
-let make_database_url name =
-  let credentials =
-    let ( let* ) = Option.bind in
-    let* username = Sys.getenv_opt "DATABASE_USERNAME" in
-    let* password = Sys.getenv_opt "DATABASE_PASSWORD" in
-    Some (username, password)
-  in
-  match credentials with
-  | Some (username, password) ->
-      Printf.sprintf "postgresql://%s:%s@localhost:5432/%s" username password
-        name
-  | None -> Printf.sprintf "postgresql://localhost:5432/%s" name
-
-let default_db_url = make_database_url ""
+let options = Test_toolbox.Database.get_options_from_env ()
+let default_db_url = Test_toolbox.Database.make_url ~options ""
 let server_secret = "a_totally_legit_server_secret_you_should_use"
 
-let create_database (db : Caqti_lwt.connection) name =
-  let (module Db) = db in
-  let open Caqti_request.Infix in
-  let open Caqti_type.Std in
-  let inner =
-    (unit ->. unit) ~oneshot:true (Printf.sprintf "CREATE DATABASE %s" name)
-  in
-  Db.exec inner ()
-
-let drop_database (db : Caqti_lwt.connection) name =
-  let (module Db) = db in
-  let open Caqti_request.Infix in
-  let open Caqti_type.Std in
-  let inner =
-    (unit ->. unit) ~oneshot:true
-      (Printf.sprintf "DROP DATABASE IF EXISTS %s" name)
-  in
-  Db.exec inner ()
-
-let with_connection url action =
-  let%lwt result = Caqti_lwt.with_connection (Uri.of_string url) action in
-  match result with
-  | Ok () -> Lwt.return ()
-  | Error e -> Lwt.reraise (Caqti_error.Exn e)
+let perish action =
+  Lwt.bind action (function
+    | Ok o -> Lwt.return o
+    | Error e -> raise (Caqti_error.Exn e))
 
 let make_test_case name ?(speed : Alcotest.speed_level = `Quick) action =
   let database_name =
@@ -45,17 +13,19 @@ let make_test_case name ?(speed : Alcotest.speed_level = `Quick) action =
     |> Cstruct.to_hex_string
     |> Printf.sprintf "sabihin_backend_test_%s"
   in
-  let database_url = make_database_url database_name in
+  let database_url = Test_toolbox.Database.make_url ~options database_name in
+
   let initialize () =
-    with_connection default_db_url (fun connection ->
-        let open Lwt_result.Infix in
-        drop_database connection database_name >>= fun _ ->
-        create_database connection database_name)
+    let open Lwt_result.Infix in
+    Caqti_lwt.with_connection (Uri.of_string default_db_url) (fun connection ->
+        Test_toolbox.Database.Q.initialize_database connection database_name)
+    >>= fun _ ->
+    Caqti_lwt.with_connection (Uri.of_string database_url) (fun connection ->
+        Models.Initialize.initialize connection)
   in
+
   let inner _ () =
-    initialize ();%lwt
-    with_connection database_url (fun connection ->
-        Models.Initialize.initialize connection);%lwt
+    perish @@ initialize ();%lwt
     let stop_promise, stop_resolver = Lwt.wait () in
     let wait_for_server =
       Backend_lib.Server.serve ~stop:stop_promise ~database_url ~server_secret
@@ -65,6 +35,7 @@ let make_test_case name ?(speed : Alcotest.speed_level = `Quick) action =
     Lwt.wakeup_later stop_resolver ();
     wait_for_server
   in
+
   Alcotest_lwt.test_case name speed inner
 
 let get_cookie_headers () =
