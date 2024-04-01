@@ -1,0 +1,15 @@
+(executable
+ (name database)
+ (public_name database)
+ (libraries
+  caqti-lwt
+  caqti-driver-postgresql
+  cmdliner
+  logs
+  logs.cli
+  logs.fmt
+  fmt.tty
+  models
+  test_toolbox)
+ (preprocess
+  (pps lwt_ppx)))
