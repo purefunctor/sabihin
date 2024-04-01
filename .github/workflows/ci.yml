@@ -9,8 +9,8 @@ permissions: read-all
 jobs:
   build_and_test:
     env:
-      DATABASE_USERNAME: purefunctor
-      DATABASE_PASSWORD: purefunctor
+      SABIHIN_DB_USERNAME: purefunctor
+      SABIHIN_DB_PASSWORD: purefunctor
     strategy:
       fail-fast: false
       matrix:
@@ -29,9 +29,9 @@ jobs:
     - name: Install PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v5
       with:
-        username: ${{ env.DATABASE_USERNAME }}
-        password: ${{ env.DATABASE_PASSWORD }}
-        database: ${{ env.DATABASE_USERNAME }}
+        username: ${{ env.SABIHIN_DB_USERNAME }}
+        password: ${{ env.SABIHIN_DB_PASSWORD }}
+        database: ${{ env.SABIHIN_DB_USERNAME }}
         port: 5432
       id: postgres
 
@@ -53,5 +53,3 @@ jobs:
 
     - name: Run Tests
       run: opam exec -- dune runtest
-      env:
-        DATABASE_URL: ${{ steps.postgres.outputs.connection-uri }}
