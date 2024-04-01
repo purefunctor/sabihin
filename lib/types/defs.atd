@@ -1,8 +1,11 @@
-type 'json base_error_response_t =
-  [ ContentType of (string * string)
-  | JSON of 'json
+type 'json base_error_content_t =
+  [ JSON of 'json
   | Raw of string
   ]
+
+type 'json base_error_response_t = {
+  content: 'json base_error_content_t;
+}
 
 type register_payload_t = {
   username: string;

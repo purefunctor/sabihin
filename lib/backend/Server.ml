@@ -12,19 +12,19 @@ let error_template _ _ suggested_response =
       let content_type = Dream.header suggested_response "Content-Type" in
       let%lwt content = Dream.body suggested_response in
 
-      let body =
-        string_of_unparsed_error_response
-        @@
+      let body, content_type =
         match content_type with
-        | Some "application/json" -> `JSON content
-        | Some content_type -> `ContentType (content, content_type)
-        | None -> `Raw content
+        | Some "application/json" ->
+            ( string_of_unparsed_error_response { content = `JSON content },
+              "application/json" )
+        | Some content_type -> (content, content_type)
+        | None ->
+            ( string_of_unparsed_error_response { content = `Raw content },
+              "application/json" )
       in
 
       Dream.set_body suggested_response body;
-
-      if Option.is_none content_type then
-        Dream.set_header suggested_response "Content-Type" "text/plain";
+      Dream.set_header suggested_response "Content-Type" content_type;
 
       Lwt.return suggested_response
 
