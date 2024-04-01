@@ -44,15 +44,32 @@ let make = (~toGenerate: RegisterHooks.Step.toGenerate) => {
 
     if (allowUsername && allowPassword && allowConfirm) {
       let _ = {
-        open RegisterHooks.Step;
-        open Vault.PromiseLet;
+        open Types_js.Defs_bs;
+        open Vault;
+        open PromiseLet;
 
-        // TODO: Insert actual logic here.
-        let publicId = "publicIdExample";
-        let clientRandom = Vault.ClientRandom.create();
+        let clientRandom = ClientRandom.create();
+        let* saltBuffer = Salt.compute_digest(clientRandom);
+        let* derivedKey = DerivedKey.create(password, saltBuffer);
 
-        let* saltBuffer = Vault.Salt.compute_digest(clientRandom);
-        let* derivedKey = Vault.DerivedKey.create(password, saltBuffer);
+        let auth_token = Salt.toHash(derivedKey.hashed_authentication_key);
+        let body =
+          write_register_payload_t({username, auth_token})
+          |> Js.Json.stringify
+          |> Fetch.BodyInit.make;
+
+        let* registerResponse = {
+          let method_ = Fetch.Post;
+          let headers =
+            Fetch.HeadersInit.make({"Content-Type": "application/json"});
+          let requestInit =
+            Fetch.RequestInit.make(~method_, ~headers, ~body, ());
+          Fetch.fetchWithInit("/api/register", requestInit);
+        };
+        let* registerJson = Fetch.Response.json(registerResponse);
+
+        let registerResponse = read_register_response_t(registerJson);
+        let publicId = registerResponse.public_id;
 
         toGenerate({publicId, clientRandom, derivedKey});
         resolve();
