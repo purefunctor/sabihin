@@ -1,17 +1,15 @@
+module Generate = {};
+
 [@react.component]
 let make = () => {
-  let formState = RegisterFormState.use();
-  let generateState = RegisterGenerateState.use();
-
-  let (registerStep, nextRegisterStep) = RegisterFormState.useStep();
-
-  <main className="login-register-content">
-    {switch (registerStep) {
-     | RegisterFormState.Initial =>
-       <RegisterForm formState nextRegisterStep generateState />
-     | RegisterFormState.Generate =>
-       <RegisterGenerate nextRegisterStep generateState />
-     | RegisterFormState.Finish => <RegisterFinish formState generateState />
-     }}
-  </main>;
+  let (step, toGenerate, toSubmit) = RegisterHooks.Step.use();
+  <React.StrictMode>
+    <main className="login-register-content">
+      {switch (step) {
+       | Form => <RegisterForm toGenerate />
+       | Generate(generate) => <RegisterGenerate generate toSubmit />
+       | Submit(submit) => <RegisterSubmit submit />
+       }}
+    </main>
+  </React.StrictMode>;
 };
