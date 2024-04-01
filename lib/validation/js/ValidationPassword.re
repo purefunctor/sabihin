@@ -27,3 +27,13 @@ let validate: (string, string) => ValidationResult.t(t) =
     } else {
       NotValidated;
     };
+
+let allow: ValidationResult.t(t) => bool =
+  fun
+  | Validated(TooShort)
+  | Validated(TooWeak)
+  | Validated(VeryWeak) => false
+  | Validated(Medium)
+  | Validated(ModeratelyStrong)
+  | Validated(VeryStrong) => true
+  | NotValidated => false;

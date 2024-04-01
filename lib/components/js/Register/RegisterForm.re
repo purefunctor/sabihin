@@ -41,10 +41,20 @@ let make = (~formState: RegisterFormState.t, ~nextRegisterStep) => {
       (password, confirmPassword),
     );
 
-  let onSubmit = event => {
-    Form.preventDefault(event);
-    nextRegisterStep();
-  };
+  let onSubmit =
+    React.useCallback3(
+      event => {
+        Form.preventDefault(event);
+        let allowUsername = ValidationUsername.allow(usernameState);
+        let allowPassword = ValidationPassword.allow(passwordState);
+        let allowConfirm = ValidationPasswordConfirm.allow(confirmState);
+        if (allowUsername && allowPassword && allowConfirm) {
+          Js.Console.log("Success!");
+          nextRegisterStep();
+        };
+      },
+      (usernameState, passwordState, confirmState),
+    );
 
   <AuthForm
     register=true

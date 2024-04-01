@@ -31,3 +31,8 @@ let validate: string => ValidationResult.t(t) =
     } else {
       NotValidated;
     };
+
+let allow: ValidationResult.t(t) => bool =
+  fun
+  | Validated(Success) => true
+  | _ => false;
