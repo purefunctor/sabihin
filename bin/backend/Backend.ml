@@ -1,11 +1,7 @@
 let get_database_url () =
-  match Sys.getenv_opt "DATABASE_URL" with
-  | Some url ->
-      Backend_lib.Logging.info (fun log -> log "DATABASE_URL: Development Mode");
-      url
-  | None ->
-      Backend_lib.Logging.warn (fun log -> log "DATABASE_URL: Development Mode");
-      "postgresql://localhost:5432/sabihin"
+  let options = Toolbox.Database.get_options_from_env () in
+  Backend_lib.Logging.info (fun log -> log "SABIHIN_DB_NAME: sabihin");
+  Toolbox.Database.make_url ~options "sabihin"
 
 let get_server_secret () =
   match Sys.getenv_opt "SERVER_SECRET" with
