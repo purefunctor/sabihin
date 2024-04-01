@@ -74,10 +74,6 @@ let already_registered =
     in
 
     let code = response |> Response.status |> Code.code_of_status in
-    let _ =
-      print_endline
-      @@ string_of_register_error_content_t (`JSON `CouldNotRegister)
-    in
 
     let%lwt body = Cohttp_lwt.Body.to_string body in
     let%lwt parsed_by_yojson =
