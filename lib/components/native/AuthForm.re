@@ -30,7 +30,9 @@ module MakeField = (S: FieldState) => {
       | None => "auth-field-input"
       };
     <div className="auth-field-container">
-      <label htmlFor={S.fieldProps.name} className="poppins-regular auth-field-label">
+      <label
+        htmlFor={S.fieldProps.name}
+        className="poppins-regular auth-field-label">
         {React.string(S.fieldProps.label)}
       </label>
       <div className=fieldCss>
