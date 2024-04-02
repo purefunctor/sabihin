@@ -5,8 +5,12 @@ let issue_csrf_cookie inner_handler request =
   | Some _ -> inner_handler request
   | None ->
       let%lwt inner_response = inner_handler request in
-      let fresh_csrf_token = Dream.csrf_token request in
-      Dream.set_cookie ~same_site:(Some `Strict) inner_response request
+      (* max_age makes the client aware of the cookie's expiration date,
+         which means that refreshing can be used to issue a fresh token. *)
+      let valid_for = 60.0 *. 60.0 in
+      let max_age = valid_for in
+      let fresh_csrf_token = Dream.csrf_token ~valid_for request in
+      Dream.set_cookie ~same_site:(Some `Strict) ~max_age inner_response request
         csrf_cookie_name fresh_csrf_token;
       Lwt.return inner_response
 
