@@ -25,6 +25,7 @@ depends: [
   "server-reason-react"
   "yojson" {>= "2.1.2"}
   "ppx_yojson_conv" {>= "v0.16.0"}
+  "dotenv" {>= "0.0.3"}
   "alcotest" {with-test & >= "1.7.0"}
   "alcotest-lwt" {with-test & >= "1.7.0"}
   "cohttp" {with-test & >= "5.3.1"}

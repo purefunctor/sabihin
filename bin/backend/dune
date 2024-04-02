@@ -1,7 +1,7 @@
 (executable
  (name backend)
  (public_name backend)
- (libraries backend_lib dream toolbox))
+ (libraries backend_lib dream dotenv toolbox))
 
 (rule
  (alias backend)

@@ -51,6 +51,8 @@
    (>= "2.1.2"))
   (ppx_yojson_conv
    (>= "v0.16.0"))
+  (dotenv
+   (>= "0.0.3"))
   (alcotest 
    (and :with-test
     (>= 1.7.0)))
