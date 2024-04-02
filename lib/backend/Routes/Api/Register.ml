@@ -3,6 +3,7 @@ open Types_native.Defs_j
 
 let handler request =
   let inner { username; auth_token } =
+    let auth_token = Cipher.double_hmac auth_token in
     let%lwt insert_result =
       Dream.sql request (fun connection ->
           Models.User.insert ~username ~auth_token connection)

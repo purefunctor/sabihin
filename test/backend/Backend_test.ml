@@ -4,6 +4,8 @@ let () =
      to use colors if this isn't called, so it's better overall to keep
      it here. *)
   Dream.initialize_log ();
+  let cipher_secret = Dream.to_base64url (Dream.random 128) in
+  Backend_lib.Cipher.set_current_key cipher_secret;
   Lwt_main.run
   @@ Alcotest_lwt.run "Backend"
        [
