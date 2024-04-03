@@ -117,6 +117,23 @@ module GitPr = {
   };
 };
 
+module GitRepo = {
+  [@react.component]
+  let make = (~size="1rem", ~className="") => {
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M13 21v2.5l-3-2l-3 2V21h-.5A3.5 3.5 0 0 1 3 17.5V5a3 3 0 0 1 3-3h14a1 1 0 0 1 1 1v17a1 1 0 0 1-1 1zm0-2h6v-3H6.5a1.5 1.5 0 0 0 0 3H7v-2h6zm6-5V4H6v10.035c.163-.023.33-.035.5-.035zM7 5h2v2H7zm0 3h2v2H7zm0 3h2v2H7z"
+      />
+    </svg>;
+  };
+};
+
 module OCamlLogo = {
   [@react.component]
   let make = (~size="1rem", ~className="") => {
@@ -134,6 +151,23 @@ module OCamlLogo = {
   };
 };
 
+module Link = {
+  [@react.component]
+  let make = (~size="1rem", ~className="") => {
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 0 0-7.071-7.071L9.878 7.05L8.464 5.636l1.414-1.414a7 7 0 0 1 9.9 9.9zm-2.829 2.828l-1.414 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 0 0 7.07 7.071l1.415-1.414zm-.707-10.607l1.415 1.415l-7.072 7.07l-1.414-1.414z"
+      />
+    </svg>;
+  };
+};
+
 module LockPassword = {
   [@react.component]
   let make = (~size="1rem", ~className="") => {
@@ -146,6 +180,23 @@ module LockPassword = {
       <path
         fill="currentColor"
         d="M18 8h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2V7a6 6 0 1 1 12 0zM5 10v10h14V10zm6 4h2v2h-2zm-4 0h2v2H7zm8 0h2v2h-2zm1-6V7a4 4 0 0 0-8 0v1z"
+      />
+    </svg>;
+  };
+};
+
+module QuillLine = {
+  [@react.component]
+  let make = (~size="1rem", ~className="") => {
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M6.94 14.033a29.79 29.79 0 0 0-.606 1.783c.96-.697 2.101-1.14 3.418-1.304c2.513-.314 4.746-1.973 5.876-4.058l-1.456-1.455l1.413-1.415l1-1.002c.43-.429.915-1.224 1.428-2.367c-5.593.867-9.018 4.291-11.074 9.818M17 8.997l1 1c-1 3-4 6-8 6.5c-2.669.333-4.336 2.167-5.002 5.5H3c1-6 3-20 18-20c-1 2.997-1.998 4.996-2.997 5.997z"
       />
     </svg>;
   };
