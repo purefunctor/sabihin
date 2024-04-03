@@ -10,5 +10,6 @@ let () =
   @@ Alcotest_lwt.run "Backend"
        [
          ( "/api/register",
-           Register_Api_test.[ it_works; it_fails; already_registered ] );
+           Register_Api_test.
+             [ it_works; it_fails; already_registered; creates_session ] );
        ]

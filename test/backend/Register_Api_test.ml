@@ -94,3 +94,34 @@ let already_registered =
     Lwt.return ()
   in
   make_test_case "already registered" inner
+
+let creates_session =
+  let inner () =
+    let%lwt cookie_headers = get_cookie_headers () in
+    let original_session_cookie =
+      Cookie.Cookie_hdr.extract cookie_headers |> List.assoc "dream.session"
+    in
+
+    let%lwt response, body =
+      let json =
+        string_of_register_payload_t
+          { username = "purefunctor"; auth_token = double_hmac "auth_token" }
+      in
+      post_json cookie_headers json "http://localhost:8080/api/register"
+    in
+    Cohttp_lwt.Body.drain_body body;%lwt
+
+    let fresh_session_cookie =
+      Response.headers response |> Cookie.Set_cookie_hdr.extract
+      |> List.assoc "dream.session" |> Cookie.Set_cookie_hdr.value
+    in
+
+    let _ =
+      Alcotest.(check bool)
+        "fresh session cookie is sent" true
+        (not @@ String.equal original_session_cookie fresh_session_cookie)
+    in
+
+    Lwt.return ()
+  in
+  make_test_case "creates session" inner

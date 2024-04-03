@@ -9,8 +9,11 @@ let handler request =
           Models.User.insert ~username ~auth_token connection)
     in
     match insert_result with
-    | Ok (_, public_id) ->
+    | Ok (id, public_id) ->
+        let id = Printf.sprintf "%li" id in
         Dream.info (fun log -> log "Created User: %s" public_id);
+        Dream.set_session_field request "id" id;%lwt
+        Dream.set_session_field request "public_id" public_id;%lwt
         Dream.json @@ string_of_register_response_t { public_id }
     | Error e ->
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
