@@ -4,7 +4,7 @@
  (libraries backend_lib dream dotenv toolbox))
 
 (rule
- (alias backend)
+ (alias backend_dev)
  (deps ./backend.exe)
  (action
   (bash "date > %{project_root}/../last_built.txt")))

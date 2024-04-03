@@ -10,6 +10,8 @@ module Page = {
         />
         <title> {React.string("Sabihin")} </title>
         <script type_="module" src="/static/index.js" />
+        {Dev.live_reload^
+           ? <script defer=true src="/assets/livereload.js" /> : React.null}
         <link rel="stylesheet" href="/assets/index.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

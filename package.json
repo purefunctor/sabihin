@@ -7,9 +7,9 @@
     "dev": "concurrently \"pnpm:dev:dune\" \"pnpm:dev:entry\" \"pnpm:dev:server\"",
     "build:dune": "dune build @backend @frontend",
     "build:entry": "esbuild --bundle --outfile=dist/index.js _build/default/bin/frontend/output/bin/frontend/Main.js",
-    "dev:dune": "dune build -w @backend @frontend",
+    "dev:dune": "dune build -w @backend_dev @frontend_dev",
     "dev:entry": "esbuild --watch --bundle --outfile=dist/index.js _build/default/bin/frontend/output/bin/frontend/Main.js",
-    "dev:server": "nodemon -w _build/last_built.txt --exec \"_build/default/bin/backend/backend.exe\""
+    "dev:server": "nodemon -w _build/last_built.txt -w ./assets/index.css --exec \"_build/default/bin/backend/backend.exe\""
   },
   "keywords": [
     "fullstack",
