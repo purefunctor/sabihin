@@ -7,3 +7,8 @@ let with_json_body request parser handler =
       | Some json -> handler json
       | None -> Dream.respond ~status:`Bad_Request "Invalid request body.")
   | _ -> Dream.respond ~status:`Bad_Request "Invalid content type."
+
+let with_session request handler =
+  match Session.from_request request with
+  | Some session -> handler session
+  | None -> Dream.respond ~status:`Forbidden "Invalid credentials."

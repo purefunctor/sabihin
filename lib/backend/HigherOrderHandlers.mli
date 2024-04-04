@@ -23,3 +23,11 @@ val with_json_body :
     
     Responds with [400 Bad Request] if an invalid [Content-Type] is given, or 
     if the given [parser] fails. *)
+
+val with_session :
+  Dream.request -> (Session.t -> Dream.response Lwt.t) -> Dream.response Lwt.t
+(** [with_session request handler] parses the fields from the [request]'s
+    session cookie after which it's passed to the [handler].
+    
+    Responds with [403 Forbidden] if the session cookie cannot be parsed,
+    which usually means that it was not set or it was set incorrectly. *)
