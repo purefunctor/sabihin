@@ -11,16 +11,16 @@ module PublicKeys = struct
     record
       [
         field "user_id" (fun k -> k.user_id) int32;
-        field "protection_key" (fun k -> k.protection_key) bytes;
-        field "verification_key" (fun k -> k.verification_key) bytes;
+        field "protection_key" (fun k -> k.exported_protection_key) bytes;
+        field "verification_key" (fun k -> k.exported_verification_key) bytes;
       ]
 
   let equal x y =
     List.for_all Fun.id
       [
         Int32.equal x.user_id y.user_id;
-        Bytes.equal x.protection_key y.protection_key;
-        Bytes.equal x.verification_key y.verification_key;
+        Bytes.equal x.exported_protection_key y.exported_protection_key;
+        Bytes.equal x.exported_verification_key y.exported_verification_key;
       ]
 end
 
@@ -42,9 +42,10 @@ let insert =
       User.insert ~username ~auth_token db
     in
     let* _ =
-      let protection_key = Bytes.make 128 ' ' in
-      let verification_key = Bytes.make 128 ' ' in
-      PublicKeys.insert ~user_id ~protection_key ~verification_key db
+      let exported_protection_key = Bytes.make 128 ' ' in
+      let exported_verification_key = Bytes.make 128 ' ' in
+      PublicKeys.insert ~user_id ~exported_protection_key
+        ~exported_verification_key db
     in
     Lwt.return_ok ()
   in
@@ -59,11 +60,15 @@ let insert_existing =
       let auth_token = String.make 128 ' ' in
       User.insert ~username ~auth_token db
     in
-    let protection_key = Bytes.make 128 ' ' in
-    let verification_key = Bytes.make 128 ' ' in
-    let* _ = PublicKeys.insert ~user_id ~protection_key ~verification_key db in
+    let exported_protection_key = Bytes.make 128 ' ' in
+    let exported_verification_key = Bytes.make 128 ' ' in
+    let* _ =
+      PublicKeys.insert ~user_id ~exported_protection_key
+        ~exported_verification_key db
+    in
     let errorful =
-      PublicKeys.insert ~user_id ~protection_key ~verification_key db
+      PublicKeys.insert ~user_id ~exported_protection_key
+        ~exported_verification_key db
     in
     Lwt.bind errorful (function
       | Ok _ -> Alcotest.fail "Expected an error."
@@ -80,11 +85,16 @@ let get_by_user_id =
       let auth_token = String.make 128 ' ' in
       User.insert ~username ~auth_token db
     in
-    let protection_key = Bytes.make 128 ' ' in
-    let verification_key = Bytes.make 128 ' ' in
-    let* _ = PublicKeys.insert ~user_id ~protection_key ~verification_key db in
+    let exported_protection_key = Bytes.make 128 ' ' in
+    let exported_verification_key = Bytes.make 128 ' ' in
+    let* _ =
+      PublicKeys.insert ~user_id ~exported_protection_key
+        ~exported_verification_key db
+    in
     let* actual = PublicKeys.get_by_user_id ~user_id db in
-    let expected = PublicKeys.{ user_id; protection_key; verification_key } in
+    let expected =
+      PublicKeys.{ user_id; exported_protection_key; exported_verification_key }
+    in
     let _ =
       Alcotest.(check @@ option (module PublicKeys))
         "public keys are equivalent" actual (Some expected)
@@ -102,11 +112,16 @@ let get_by_username =
       let auth_token = String.make 128 ' ' in
       User.insert ~username ~auth_token db
     in
-    let protection_key = Bytes.make 128 ' ' in
-    let verification_key = Bytes.make 128 ' ' in
-    let* _ = PublicKeys.insert ~user_id ~protection_key ~verification_key db in
+    let exported_protection_key = Bytes.make 128 ' ' in
+    let exported_verification_key = Bytes.make 128 ' ' in
+    let* _ =
+      PublicKeys.insert ~user_id ~exported_protection_key
+        ~exported_verification_key db
+    in
     let* actual = PublicKeys.get_by_username ~username db in
-    let expected = PublicKeys.{ user_id; protection_key; verification_key } in
+    let expected =
+      PublicKeys.{ user_id; exported_protection_key; exported_verification_key }
+    in
     let _ =
       Alcotest.(check @@ option (module PublicKeys))
         "public keys are equivalent" actual (Some expected)
@@ -124,11 +139,16 @@ let get_by_public_id =
       let auth_token = String.make 128 ' ' in
       User.insert ~username ~auth_token db
     in
-    let protection_key = Bytes.make 128 ' ' in
-    let verification_key = Bytes.make 128 ' ' in
-    let* _ = PublicKeys.insert ~user_id ~protection_key ~verification_key db in
+    let exported_protection_key = Bytes.make 128 ' ' in
+    let exported_verification_key = Bytes.make 128 ' ' in
+    let* _ =
+      PublicKeys.insert ~user_id ~exported_protection_key
+        ~exported_verification_key db
+    in
     let* actual = PublicKeys.get_by_public_id ~public_id db in
-    let expected = PublicKeys.{ user_id; protection_key; verification_key } in
+    let expected =
+      PublicKeys.{ user_id; exported_protection_key; exported_verification_key }
+    in
     let _ =
       Alcotest.(check @@ option (module PublicKeys))
         "public keys are equivalent" actual (Some expected)

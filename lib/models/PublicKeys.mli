@@ -2,10 +2,10 @@
 
 type t = {
   user_id : int32;  (** References a {!User.t.id}. *)
-  protection_key : bytes;
+  exported_protection_key : bytes;
       (** The public key used to encrypt the "[EphemeralKey]" that's passed
           alongside a message. *)
-  verification_key : bytes;
+  exported_verification_key : bytes;
       (** The public key used to verify the signature that's passed alongside
           a message. *)
 }
@@ -36,8 +36,8 @@ val get_by_public_id :
 
 val insert :
   user_id:int32 ->
-  protection_key:bytes ->
-  verification_key:bytes ->
+  exported_protection_key:bytes ->
+  exported_verification_key:bytes ->
   (module Rapper_helper.CONNECTION) ->
   (unit, [> Caqti_error.call_or_retrieve ]) result Lwt.t
 (** [insert ... db] inserts a new row in the [public_keys] table. *)

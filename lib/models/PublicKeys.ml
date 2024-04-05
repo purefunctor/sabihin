@@ -1,4 +1,8 @@
-type t = { user_id : int32; protection_key : bytes; verification_key : bytes }
+type t = {
+  user_id : int32;
+  exported_protection_key : bytes;
+  exported_verification_key : bytes;
+}
 
 let create_table =
   [%rapper
@@ -6,8 +10,8 @@ let create_table =
       {sql|
 CREATE TABLE IF NOT EXISTS public_keys (
   user_id INT PRIMARY KEY REFERENCES users(id),
-  protection_key BYTEA NOT NULL,
-  verification_key BYTEA NOT NULL
+  exported_protection_key BYTEA NOT NULL,
+  exported_verification_key BYTEA NOT NULL
 );
       |sql}]
     ()
@@ -19,8 +23,8 @@ let get_by_user_id =
       {sql|
 SELECT
   @int32{user_id},
-  @ByteOctets{protection_key},
-  @ByteOctets{verification_key}
+  @ByteOctets{exported_protection_key},
+  @ByteOctets{exported_verification_key}
 FROM
   public_keys
 WHERE
@@ -35,8 +39,8 @@ let get_by_username =
       {sql|
 SELECT
   @int32{user_id},
-  @ByteOctets{protection_key},
-  @ByteOctets{verification_key}
+  @ByteOctets{exported_protection_key},
+  @ByteOctets{exported_verification_key}
 FROM
   public_keys
 JOIN
@@ -55,8 +59,8 @@ let get_by_public_id =
       {sql|
 SELECT
   @int32{user_id},
-  @ByteOctets{protection_key},
-  @ByteOctets{verification_key}
+  @ByteOctets{exported_protection_key},
+  @ByteOctets{exported_verification_key}
 FROM
   public_keys
 JOIN
@@ -75,12 +79,12 @@ let insert =
       {sql|
 INSERT INTO public_keys (
   user_id,
-  protection_key,
-  verification_key
+  exported_protection_key,
+  exported_verification_key
 )
 VALUES(
   %int32{user_id},
-  %ByteOctets{protection_key},
-  %ByteOctets{verification_key}
+  %ByteOctets{exported_protection_key},
+  %ByteOctets{exported_verification_key}
 );
       |sql}]
