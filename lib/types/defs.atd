@@ -13,6 +13,7 @@ type register_payload_t = {
 }
 
 type register_keys_payload_t = {
+  client_random_value: string;
   encrypted_master_key: string;
   master_key_iv: string;
   encrypted_protection_key: string;

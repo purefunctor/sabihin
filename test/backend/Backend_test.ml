@@ -11,5 +11,11 @@ let () =
        [
          ( "/api/register",
            Register_Api_test.
-             [ it_works; it_fails; already_registered; creates_session ] );
+             [
+               it_works;
+               it_fails;
+               already_registered;
+               creates_session;
+               register_secrets;
+             ] );
        ]

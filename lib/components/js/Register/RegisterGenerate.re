@@ -122,6 +122,9 @@ let useGenerateKeys =
     open PromiseLet;
 
     let _ = {
+      let client_random_value =
+        generate.clientRandom |> Base64Utils.uint8array_to_base64;
+
       let* salt_buffer = Salt.compute_digest(generate.clientRandom);
       let fresh_derived_key = generate.derivedKey;
 
@@ -196,6 +199,7 @@ let useGenerateKeys =
 
       setKeysPayload(_ =>
         {
+          client_random_value,
           encrypted_master_key,
           master_key_iv,
           encrypted_protection_key,

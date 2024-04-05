@@ -20,6 +20,7 @@ module Generate = {
   let use = () => {
     React.useState(() =>
       {
+        client_random_value: "",
         encrypted_master_key: "",
         master_key_iv: "",
         encrypted_protection_key: "",
