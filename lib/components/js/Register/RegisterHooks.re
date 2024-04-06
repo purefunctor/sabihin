@@ -15,24 +15,6 @@ module Form = {
 };
 
 module Generate = {
-  type t = register_keys_payload_t;
-
-  let use = () => {
-    React.useState(() =>
-      {
-        client_random_value: "",
-        encrypted_master_key: "",
-        master_key_iv: "",
-        encrypted_protection_key: "",
-        exported_protection_key: "",
-        protection_key_iv: "",
-        encrypted_verification_key: "",
-        exported_verification_key: "",
-        verification_key_iv: "",
-      }
-    );
-  };
-
   type keys_t =
     | Master
     | Protection
@@ -52,7 +34,7 @@ module Generate = {
     | Keys(keys_t)
     | Finished;
 
-  let useStep = () => {
+  let use = () => {
     React.useReducer(
       (step: step_t, ()) => {
         switch (step) {

@@ -113,13 +113,13 @@ let useGenerateKeys =
       toSubmit: RegisterHooks.Step.toSubmit,
     ) => {
   let publicId = generate.publicId;
-  let (keysPayload, setKeysPayload) = RegisterHooks.Generate.use();
-  let (generateStep, nextGenerateStep) = RegisterHooks.Generate.useStep();
+  let (generateStep, nextGenerateStep) = RegisterHooks.Generate.use();
   let isGenerating = React.useRef(false);
 
   let generateInner = () => {
     open Vault;
     open PromiseLet;
+    open Types_js.Defs_t;
 
     let _ = {
       let client_random_value =
@@ -197,19 +197,17 @@ let useGenerateKeys =
       };
       nextGenerateStep();
 
-      setKeysPayload(_ =>
-        {
-          client_random_value,
-          encrypted_master_key,
-          master_key_iv,
-          encrypted_protection_key,
-          exported_protection_key,
-          protection_key_iv,
-          encrypted_verification_key,
-          exported_verification_key,
-          verification_key_iv,
-        }
-      );
+      let keysPayload = {
+        client_random_value,
+        encrypted_master_key,
+        master_key_iv,
+        encrypted_protection_key,
+        exported_protection_key,
+        protection_key_iv,
+        encrypted_verification_key,
+        exported_verification_key,
+        verification_key_iv,
+      };
 
       let _ =
         Js.Global.setTimeout(
