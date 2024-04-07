@@ -1,0 +1,3 @@
+(test
+ (name subscribers_native_test)
+ (libraries alcotest subscribers_native))

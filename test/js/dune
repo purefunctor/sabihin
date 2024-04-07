@@ -1,3 +1,5 @@
+(dirs :standard __tests__)
+
 (melange.emit
  (target output)
  (alias sabihin_tests_emit)

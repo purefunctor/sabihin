@@ -53,6 +53,9 @@
    (>= "v0.16.0"))
   (dotenv
    (>= "0.0.3"))
+  (melange-jest
+   (and :with-test
+    (>= "0.1.1")))
   (alcotest 
    (and :with-test
     (>= 1.7.0)))

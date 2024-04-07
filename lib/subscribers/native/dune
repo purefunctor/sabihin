@@ -1,0 +1,3 @@
+(library
+ (name subscribers_native)
+ (public_name sabihin.subscribers_native))

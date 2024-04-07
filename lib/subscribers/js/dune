@@ -1,0 +1,5 @@
+(library
+ (name subscribers_js)
+ (modes melange)
+ (preprocess
+  (pps melange.ppx)))
