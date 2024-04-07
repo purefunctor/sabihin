@@ -8,4 +8,5 @@ let route =
       Dream.post "/register" Register.handler;
       Dream.post "/secrets" Secrets.handler;
       Dream.post "/login" Login.handler;
+      Dream.post "/logout" Logout.handler;
     ]
