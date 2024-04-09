@@ -1,6 +1,6 @@
 [@react.component]
 let make = () => {
-  let (session, _) = Session.useSession();
+  let session = Session.useSession();
   <nav className="header-nav josefin-sans-regular">
     {switch (session) {
      | Loading => <HeaderNavLoading />

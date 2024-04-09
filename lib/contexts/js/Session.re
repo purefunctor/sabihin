@@ -55,15 +55,8 @@ module API = {
   };
 };
 
-let extractStore = store => {
-  switch (store) {
-  | Some(store) => store
-  | None => failwith("Missing SessionStore.Provider!")
-  };
-};
-
 let useSession = () => {
-  let store = React.useContext(SessionStore.context) |> extractStore;
+  let store = SessionStore.useContext();
 
   let (session, setSession) = React.useState(() => Loading);
 
@@ -85,20 +78,19 @@ let useSession = () => {
     );
   });
 
-  let register =
-    React.useCallback1(
-      payload => {
-        let ( let* ) = (f, x) => Js.Promise.then_(x, f);
-        let* registerResult = API.register(payload);
-        switch (registerResult) {
-        | Ok(registerResult) =>
-          store.set(LoggedIn({publicId: registerResult.public_id}))
-        | Error(_) => ()
-        };
-        Js.Promise.resolve(registerResult);
-      },
-      [||],
-    );
+  session;
+};
 
-  (session, register);
+let useRegister = () => {
+  let store = SessionStore.useContext();
+  React.useCallback0(payload => {
+    let ( let* ) = (f, x) => Js.Promise.then_(x, f);
+    let* registerResult = API.register(payload);
+    switch (registerResult) {
+    | Ok(registerResult) =>
+      store.set(LoggedIn({publicId: registerResult.public_id}))
+    | Error(_) => ()
+    };
+    Js.Promise.resolve(registerResult);
+  });
 };

@@ -3,7 +3,7 @@ open React.Event;
 [@react.component]
 let make = (~toGenerate: RegisterHooks.Step.toGenerate) => {
   let (form, setForm) = RegisterHooks.Form.use();
-  let (_, register) = Session.useSession();
+  let register = Session.useRegister();
 
   let username = form.username;
   let password = form.password;

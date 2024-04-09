@@ -41,6 +41,17 @@ let useStore = () => {
 
 let context: React.Context.t(option(store)) = React.createContext(None);
 
+let extractStore = store => {
+  switch (store) {
+  | Some(store) => store
+  | None => failwith("Missing SessionStore.Provider!")
+  };
+};
+
+let useContext = () => {
+  React.useContext(context) |> extractStore;
+};
+
 module Provider = {
   module Inner = {
     include React.Context;
