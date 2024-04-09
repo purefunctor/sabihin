@@ -1,0 +1,11 @@
+(library
+ (name contexts_js)
+ (modes melange)
+ (wrapped false)
+ (libraries reason-react subscribers_js)
+ (preprocess
+  (pps melange.ppx reason-react-ppx)))
+
+(copy_files#
+ (mode fallback)
+ (files "../native/**.{re,rei}"))
