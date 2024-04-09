@@ -220,16 +220,13 @@ let useGenerateKeys =
     ();
   };
 
-  React.useEffect1(
-    () => {
-      if (!isGenerating.current) {
-        isGenerating.current = true;
-        generateInner();
-      };
-      None;
-    },
-    [||],
-  );
+  React.useEffect0(() => {
+    if (!isGenerating.current) {
+      isGenerating.current = true;
+      generateInner();
+    };
+    None;
+  });
 
   generateStep;
 };

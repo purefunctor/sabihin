@@ -84,16 +84,13 @@ module State = {
       ();
     };
 
-    React.useEffect1(
-      () => {
-        if (!isSubmitting.current) {
-          isSubmitting.current = true;
-          submitInner();
-        };
-        None;
-      },
-      [||],
-    );
+    React.useEffect0(() => {
+      if (!isSubmitting.current) {
+        isSubmitting.current = true;
+        submitInner();
+      };
+      None;
+    });
 
     isFinished;
   };
