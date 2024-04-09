@@ -2,7 +2,7 @@
  (name contexts_js)
  (modes melange)
  (wrapped false)
- (libraries reason-react subscribers_js)
+ (libraries melange-fetch reason-react subscribers_js types_js)
  (preprocess
   (pps melange.ppx reason-react-ppx)))
 

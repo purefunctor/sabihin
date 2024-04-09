@@ -3,6 +3,7 @@ open React.Event;
 [@react.component]
 let make = (~toGenerate: RegisterHooks.Step.toGenerate) => {
   let (form, setForm) = RegisterHooks.Form.use();
+  let (_, register) = Session.useSession();
 
   let username = form.username;
   let password = form.password;
@@ -53,25 +54,17 @@ let make = (~toGenerate: RegisterHooks.Step.toGenerate) => {
         let* derivedKey = DerivedKey.create(password, saltBuffer);
 
         let auth_token = Salt.toHash(derivedKey.hashed_authentication_key);
-        let body =
-          write_register_payload_t({username, auth_token})
-          |> Js.Json.stringify
-          |> Fetch.BodyInit.make;
+        let* registerResult = register({username, auth_token});
 
-        let* registerResponse = {
-          let method_ = Fetch.Post;
-          let headers =
-            Fetch.HeadersInit.make({"Content-Type": "application/json"});
-          let requestInit =
-            Fetch.RequestInit.make(~method_, ~headers, ~body, ());
-          Fetch.fetchWithInit("/api/register", requestInit);
+        switch (registerResult) {
+        | Ok(registerResult) =>
+          let publicId = registerResult.public_id;
+          toGenerate({publicId, clientRandom, derivedKey});
+        | Error(_) =>
+          // TODO: Render errors as part of the UI.
+          ()
         };
-        let* registerJson = Fetch.Response.json(registerResponse);
 
-        let registerResponse = read_register_response_t(registerJson);
-        let publicId = registerResponse.public_id;
-
-        toGenerate({publicId, clientRandom, derivedKey});
         resolve();
       };
       ();
