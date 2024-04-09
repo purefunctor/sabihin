@@ -1,5 +1,5 @@
 open SessionTypes;
 
 let useSession = () => {
-  React.useState(() => Guest);
+  React.useState(() => Loading);
 };

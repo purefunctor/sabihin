@@ -1,3 +1,4 @@
+open SessionTypes;
 open Types_js.Defs_bs;
 
 module API = {
@@ -64,12 +65,25 @@ let extractStore = store => {
 let useSession = () => {
   let store = React.useContext(SessionStore.context) |> extractStore;
 
-  let (session, setSession) = React.useState(() => store.get());
+  let (session, setSession) = React.useState(() => Loading);
 
-  React.useEffect1(
-    () => {Some(store.subscribe(() => setSession(_ => store.get())))},
-    [||],
-  );
+  React.useEffect0(() => {
+    let unsubscribe = store.subscribe(() => setSession(_ => store.get()));
+    // NOTE: Artificial latency makes the transition less jarring. In the
+    // future, this effect may involve performing an API call which would
+    // induce real latency.
+    let timeoutId =
+      Js.Global.setTimeout(
+        ~f=() => store.set(SessionStore.readSession()),
+        500,
+      );
+    Some(
+      () => {
+        unsubscribe();
+        Js.Global.clearTimeout(timeoutId);
+      },
+    );
+  });
 
   let register =
     React.useCallback1(

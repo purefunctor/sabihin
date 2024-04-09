@@ -1,6 +1,7 @@
 type loggedIn = {publicId: string};
 
 type session =
+  | Loading
   | Guest
   | LoggedIn(loggedIn);
 

@@ -14,6 +14,7 @@ let readSession = () => {
 
 let writeSession = kind => {
   switch (kind) {
+  | Loading => ()
   | Guest => ()
   | LoggedIn({publicId}) =>
     Dom.Storage.(localStorage |> setItem("publicId", publicId))

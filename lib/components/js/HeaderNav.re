@@ -1,16 +1,11 @@
-type state =
-  | Initial
-  | Guest
-  | LoggedIn;
-
 [@react.component]
 let make = () => {
-  let (state, _) = React.useState(() => Initial);
+  let (session, _) = Session.useSession();
   <nav className="header-nav josefin-sans-regular">
-    {switch (state) {
-     | Initial => <HeaderNavInitial />
+    {switch (session) {
+     | Loading => <HeaderNavLoading />
      | Guest => <HeaderNavGuest />
-     | LoggedIn => <HeaderNavLoggedIn />
+     | LoggedIn(_) => <HeaderNavLoggedIn />
      }}
   </nav>;
 };
