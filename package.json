@@ -9,7 +9,7 @@
     "build:entry": "esbuild --bundle --outfile=dist/index.js _build/default/bin/frontend/output/bin/frontend/Main.js",
     "dev:dune": "dune build -w @backend_dev @frontend_dev",
     "dev:entry": "esbuild --watch --bundle --outfile=dist/index.js _build/default/bin/frontend/output/bin/frontend/Main.js",
-    "dev:server": "nodemon -w _build/last_built.txt -w ./assets/index.css --exec \"_build/default/bin/backend/backend.exe\"",
+    "dev:server": "nodemon -w _build/backend_last_built.txt -w _build/frontend_last_built.txt -w ./assets/index.css --exec \"_build/default/bin/backend/backend.exe\"",
     "test:ocaml": "dune runtest",
     "test:js": "jest",
     "test": "pnpm test:ocaml && pnpm test:js"

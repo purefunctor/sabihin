@@ -11,4 +11,4 @@
  (deps
   (alias frontend))
  (action
-  (bash "date > %{project_root}/../last_built.txt")))
+  (bash "date > %{project_root}/../frontend_last_built.txt")))
