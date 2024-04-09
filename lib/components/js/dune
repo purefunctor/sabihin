@@ -8,6 +8,7 @@
   reason-react
   melange.belt
   melange-fetch
+  contexts_js
   types_js
   validation_js
   vault_js)

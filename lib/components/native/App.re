@@ -22,5 +22,7 @@ module Content = {
 
 [@react.component]
 let make = (~serverUrl: option(ReasonReactRouter.url)=?) => {
-  <Layout> <Content serverUrl /> </Layout>;
+  <SessionStore.Provider>
+    <Layout> <Content serverUrl /> </Layout>
+  </SessionStore.Provider>;
 };

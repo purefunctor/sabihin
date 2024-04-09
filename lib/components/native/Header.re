@@ -6,13 +6,6 @@ let make = () => {
       <span className="color-primary"> {React.string(".")} </span>
       <span> {React.string("ph")} </span>
     </Link>
-    <nav className="header-nav josefin-sans-regular">
-      <Link href="/login" className="header-button header-login">
-        {React.string("Login")}
-      </Link>
-      <Link href="/register" className="header-button header-register">
-        {React.string("Register")}
-      </Link>
-    </nav>
+    <HeaderNav />
   </header>;
 };
