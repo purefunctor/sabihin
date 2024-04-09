@@ -286,6 +286,7 @@ a {
     padding-top: 2rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid var(--neutral);
+    min-height: 4rem;
 }
 
 .header-title {
