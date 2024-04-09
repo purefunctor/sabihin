@@ -2,9 +2,3 @@
  (name backend)
  (public_name backend)
  (libraries backend_lib dream dotenv toolbox))
-
-(rule
- (alias backend_dev)
- (deps ./backend.exe)
- (action
-  (bash "date > %{project_root}/../backend_last_built.txt")))

@@ -1,0 +1,7 @@
+(rule
+ (alias live_reload_build)
+ (deps
+  ./backend/backend.exe
+  (alias frontend/frontend))
+ (action
+  (bash "date > %{project_root}/../last_built.txt")))

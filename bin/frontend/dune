@@ -5,10 +5,3 @@
  (preprocess
   (pps melange.ppx reason-react-ppx))
  (module_systems es6))
-
-(rule
- (alias frontend_dev)
- (deps
-  (alias frontend))
- (action
-  (bash "date > %{project_root}/../frontend_last_built.txt")))
