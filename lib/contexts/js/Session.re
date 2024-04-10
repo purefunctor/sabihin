@@ -58,13 +58,15 @@ module API = {
 let useSession = () => {
   let store = SessionStore.useContext();
 
-  let (session, setSession) = React.useState(() => Loading);
+  // The default session state is always the guest.
+  let (session, setSession) = React.useState(() => Guest);
 
   React.useEffect0(() => {
     let unsubscribe = store.subscribe(() => setSession(_ => store.get()));
-    // NOTE: Artificial latency makes the transition less jarring. In the
-    // future, this effect may involve performing an API call which would
-    // induce real latency.
+    // We introduce artificial latency here by setting the local session
+    // state to Loading, then reading from the SessionStore after 500ms.
+    // In the future, readSession may involve calling into the network.
+    setSession(_ => Loading);
     let timeoutId =
       Js.Global.setTimeout(
         ~f=() => store.set(SessionStore.readSession()),
@@ -85,11 +87,13 @@ let useRegister = () => {
   let store = SessionStore.useContext();
   React.useCallback0(payload => {
     let ( let* ) = (f, x) => Js.Promise.then_(x, f);
+    let original = store.get();
+    store.set(Loading);
     let* registerResult = API.register(payload);
     switch (registerResult) {
     | Ok(registerResult) =>
       store.set(LoggedIn({publicId: registerResult.public_id}))
-    | Error(_) => ()
+    | Error(_) => store.set(original)
     };
     Js.Promise.resolve(registerResult);
   });
