@@ -31,7 +31,8 @@ module Template = {
         <title> {React.string("Sabihin")} </title>
         <script type_="module" src="http://localhost:5173/@vite/client" />
         <script type_="module" src="http://localhost:5173/index.js" />
-        <link rel="stylesheet" href="assets/global.css" />
+        <link rel="stylesheet" href="/assets/fonts.css" />
+        <link rel="stylesheet" href="/assets/global.css" />
         styleTag
       </head>
       <body> <div id="root"> children </div> </body>
