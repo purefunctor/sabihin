@@ -1,0 +1,11 @@
+(library
+ (name frontend_lib_js)
+ (modes melange)
+ (wrapped false)
+ (libraries reason-react)
+ (preprocess
+  (pps melange.ppx reason-react-ppx)))
+
+(copy_files#
+ (mode fallback)
+ (files "../universal/**.{re,rei}"))
