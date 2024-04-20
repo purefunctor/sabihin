@@ -21,11 +21,12 @@ module Template = {
 
 let toString = path => {
   let serverUrl: ReasonReactRouter.url = {path, hash: "", search: ""};
-  ReactDOM.renderToString(
-    <Template>
-      <ServerUrl.Provider value={Some(serverUrl)}>
-        <App />
-      </ServerUrl.Provider>
-    </Template>,
-  );
+  "<!doctype html>"
+  ++ ReactDOM.renderToString(
+       <Template>
+         <ServerUrl.Provider value={Some(serverUrl)}>
+           <App />
+         </ServerUrl.Provider>
+       </Template>,
+     );
 };
