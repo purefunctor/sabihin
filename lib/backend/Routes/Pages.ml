@@ -4,4 +4,9 @@ let get route path =
 let route =
   Dream.scope "/"
     [ Middleware.issue_csrf_cookie ]
-    [ get "/" []; get "/login" [ "login" ]; get "/register" [ "register" ] ]
+    [
+      get "/" [];
+      get "/login" [ "login" ];
+      get "/register" [ "register" ];
+      get "/profile" [ "profile" ];
+    ]

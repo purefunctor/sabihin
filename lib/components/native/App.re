@@ -14,6 +14,7 @@ module Content = {
     | [] => <Index />
     | ["login"] => <Login />
     | ["register"] => <Register />
+    | ["profile"] => <Profile />
     | ["not-found"]
     | _ => <NotFound />
     };
