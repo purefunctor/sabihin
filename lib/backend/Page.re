@@ -29,10 +29,9 @@ module Template = {
           content="width=device-width, initial-scale=1.0"
         />
         <title> {React.string("Sabihin")} </title>
-        <script type_="module" src="http://localhost:5173/@vite/client" />
-        <script type_="module" src="http://localhost:5173/index.js" />
-        <link rel="stylesheet" href="/assets/fonts.css" />
-        <link rel="stylesheet" href="/assets/global.css" />
+        {Vite.make_script_tags()}
+        <link rel="stylesheet" href="/static/fonts.css" />
+        <link rel="stylesheet" href="/static/global.css" />
         styleTag
       </head>
       <body> <div id="root"> children </div> </body>

@@ -36,12 +36,7 @@ let get_server_handler database_url server_secret () =
   @@ Dream.logger @@ Dream.cookie_sessions
   @@ Dream.sql_pool database_url
   @@ Dream.router
-       [
-         Routes.Static.route;
-         Routes.Pages.route;
-         Routes.Api.route;
-         Routes.LiveReload.route ();
-       ]
+       [ Routes.Static.route (); Routes.Pages.route; Routes.Api.route ]
 
 let run ~database_url ~server_secret () =
   Dream.run ~error_handler ~interface

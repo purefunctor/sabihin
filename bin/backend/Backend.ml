@@ -30,13 +30,15 @@ let get_cipher_secret () =
           log "SABIHIN_CIPHER_SECRET: Development Mode");
       Dream.to_base64url (Dream.random 128)
 
-let get_live_reload () =
-  let has_live_reload =
-    Sys.getenv_opt "SABIHIN_LIVE_RELOAD" |> Option.is_some
-  in
-  if has_live_reload then
-    Backend_lib.Logging.info (fun log -> log "SABIHIN_LIVE_RELOAD: Enabled.");
-  has_live_reload
+let get_vite_dev () =
+  let has_vite_dev = Sys.getenv_opt "SABIHIN_VITE_DEV" |> Option.is_some in
+  if has_vite_dev then
+    Backend_lib.Logging.warn (fun log ->
+        log "SABIHIN_VITE_DEV: Development Mode")
+  else
+    Backend_lib.Logging.info (fun log ->
+        log "SABIHIN_VITE_DEV: Production Mode");
+  has_vite_dev
 
 let () =
   Dotenv.export ();
@@ -45,8 +47,8 @@ let () =
   let database_url = get_database_url () in
   let server_secret = get_server_secret () in
   let cipher_secret = get_cipher_secret () in
-  let live_reload = get_live_reload () in
+  let vite_dev = get_vite_dev () in
 
   Backend_lib.Cipher.set_current_key cipher_secret;
-  if live_reload then Backend_lib.Dev.enable_live_reload ();
+  if vite_dev then Backend_lib.Vite.enable_dev ();
   Backend_lib.Server.run ~database_url ~server_secret ()
