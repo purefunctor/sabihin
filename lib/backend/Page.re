@@ -1,6 +1,26 @@
 module Template = {
   [@react.component]
   let make = (~children) => {
+    let dataEmotion =
+      CssJs.Stylesheet.get_all(CssJs.instance)
+      |> List.map(((name, _)) =>
+           String.sub(name, 4, String.length(name) - 4)
+         )
+      |> List.cons("css")
+      |> String.concat(" ");
+
+    let styleTag = {
+      React.createElement(
+        "style",
+        [
+          Bool(("data-s", true)),
+          String(("data-emotion", dataEmotion)),
+          DangerouslyInnerHtml(CssJs.render_style_tag()),
+        ],
+        [],
+      );
+    };
+
     <html lang="en">
       <head>
         <meta charSet="UTF-8" />
@@ -12,7 +32,7 @@ module Template = {
         <script type_="module" src="http://localhost:5173/@vite/client" />
         <script type_="module" src="http://localhost:5173/index.js" />
         <link rel="stylesheet" href="assets/global.css" />
-        <style> {React.string(CssJs.render_style_tag())} </style>
+        styleTag
       </head>
       <body> <div id="root"> children </div> </body>
     </html>;
