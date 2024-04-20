@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 export default defineConfig({
   build: {
@@ -10,5 +11,5 @@ export default defineConfig({
   server: {
     origin: "http://localhost:8080",
   },
-  plugins: [],
+  plugins: [nodeResolve()],
 });
