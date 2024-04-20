@@ -13,8 +13,8 @@ module Template = {
       React.createElement(
         "style",
         [
-          Bool(("data-s", true)),
           String(("data-emotion", dataEmotion)),
+          Bool(("data-s", true)),
           DangerouslyInnerHtml(CssJs.render_style_tag()),
         ],
         [],
