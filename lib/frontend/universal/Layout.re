@@ -1,9 +1,12 @@
-let divCss = [%cx {|
+let headerRouterCss = [%cx {|
 flex-grow: 1;
 min-height: 100vh;
 |}];
 
 [@react.component]
 let make = () => {
-  <> <div className=divCss> <Header /> <Router /> </div> <Footer /> </>;
+  <>
+    <div className=headerRouterCss> <Header /> <Router /> </div>
+    <Footer />
+  </>;
 };
