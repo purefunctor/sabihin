@@ -23,6 +23,7 @@ depends: [
   "reason-react" {>= "0.14.0"}
   "reason-react-ppx" {>= "0.14.0"}
   "server-reason-react"
+  "styled-ppx"
   "yojson" {>= "2.1.2"}
   "ppx_yojson_conv" {>= "v0.16.0"}
   "dotenv" {>= "0.0.3"}
@@ -50,4 +51,5 @@ build: [
 dev-repo: "git+https://github.com/purefunctor/sabihin.git"
 pin-depends: [
   ["server-reason-react.dev" "https://github.com/ml-in-barcelona/server-reason-react/archive/ded352952dc49fcc7cad22956e0887c964b3c68b.tar.gz"]
+  ["styled-ppx.dev" "https://github.com/davesnx/styled-ppx/archive/f7affb36656c63a69ab8256a5149d30ef684563e.tar.gz"]
 ]

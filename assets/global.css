@@ -1,0 +1,12 @@
+body {
+  background-color: hsla(228, 8%, 12%, 1);
+  color: hsla(0, 8%, 97%, 1);
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}

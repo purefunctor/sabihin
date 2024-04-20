@@ -1,5 +1,5 @@
 let get route path =
-  Dream.get route (fun _ -> path |> Render.AppPage.render |> Dream.html)
+  Dream.get route (fun _ -> path |> Page.toString |> Dream.html)
 
 let route =
   Dream.scope "/"

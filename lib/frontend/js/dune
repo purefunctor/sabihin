@@ -1,11 +1,21 @@
+(include_subdirs unqualified)
+
 (library
  (name frontend_lib_js)
  (modes melange)
  (wrapped false)
- (libraries reason-react)
+ (libraries reason-react styled-ppx.css styled-ppx.emotion)
  (preprocess
-  (pps melange.ppx reason-react-ppx)))
+  (pps styled-ppx melange.ppx reason-react-ppx)))
 
 (copy_files#
  (mode fallback)
  (files "../universal/**.{re,rei}"))
+
+(copy_files#
+ (mode fallback)
+ (files "../universal/contexts/**.{re,rei}"))
+
+(copy_files#
+ (mode fallback)
+ (files "../universal/pages/**.{re,rei}"))

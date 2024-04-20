@@ -1,4 +1,4 @@
-module Page = {
+module Template = {
   [@react.component]
   let make = (~children) => {
     <html lang="en">
@@ -11,17 +11,21 @@ module Page = {
         <title> {React.string("Sabihin")} </title>
         <script type_="module" src="http://localhost:5173/@vite/client" />
         <script type_="module" src="http://localhost:5173/index.js" />
+        <link rel="stylesheet" href="assets/global.css" />
+        <style> {React.string(CssJs.render_style_tag())} </style>
       </head>
       <body> <div id="root"> children </div> </body>
     </html>;
   };
 };
 
-module AppPage = {
-  [@react.component]
-  let make = () => {
-    <Page> <App /> </Page>;
-  };
-
-  let render = _ => ReactDOM.renderToStaticMarkup(make());
+let toString = path => {
+  let serverUrl: ReasonReactRouter.url = {path, hash: "", search: ""};
+  ReactDOM.renderToString(
+    <Template>
+      <ServerUrl.Provider value={Some(serverUrl)}>
+        <App />
+      </ServerUrl.Provider>
+    </Template>,
+  );
 };
