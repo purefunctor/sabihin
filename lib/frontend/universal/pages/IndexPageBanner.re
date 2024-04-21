@@ -58,7 +58,7 @@ gap: 1rem;
 justify-content: center;
 
 $(Theme.afterMedium) {
-  justify-content: initial;
+  justify-content: left;
 }
 |}
 ];
