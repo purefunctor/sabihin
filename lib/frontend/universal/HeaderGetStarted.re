@@ -11,35 +11,17 @@ $(Theme.afterSmall) {
 |}
 ];
 
-let loginButtonCss = [%cx
-  {|
+let loginButtonCss =
+  Theme.ghostButton
+  ++ " "
+  ++ [%cx {|
 display: none;
-
-border: 1px solid $(Theme.backgroundSubtle);
-border-radius: 8px;
-padding: 1rem;
-
 $(Theme.afterSmall) {
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
-|}
-];
+|}];
 
-let registerButtonCss = [%cx
-  {|
-display: flex;
-align-items: center;
-justify-content: center;
-
-color: $(Theme.background);
-background-color: $(Theme.primary);
-border: 1px solid $(Theme.primary);
-border-radius: 8px;
-padding: 1rem;
-|}
-];
+let registerButtonCss = Theme.primaryButton;
 
 [@react.component]
 let make = () => {

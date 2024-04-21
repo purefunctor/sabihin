@@ -1,4 +1,10 @@
+let indexPageCss = [%cx {|
+margin: 2rem;
+|}];
+
 [@react.component]
 let make = () => {
-  <main> {React.string("Component")} </main>;
+  <main className=indexPageCss>
+    <IndexPageBanner />
+  </main>;
 };
