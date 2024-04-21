@@ -5,6 +5,10 @@ let foreground = `var("--foreground");
 let foregroundSubtle = `var("--foreground-subtle");
 let background = `var("--background");
 let backgroundSubtle = `var("--background-subtle");
+let success = `var("--success");
+let failure = `var("--failure");
+let warning = `var("--warning");
+let info = `var("--info");
 
 let afterSmall = {j|@media screen and (min-width: 640px)|j};
 let afterMedium = {|@media screen and (min-width: 768px)|};

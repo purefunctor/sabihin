@@ -8,7 +8,8 @@
   server-reason-react.react
   server-reason-react.reactDom
   styled-ppx.css_native
-  styled-ppx.emotion_native)
+  styled-ppx.emotion_native
+  validation_universal)
  (preprocess
   (pps
    styled-ppx

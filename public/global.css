@@ -6,6 +6,10 @@
   --foreground-subtle: #c4c4c4;
   --background: #1c1d21;
   --background-subtle: #333437;
+  --success: #c4e1a3;
+  --failure: #ff9b85;
+  --warning: #ffdf99;
+  --info: #a3c5e1;
 }
 
 body {

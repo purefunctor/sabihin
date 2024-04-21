@@ -4,7 +4,7 @@
  (name frontend_lib_js)
  (modes melange)
  (wrapped false)
- (libraries reason-react styled-ppx.css styled-ppx.emotion)
+ (libraries reason-react styled-ppx.css styled-ppx.emotion validation_js)
  (preprocess
   (pps styled-ppx melange.ppx reason-react-ppx)))
 
@@ -15,7 +15,3 @@
 (copy_files#
  (mode fallback)
  (files "../universal/contexts/**.{re,rei}"))
-
-(copy_files#
- (mode fallback)
- (files "../universal/pages/**.{re,rei}"))
