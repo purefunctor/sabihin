@@ -19,6 +19,15 @@ justify-content: center;
 border: 1px solid $(backgroundSubtle);
 border-radius: 8px;
 padding: 1rem;
+
+transition: 
+  color 150ms ease-out,
+  border-color 150ms ease-out;
+
+&:hover {
+  color: $(secondary);
+  border-color: $(secondary);
+}
 |}
 ];
 
@@ -33,5 +42,14 @@ background-color: $(primary);
 border: 1px solid $(primary);
 border-radius: 8px;
 padding: 1rem;
+
+transition: 
+  color 150ms ease-out,
+  background-color 150ms ease-out;
+
+&:hover {
+  color: $(primary);
+  background-color: $(background);
+}
 |}
 ];
