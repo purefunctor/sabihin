@@ -30,6 +30,6 @@ include MakeField({
     type_: "password",
     placeholder: "password (min. 8 characters)",
   };
-  let iconFn = _ => <Icons.BookLine size="1.5rem" />;
+  let iconFn = _ => <Icons.LockPasswordLine size="1.5rem" />;
   let hintFn = hintFn;
 });

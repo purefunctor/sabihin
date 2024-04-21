@@ -31,6 +31,6 @@ include MakeField({
     type_: "text",
     placeholder: "username (e.g. aimoto_rinku)",
   };
-  let iconFn = _ => <Icons.BookLine size="1.5rem" />;
+  let iconFn = _ => <Icons.UserLine size="1.5rem" />;
   let hintFn = hintFn;
 });

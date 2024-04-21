@@ -15,6 +15,23 @@ module BookLine = {
   };
 };
 
+module LockPasswordLine = {
+  [@react.component]
+  let make = (~size="1rem", ~className="") => {
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M18 8h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2V7a6 6 0 1 1 12 0zM5 10v10h14V10zm6 4h2v2h-2zm-4 0h2v2H7zm8 0h2v2h-2zm1-6V7a4 4 0 0 0-8 0v1z"
+      />
+    </svg>;
+  };
+};
+
 module MailLockLine = {
   [@react.component]
   let make = (~size="1rem", ~className="") => {
@@ -78,6 +95,23 @@ module SparkleLine = {
       <path
         fill="currentColor"
         d="M14 4.438A2.437 2.437 0 0 0 16.438 2h1.125A2.437 2.437 0 0 0 20 4.438v1.125A2.437 2.437 0 0 0 17.563 8h-1.125A2.437 2.437 0 0 0 14 5.563zM1 11a6 6 0 0 0 6-6h2a6 6 0 0 0 6 6v2a6 6 0 0 0-6 6H7a6 6 0 0 0-6-6zm3.876 1A8.038 8.038 0 0 1 8 15.124A8.038 8.038 0 0 1 11.124 12A8.038 8.038 0 0 1 8 8.876A8.038 8.038 0 0 1 4.876 12m12.374 2A3.25 3.25 0 0 1 14 17.25v1.5A3.25 3.25 0 0 1 17.25 22h1.5A3.25 3.25 0 0 1 22 18.75v-1.5A3.25 3.25 0 0 1 18.75 14z"
+      />
+    </svg>;
+  };
+};
+
+module UserLine = {
+  [@react.component]
+  let make = (~size="1rem", ~className="") => {
+    <svg
+      className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5zm-8-9a6 6 0 1 1 0-12a6 6 0 0 1 0 12m0-2a4 4 0 1 0 0-8a4 4 0 0 0 0 8"
       />
     </svg>;
   };
