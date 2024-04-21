@@ -20,7 +20,7 @@ border: 1px solid $(backgroundSubtle);
 border-radius: 8px;
 padding: 1rem;
 
-transition: 
+transition:
   color 150ms ease-out,
   border-color 150ms ease-out;
 
@@ -43,7 +43,7 @@ border: 1px solid $(primary);
 border-radius: 8px;
 padding: 1rem;
 
-transition: 
+transition:
   color 150ms ease-out,
   background-color 150ms ease-out;
 

@@ -92,9 +92,7 @@ let make = () => {
       title="Open-Source Software"
       iconFn={(~size, ~className) => <Icons.RepositoryLine size className />}>
       <p className=IndexCard.pCss>
-        {React.string(
-           "Sabihin is built as and with open-source software.",
-         )}
+        {React.string("Sabihin is built as and with open-source software.")}
       </p>
       <p className=IndexCard.pCss>
         {React.string(

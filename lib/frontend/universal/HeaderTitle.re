@@ -9,9 +9,9 @@ color: $(Theme.primary);
 
 [@react.component]
 let make = () => {
-    <Link className=titleCss href="/">
-      {React.string("sabihin")}
-      <span className=dotCss> {React.string(".")} </span>
-      {React.string("ph")}
-    </Link>
+  <Link className=titleCss href="/">
+    {React.string("sabihin")}
+    <span className=dotCss> {React.string(".")} </span>
+    {React.string("ph")}
+  </Link>;
 };
