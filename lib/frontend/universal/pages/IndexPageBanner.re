@@ -28,7 +28,7 @@ $(Theme.afterMedium) {
 
 let subtitleCss = [%cx
   {|
-margin-top: 0.5rem;
+margin-top: 2rem;
 margin-bottom: 0;
 
 $(Theme.afterMedium) {
@@ -63,9 +63,8 @@ $(Theme.afterMedium) {
 |}
 ];
 
-let iconTextCss = [%cx {|
-display: flex;
-gap: 4px;
+let iconButton = [%cx {|
+gap: 0.5rem;
 |}];
 
 [@react.component]
@@ -87,17 +86,15 @@ let make = () => {
          )}
       </p>
       <nav className=actionButtonsCss>
-        <Link className=Theme.primaryButton href="/register">
-          <span className=iconTextCss>
-            <Icons.SparkleLine size="1rem" />
-            {React.string("Get Started")}
-          </span>
+        <Link
+          className={Theme.primaryButton ++ " " ++ iconButton}
+          href="/register">
+          <Icons.SparkleLine size="1.5rem" />
+          <span> {React.string("Get Started")} </span>
         </Link>
-        <Link className=Theme.ghostButton href="/learn">
-          <span className=iconTextCss>
-            <Icons.BookLine size="1rem" />
-            {React.string("Learn More")}
-          </span>
+        <Link className={Theme.ghostButton ++ " " ++ iconButton} href="/learn">
+          <Icons.BookLine size="1.5rem" />
+          <span> {React.string("Learn More")} </span>
         </Link>
       </nav>
     </header>
