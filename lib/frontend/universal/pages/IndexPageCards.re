@@ -7,7 +7,7 @@ module IndexCard = {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    padding: 1rem;
+    padding: 2rem;
   |}
   ];
 
@@ -52,7 +52,7 @@ flex-direction: column;
 gap: 2rem;
 padding-top: 2rem;
 
-$(Theme.afterMedium) {
+$(Theme.afterLarge) {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -77,7 +77,7 @@ let make = () => {
       iconFn={(~size, ~className) => <Icons.RepositoryLine size className />}>
       <p className=IndexCard.pCss>
         {React.string(
-           "Sabihin is built with open-source tools and is open-source itself.",
+           "Sabihin is built as and with open-source software.",
          )}
       </p>
       <p className=IndexCard.pCss>
