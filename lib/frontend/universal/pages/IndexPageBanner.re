@@ -69,13 +69,12 @@ let make = () => {
   <section className=bannerCss>
     <header>
       <h1 className=titleCss>
-        <span className=titleGradientCss>
+        <div className=titleGradientCss>
           {React.string("End-to-End Encrypted")}
-        </span>
-        <br />
-        <span className=titleGradientCss>
+        </div>
+        <div className=titleGradientCss>
           {React.string("Anonymous Confessions")}
-        </span>
+        </div>
       </h1>
       <p role="doc-subtitle" className=subtitleCss>
         {React.string(
