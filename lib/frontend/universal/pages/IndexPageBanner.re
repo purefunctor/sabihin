@@ -1,5 +1,6 @@
 let bannerCss = [%cx
   {|
+font-family: "Poppins";
 text-align: center;
 
 padding-bottom: 2rem;
@@ -13,7 +14,7 @@ $(Theme.afterMedium) {
 
 let titleCss = [%cx
   {|
-font-size: 1.75rem;
+font-size: 1.5rem;
 margin-top: 0;
 margin-bottom: 0;
 
@@ -61,6 +62,7 @@ $(Theme.afterMedium) {
 ];
 
 let iconButton = [%cx {|
+font-family: "Josefin Sans";
 gap: 0.5rem;
 |}];
 

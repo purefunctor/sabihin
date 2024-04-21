@@ -1,5 +1,6 @@
 let headerCss = [%cx
   {|
+font-family: "Josefin Sans";
 display: flex;
 align-items: center;
 

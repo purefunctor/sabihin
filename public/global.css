@@ -19,7 +19,6 @@ body {
 
 #root {
   display: flex;
-  font-family: "Josefin Sans";
   flex-direction: column;
   min-height: 100vh;
 }
