@@ -3,6 +3,7 @@ font-family: "Poppins";
 |}];
 
 let headingCss = [%cx {|
+font-size: 3rem;
 text-align: center;
 |}];
 
