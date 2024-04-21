@@ -1,8 +1,3 @@
-type hint_kind =
-  | NoHint
-  | Success(string)
-  | Failure(string);
-
 type meta = {
   title: string,
   name: string,
@@ -54,13 +49,14 @@ module MakeField = (FieldKind: FieldKind) => {
       outline-offset: 2px;
       outline-style: solid;
       outline-color: $(Theme.primary);
-    };
+    }
   |}
   ];
 
   let inputCss = [%cx
     {|
-    flex-grow: 1;
+    height: 100%;
+    width: 100%;
     color: $(Theme.foreground);
     background-color: $(Theme.backgroundSubtle);
     border: 0;
@@ -71,6 +67,10 @@ module MakeField = (FieldKind: FieldKind) => {
     &:focus {
       border-radius: 0;
       outline: none;
+    }
+
+    &:placeholder-shown {
+      text-overflow: ellipsis;
     }
   |}
   ];
