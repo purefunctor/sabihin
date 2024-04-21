@@ -4,7 +4,7 @@ display: flex;
 align-items: center;
 
 border-bottom: 1px solid $(Theme.backgroundSubtle);
-margin: 2rem;
+padding-top: 1rem;
 padding-bottom: 1rem;
 |}
 ];

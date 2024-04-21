@@ -2,9 +2,6 @@ let bannerCss = [%cx
   {|
 text-align: center;
 
-margin-top: 2rem;
-margin-bottom: 2rem;
-
 padding-bottom: 2rem;
 border-bottom: 1px solid $(Theme.backgroundSubtle);
 
@@ -18,7 +15,7 @@ let titleCss = [%cx
   {|
 font-size: 1.75rem;
 margin-top: 0;
-margin-bottom: 0.5rem;
+margin-bottom: 0;
 
 $(Theme.afterMedium) {
   font-size: 4rem;

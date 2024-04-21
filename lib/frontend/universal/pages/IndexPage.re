@@ -1,5 +1,6 @@
 let indexPageCss = [%cx {|
-margin: 2rem;
+padding-top: 2rem;
+padding-bottom: 2rem;
 |}];
 
 [@react.component]

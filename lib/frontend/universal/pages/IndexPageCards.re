@@ -50,6 +50,7 @@ let cardsCss = [%cx
 display: flex;
 flex-direction: column;
 gap: 2rem;
+padding-top: 2rem;
 
 $(Theme.afterMedium) {
   display: grid;
