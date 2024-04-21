@@ -6,5 +6,6 @@ margin: 2rem;
 let make = () => {
   <main className=indexPageCss>
     <IndexPageBanner />
+    <IndexPageCards />
   </main>;
 };
