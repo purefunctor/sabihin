@@ -13,6 +13,8 @@ body {
   color: var(--foreground);
   margin: 0;
   padding: 0;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 #root {
@@ -20,8 +22,6 @@ body {
   font-family: "Josefin Sans";
   flex-direction: column;
   min-height: 100vh;
-  margin-left: 2rem;
-  margin-right: 2rem;
 }
 
 @media screen and (min-width: 768px) {
