@@ -7,7 +7,17 @@ module IndexCard = {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
+
+    box-sizing: border-box;
     padding: 2rem;
+
+    $(Theme.afterMedium) {
+      width: calc(50% - 1rem);
+    }
+
+    $(Theme.afterLarge) {
+      width: initial;
+    }
   |}
   ];
 
@@ -51,6 +61,12 @@ display: flex;
 flex-direction: column;
 gap: 2rem;
 padding-top: 2rem;
+
+$(Theme.afterMedium) {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
 $(Theme.afterLarge) {
   display: grid;
