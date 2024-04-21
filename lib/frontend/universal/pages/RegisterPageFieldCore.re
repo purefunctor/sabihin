@@ -16,6 +16,7 @@ module type FieldKind = {
   let meta: meta;
   let iconFn: unit => React.element;
   let hintFn: ValidationResult.t(kind) => React.element;
+  let fieldCssFn: ValidationResult.t(kind) => string;
 };
 
 module MakeField = (FieldKind: FieldKind) => {
@@ -43,6 +44,9 @@ module MakeField = (FieldKind: FieldKind) => {
     padding: 1rem;
     background-color: $(Theme.backgroundSubtle);
     border-radius: 8px;
+    border-width: 4px;
+    border-style: solid;
+    border-color: $(Theme.backgroundSubtle);
     gap: 0.5rem;
 
     &:focus-within {
@@ -75,6 +79,7 @@ module MakeField = (FieldKind: FieldKind) => {
   let make = (~hook: RegisterPageHooksCore.field_hook(FieldKind.kind)) => {
     let iconElement = FieldKind.iconFn();
     let hintElement = FieldKind.hintFn(hook.validation);
+    let extraFieldCss = FieldKind.fieldCssFn(hook.validation);
 
     let autoComplete = "off";
     let {title, name, type_, placeholder} = FieldKind.meta;
@@ -82,7 +87,7 @@ module MakeField = (FieldKind: FieldKind) => {
 
     <div className=containerCss>
       <label htmlFor=id> {React.string(title)} </label>
-      <div className=fieldCss>
+      <div className={fieldCss ++ extraFieldCss}>
         iconElement
         <input
           className=inputCss
@@ -99,3 +104,11 @@ module MakeField = (FieldKind: FieldKind) => {
     </div>;
   };
 };
+
+let fieldSuccessCss = [%cx {| border-color: $(Theme.success) !important; |}];
+let fieldWarningCss = [%cx {| border-color: $(Theme.success) !important; |}];
+let fieldFailureCss = [%cx {| border-color: $(Theme.failure) !important; |}];
+
+let successCss = [%cx {| color: $(Theme.success) |}];
+let warningCss = [%cx {| color: $(Theme.warning) |}];
+let failureCss = [%cx {| color: $(Theme.failure) |}];

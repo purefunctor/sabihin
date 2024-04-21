@@ -1,8 +1,5 @@
 open RegisterPageFieldCore;
 
-let successCss = [%cx {| color: $(Theme.success) |}];
-let failureCss = [%cx {| color: $(Theme.failure) |}];
-
 let hintFn =
     (validation: ValidationResult.t(ValidationCore.PasswordConfirm.t)) => {
   switch (validation) {
@@ -17,6 +14,18 @@ let hintFn =
   };
 };
 
+let fieldCssFn =
+    (validation: ValidationResult.t(ValidationCore.PasswordConfirm.t)) => {
+  switch (validation) {
+  | Validated(validated) =>
+    switch (validated) {
+    | Yes => " " ++ fieldSuccessCss
+    | No => " " ++ fieldFailureCss
+    }
+  | NotValidated => ""
+  };
+};
+
 include MakeField({
   type kind = ValidationCore.PasswordConfirm.t;
 
@@ -28,4 +37,5 @@ include MakeField({
   };
   let iconFn = _ => <Icons.LockPasswordLine size="1.5rem" />;
   let hintFn = hintFn;
+  let fieldCssFn = fieldCssFn;
 });

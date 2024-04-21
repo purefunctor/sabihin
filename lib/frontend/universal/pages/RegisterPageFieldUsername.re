@@ -1,10 +1,6 @@
 open RegisterPageFieldCore;
 
-let successCss = [%cx {| color: $(Theme.success) |}];
-let failureCss = [%cx {| color: $(Theme.failure) |}];
-
-let hintFn =
-    (validation: ValidationResult.t(ValidationCore.Username.t)) => {
+let hintFn = (validation: ValidationResult.t(ValidationCore.Username.t)) => {
   switch (validation) {
   | Validated(validated) =>
     let (className, text) =
@@ -22,6 +18,19 @@ let hintFn =
   };
 };
 
+let fieldCssFn = (validation: ValidationResult.t(ValidationCore.Username.t)) => {
+  switch (validation) {
+  | Validated(validated) =>
+    switch (validated) {
+    | TooShort
+    | TooLong
+    | InvalidCharacter(_) => " " ++ fieldFailureCss
+    | Success => " " ++ fieldSuccessCss
+    }
+  | NotValidated => ""
+  };
+};
+
 include MakeField({
   type kind = ValidationCore.Username.t;
 
@@ -33,4 +42,5 @@ include MakeField({
   };
   let iconFn = _ => <Icons.UserLine size="1.5rem" />;
   let hintFn = hintFn;
+  let fieldCssFn = fieldCssFn;
 });
