@@ -82,6 +82,7 @@ module MakeField = (FieldKind: FieldKind) => {
     let extraFieldCss = FieldKind.fieldCssFn(hook.validation);
 
     let autoComplete = "off";
+    let required = true;
     let {title, name, type_, placeholder} = FieldKind.meta;
     let id = name;
 
@@ -92,6 +93,7 @@ module MakeField = (FieldKind: FieldKind) => {
         <input
           className=inputCss
           autoComplete
+          required
           id
           name
           type_
