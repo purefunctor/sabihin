@@ -3,9 +3,9 @@
   --secondary: #7bc8f4;
   --accent: #bea6dd;
   --foreground: #f5f5f5;
-  --foreground-subtle: #626262;
+  --foreground-subtle: #c4c4c4;
   --background: #1c1d21;
-  --background-subtle: #26272c;
+  --background-subtle: #333437;
 }
 
 body {
