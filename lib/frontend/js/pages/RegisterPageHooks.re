@@ -1,5 +1,7 @@
 open React.Event;
 open RegisterPageHooksCore;
+open Types_js.Definitions_bs;
+open Vault;
 
 let useField = () => {
   let (state, setState) = React.useState(() => "");
@@ -44,6 +46,8 @@ let useFormSubmit =
       ~password: fieldHook(ValidationPassword.t),
       ~confirm: fieldHook(ValidationPasswordConfirm.t),
     ) => {
+  let register = Session.useRegister();
+
   React.useCallback3(
     event => {
       Form.preventDefault(event);
@@ -53,7 +57,27 @@ let useFormSubmit =
       let allowConfirm = ValidationPasswordConfirm.allow(confirm.validation);
 
       if (allowUsername && allowPassword && allowConfirm) {
-        Js.Console.log3(username, password, confirm);
+        let username = username.value;
+        let password = password.value;
+
+        let _ = {
+          let ( let* ) = (f, x) => Js.Promise.then_(x, f);
+
+          let clientRandom = ClientRandom.create();
+          let* saltBuffer = Salt.compute_digest(clientRandom);
+          let* derivedKey = DerivedKey.create(password, saltBuffer);
+
+          let auth_token = Salt.toHash(derivedKey.hashed_authentication_key);
+          let* registerResult = register({username, auth_token});
+
+          switch (registerResult) {
+          | Ok(registerResult) => Js.Console.log(registerResult)
+          | Error(_) => ()
+          };
+
+          Js.Promise.resolve();
+        };
+        ();
       };
     },
     (username, password, confirm),

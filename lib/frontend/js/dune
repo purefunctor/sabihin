@@ -5,13 +5,15 @@
  (modes melange)
  (wrapped false)
  (libraries
+  melange-webapi
   reason-react
   styled-ppx.css
   styled-ppx.emotion
   subscribers_js
   types_js
   types_universal
-  validation_js)
+  validation_js
+  vault_js)
  (preprocess
   (pps styled-ppx melange.ppx reason-react-ppx)))
 
