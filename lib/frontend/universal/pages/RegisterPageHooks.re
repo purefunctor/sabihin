@@ -16,11 +16,11 @@ let useConfirm = (~password: string) => {
   useNothing();
 };
 
-let useFormSubmit = (~username, ~password, ~confirm) => {
-  let _ = (username, password, confirm);
+let useFormSubmit = (~username, ~password, ~confirm, ~toGenerate) => {
+  let _ = (username, password, confirm, toGenerate);
   _ => ();
 };
 
-let useStage = (): stageHook => {
+let useStage = () => {
   {current: Form, toGenerate: _ => (), toSubmit: _ => ()};
 };
