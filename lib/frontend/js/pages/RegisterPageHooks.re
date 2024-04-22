@@ -38,6 +38,28 @@ let useConfirm = (~password: string) => {
   {value, onChange, validation};
 };
 
+let useFormSubmit =
+    (
+      ~username: fieldHook(ValidationUsername.t),
+      ~password: fieldHook(ValidationPassword.t),
+      ~confirm: fieldHook(ValidationPasswordConfirm.t),
+    ) => {
+  React.useCallback3(
+    event => {
+      Form.preventDefault(event);
+
+      let allowUsername = ValidationUsername.allow(username.validation);
+      let allowPassword = ValidationPassword.allow(password.validation);
+      let allowConfirm = ValidationPasswordConfirm.allow(confirm.validation);
+
+      if (allowUsername && allowPassword && allowConfirm) {
+        Js.Console.log3(username, password, confirm);
+      };
+    },
+    (username, password, confirm),
+  );
+};
+
 let useStage = (): stageHook => {
   let (stage, setStage) = React.useState(() => Form);
   {

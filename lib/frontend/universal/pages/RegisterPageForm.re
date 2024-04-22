@@ -33,9 +33,9 @@ text-align: center;
 ];
 
 [@react.component]
-let make = (~username, ~password, ~confirm) => {
+let make = (~username, ~password, ~confirm, ~onSubmit) => {
   <>
-    <form className=formCss>
+    <form onSubmit className=formCss>
       <RegisterPageFieldUsername hook=username />
       <RegisterPageFieldPassword hook=password />
       <RegisterPageFieldConfirm hook=confirm />
