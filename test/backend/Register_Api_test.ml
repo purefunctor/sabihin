@@ -1,6 +1,6 @@
 open Cohttp
 open Cohttp_lwt_unix
-open Types_native.Defs_j
+open Types_native.Definitions_j
 open Types_native.Dynamic
 open Utils
 
@@ -15,7 +15,7 @@ let it_works =
     let%lwt cookie_headers = get_cookie_headers () in
     let%lwt response, body =
       let json =
-        string_of_register_payload_t
+        string_of_register_user_payload
           { username = "purefunctor"; auth_token = double_hmac "auth_token" }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
@@ -23,7 +23,7 @@ let it_works =
 
     let code = Response.status response |> Code.code_of_status in
     let%lwt body = Cohttp_lwt.Body.to_string body in
-    let%lwt parsed = is_parsed_by body register_response_t_of_string in
+    let%lwt parsed = is_parsed_by body register_response_of_string in
 
     let _ =
       Alcotest.(check int) "status code is 200" 200 code;
@@ -58,7 +58,7 @@ let already_registered =
     let%lwt cookie_headers = get_cookie_headers () in
     let%lwt _, body =
       let json =
-        string_of_register_payload_t
+        string_of_register_user_payload
           { username = "purefunctor"; auth_token = double_hmac "auth_token" }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
@@ -67,7 +67,7 @@ let already_registered =
 
     let%lwt response, body =
       let json =
-        string_of_register_payload_t
+        string_of_register_user_payload
           { username = "purefunctor"; auth_token = double_hmac "auth_token" }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
@@ -80,7 +80,7 @@ let already_registered =
       is_parsed_by body yojson_error_response_of_string
     in
     let%lwt parsed_by_specific =
-      is_parsed_by body register_error_response_t_of_string
+      is_parsed_by body register_error_response_of_string
     in
 
     let _ =
@@ -104,7 +104,7 @@ let creates_session =
 
     let%lwt response, body =
       let json =
-        string_of_register_payload_t
+        string_of_register_user_payload
           { username = "purefunctor"; auth_token = double_hmac "auth_token" }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
@@ -132,7 +132,7 @@ let register_secrets =
 
     let%lwt response, body =
       let json =
-        string_of_register_payload_t
+        string_of_register_user_payload
           { username = "purefunctor"; auth_token = double_hmac "auth_token" }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
@@ -169,7 +169,7 @@ let register_secrets =
         let verification_key_iv = get_random_base64 () in
         let exported_protection_key = get_random_base64 () in
         let exported_verification_key = get_random_base64 () in
-        string_of_register_keys_payload_t
+        string_of_register_keys_payload
           {
             client_random_value;
             encrypted_master_key;

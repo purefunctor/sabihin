@@ -1,7 +1,7 @@
 open HigherOrderHandlers
-open Types_native.Defs_j
+open Types_native.Definitions_j
 
-let insert request (user_id : int32) (keys : register_keys_payload_t) =
+let insert request (user_id : int32) (keys : register_keys_payload) =
   let open Lwt_result.Syntax in
   let base64_decode field =
     field |> Base64.decode |> Result.map Bytes.of_string |> Lwt_result.lift
@@ -38,11 +38,11 @@ let insert request (user_id : int32) (keys : register_keys_payload_t) =
 
 let handler request =
   let inner (session : Session.t) =
-    let inner (payload : register_keys_payload_t) =
+    let inner (payload : register_keys_payload) =
       match%lwt insert request session.id payload with
       | Ok () -> Dream.empty `No_Content
       | Error _ -> Dream.respond ~status:`Bad_Request "Invalid payload."
     in
-    with_json_body request register_keys_payload_t_of_string inner
+    with_json_body request register_keys_payload_of_string inner
   in
   with_session request inner

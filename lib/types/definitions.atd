@@ -1,0 +1,50 @@
+(* base response types *)
+
+type 'json base_error_kind = [
+  | JSON of 'json
+  | Raw of string
+]
+
+type 'json base_error_response = {
+  content: 'json base_error_kind
+}
+
+(* registration api types *)
+
+type register_user_payload = {
+  username: string;
+  auth_token: string;
+}
+
+type register_keys_payload = {
+  client_random_value: string;
+  encrypted_master_key: string;
+  master_key_iv: string;
+  encrypted_protection_key: string;
+  exported_protection_key: string;
+  protection_key_iv: string;
+  encrypted_verification_key: string;
+  exported_verification_key: string;
+  verification_key_iv: string;
+}
+
+type register_response = {
+  public_id: string;
+}
+
+type register_error_content = [
+  | CouldNotRegister
+]
+
+type register_error_response = register_error_content base_error_response
+
+(* client session types *)
+
+type logged_in = {
+  public_id: string;
+}
+
+type session_kind = [
+  | Guest
+  | LoggedIn of logged_in
+]

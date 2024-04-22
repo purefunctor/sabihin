@@ -1,0 +1,13 @@
+(library
+ (name types_universal)
+ (public_name sabihin.types_universal)
+ (modes melange native))
+
+(copy_files
+ (files "../*.{atd}"))
+
+(rule
+ (targets definitions_t.ml definitions_t.mli)
+ (deps definitions.atd)
+ (action
+  (run atdgen -t %{deps})))

@@ -1,19 +1,14 @@
 (library
  (name types_native)
  (public_name sabihin.types_native)
- (libraries atdgen melange.js))
+ (modes native)
+ (libraries atdgen types_universal yojson))
 
 (copy_files
  (files "../*.{atd}"))
 
 (rule
- (targets defs_t.ml defs_t.mli)
- (deps defs.atd)
+ (targets definitions_j.ml definitions_j.mli)
+ (deps definitions.atd)
  (action
-  (run atdgen -t %{deps})))
-
-(rule
- (targets defs_j.ml defs_j.mli)
- (deps defs.atd)
- (action
-  (run atdgen -j -j-std %{deps})))
+  (run atdgen -open "Types_universal" -j -j-std %{deps})))
