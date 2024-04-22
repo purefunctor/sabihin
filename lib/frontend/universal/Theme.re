@@ -20,6 +20,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 
+cursor: pointer;
 border: 1px solid $(backgroundSubtle);
 border-radius: 8px;
 padding: 1rem;
@@ -41,6 +42,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 
+cursor: pointer;
 color: $(background);
 background-color: $(primary);
 border: 1px solid $(primary);
