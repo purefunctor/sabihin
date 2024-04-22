@@ -26,8 +26,7 @@ let make = () => {
   let confirm = RegisterPageHooks.useConfirm(~password=password.value);
 
   let stage = RegisterPageHooks.useStage();
-  let current = stage.current;
-  let toGenerate = stage.toGenerate;
+  let RegisterPageHooksCore.{current, toGenerate, toSubmit} = stage;
 
   let onSubmit =
     RegisterPageHooks.useFormSubmit(
@@ -41,7 +40,7 @@ let make = () => {
     <h1 className=headingCss> {React.string("Register")} </h1>
     {switch (current) {
      | Form => <RegisterPageForm username password confirm onSubmit />
-     | Generate(_) => React.null
+     | Generate(generate) => <RegisterPageGenerate generate toSubmit />
      | Submit(_) => React.null
      }}
   </main>;
