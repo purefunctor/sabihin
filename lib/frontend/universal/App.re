@@ -1,4 +1,4 @@
 [@react.component]
 let make = () => {
-  <Layout />;
+  <SessionContext.Provider> <Layout /> </SessionContext.Provider>;
 };
