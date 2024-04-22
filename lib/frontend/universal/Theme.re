@@ -21,7 +21,7 @@ align-items: center;
 justify-content: center;
 
 cursor: pointer;
-border: 1px solid $(backgroundSubtle);
+border: 2px solid $(backgroundSubtle);
 border-radius: 8px;
 padding: 1rem;
 
@@ -45,7 +45,7 @@ justify-content: center;
 cursor: pointer;
 color: $(background);
 background-color: $(primary);
-border: 1px solid $(primary);
+border: 2px solid $(primary);
 border-radius: 8px;
 padding: 1rem;
 
