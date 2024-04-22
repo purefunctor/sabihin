@@ -13,3 +13,7 @@ let useConfirm = (~password: string) => {
   let _ = password;
   useNothing();
 };
+
+let useStage = (): stageHook => {
+  {current: Form, toGenerate: _ => (), toSubmit: _ => ()};
+};

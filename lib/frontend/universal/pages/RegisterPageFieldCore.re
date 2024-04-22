@@ -76,7 +76,7 @@ module MakeField = (FieldKind: FieldKind) => {
   ];
 
   [@react.component]
-  let make = (~hook: RegisterPageHooksCore.field_hook(FieldKind.kind)) => {
+  let make = (~hook: RegisterPageHooksCore.fieldHook(FieldKind.kind)) => {
     let iconElement = FieldKind.iconFn();
     let hintElement = FieldKind.hintFn(hook.validation);
     let extraFieldCss = FieldKind.fieldCssFn(hook.validation);

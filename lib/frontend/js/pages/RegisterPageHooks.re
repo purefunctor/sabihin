@@ -37,3 +37,12 @@ let useConfirm = (~password: string) => {
     );
   {value, onChange, validation};
 };
+
+let useStage = (): stageHook => {
+  let (stage, setStage) = React.useState(() => Form);
+  {
+    current: stage,
+    toGenerate: _ => setStage(_ => Generate),
+    toSubmit: _ => setStage(_ => Submit),
+  };
+};
