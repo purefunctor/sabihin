@@ -5,15 +5,17 @@ type t = {
   master_key_iv : bytes;
   encrypted_protection_key : bytes;
   protection_key_iv : bytes;
+  exported_protection_key : bytes;
   encrypted_verification_key : bytes;
   verification_key_iv : bytes;
+  exported_verification_key : bytes;
 }
 
 let create_table =
   [%rapper
     execute
       {sql|
-CREATE TABLE IF NOT EXISTS private_keys (
+CREATE TABLE IF NOT EXISTS secrets (
   user_id INT PRIMARY KEY REFERENCES users(id),
 
   client_random_value BYTEA NOT NULL,
@@ -23,11 +25,13 @@ CREATE TABLE IF NOT EXISTS private_keys (
 
   encrypted_protection_key BYTEA NOT NULL,
   protection_key_iv BYTEA NOT NULL,
+  exported_protection_key BYTEA NOT NULL,
 
   encrypted_verification_key BYTEA NOT NULL,
-  verification_key_iv BYTEA NOT NULL
-);
-      |sql}]
+  verification_key_iv BYTEA NOT NULL,
+  exported_verification_key BYTEA NOT NULL
+);   
+|sql}]
     ()
 
 let get_by_user_id =
@@ -45,14 +49,16 @@ SELECT
 
   @ByteOctets{encrypted_protection_key},
   @ByteOctets{protection_key_iv},
+  @ByteOctets{exported_protection_key},
 
   @ByteOctets{encrypted_verification_key},
-  @ByteOctets{verification_key_iv}
+  @ByteOctets{verification_key_iv},
+  @ByteOctets{exported_verification_key}
 FROM
-  private_keys
+  secrets
 WHERE
   user_id = %int32{user_id};
-      |sql}
+|sql}
       record_out]
 
 let get_by_username =
@@ -70,18 +76,20 @@ SELECT
 
   @ByteOctets{encrypted_protection_key},
   @ByteOctets{protection_key_iv},
+  @ByteOctets{exported_protection_key},
 
   @ByteOctets{encrypted_verification_key},
-  @ByteOctets{verification_key_iv}
+  @ByteOctets{verification_key_iv},
+  @ByteOctets{exported_verification_key}
 FROM
-  private_keys
+  secrets
 JOIN
   users
 ON
   users.id = private_keys.user_id
 WHERE
   username = %string{username};
-      |sql}
+|sql}
       record_out]
 
 let insert =
@@ -89,15 +97,21 @@ let insert =
   [%rapper
     execute
       {sql|
-INSERT INTO private_keys (
+INSERT INTO secrets (
   user_id,
+
   client_random_value,
+
   encrypted_master_key,
   master_key_iv,
+
   encrypted_protection_key,
   protection_key_iv,
+  exported_protection_key,
+
   encrypted_verification_key,
-  verification_key_iv
+  verification_key_iv,
+  exported_verification_key
 )
 VALUES(
   %int32{user_id},
@@ -109,8 +123,10 @@ VALUES(
 
   %ByteOctets{encrypted_protection_key},
   %ByteOctets{protection_key_iv},
+  %ByteOctets{exported_protection_key},
 
   %ByteOctets{encrypted_verification_key},
-  %ByteOctets{verification_key_iv}
+  %ByteOctets{verification_key_iv},
+  %ByteOctets{exported_verification_key}
 );
-      |sql}]
+|sql}]

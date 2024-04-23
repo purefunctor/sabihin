@@ -19,30 +19,9 @@ let () =
               get_by_username;
               get_missing;
             ] );
-      ( "PrivateKeys",
+      ( "Secrets",
         List.map
           (fun f -> f pool)
-          PrivateKeys_test.
-            [
-              initialize;
-              insert;
-              insert_existing;
-              get_by_user_id;
-              get_by_username;
-              get_missing;
-            ] );
-      ( "PublicKeys",
-        List.map
-          (fun f -> f pool)
-          PublicKeys_test.
-            [
-              initialize;
-              insert;
-              insert_existing;
-              get_by_user_id;
-              get_by_username;
-              get_by_public_id;
-              get_missing;
-            ] );
+          Secrets_test.[ initialize; insert; insert_existing ] );
       ("Nanoid", [ Nanoid_test.simple pool ]);
     ]

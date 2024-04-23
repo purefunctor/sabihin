@@ -11,28 +11,25 @@ let insert request (user_id : int32) (keys : register_keys_payload) =
   let* encrypted_master_key = base64_decode keys.encrypted_master_key in
   let* master_key_iv = base64_decode keys.master_key_iv in
   let* encrypted_protection_key = base64_decode keys.encrypted_protection_key in
-  let* exported_protection_key = base64_decode keys.exported_protection_key in
   let* protection_key_iv = base64_decode keys.protection_key_iv in
+  let* exported_protection_key = base64_decode keys.exported_protection_key in
   let* encrypted_verification_key =
     base64_decode keys.encrypted_verification_key
   in
+  let* verification_key_iv = base64_decode keys.verification_key_iv in
   let* exported_verification_key =
     base64_decode keys.exported_verification_key
   in
-  let* verification_key_iv = base64_decode keys.verification_key_iv in
 
   Dream.sql request (fun db ->
       let (module Db) = db in
       Db.with_transaction (fun () ->
           let* _ =
-            Models.PrivateKeys.insert ~user_id ~client_random_value
+            Models.Secrets.insert ~user_id ~client_random_value
               ~encrypted_master_key ~master_key_iv ~encrypted_protection_key
-              ~protection_key_iv ~encrypted_verification_key
-              ~verification_key_iv db
-          in
-          let* () =
-            Models.PublicKeys.insert ~user_id ~exported_protection_key
-              ~exported_verification_key db
+              ~protection_key_iv ~exported_verification_key
+              ~encrypted_verification_key ~verification_key_iv
+              ~exported_protection_key db
           in
           Lwt.return_ok ()))
 
