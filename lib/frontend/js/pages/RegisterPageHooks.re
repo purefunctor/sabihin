@@ -40,7 +40,7 @@ let useConfirm = (~password: string) => {
   {value, onChange, validation};
 };
 
-type generateFields = {
+type generate = {
   publicId: string,
   clientRandom: Js.Typed_array.Uint8Array.t,
   derivedKey: DerivedKey.fresh_t,
@@ -51,7 +51,7 @@ let useFormSubmit =
       ~username: fieldHook(ValidationUsername.t),
       ~password: fieldHook(ValidationPassword.t),
       ~confirm: fieldHook(ValidationPasswordConfirm.t),
-      ~toGenerate: generateFields => unit,
+      ~toGenerate: generate => unit,
     ) => {
   let register = Session.useRegister();
 
