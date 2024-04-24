@@ -64,16 +64,17 @@ let useFormSubmit =
           let ( let* ) = (f, x) => Js.Promise.then_(x, f);
 
           let clientRandom = ClientRandom.create();
-          let* saltBuffer = Salt.compute_digest(clientRandom);
-          let* derivedKey = DerivedKey.create(password, saltBuffer);
+          let* saltBuffer = Salt.computeDigest(clientRandom);
+          let* freshDerivedKey = DerivedKey.create(~password, ~saltBuffer);
 
-          let auth_token = Salt.toHash(derivedKey.hashed_authentication_key);
+          let auth_token =
+            Salt.toHash(freshDerivedKey.hashedAuthenticationKey);
           let* registerResult = register({username, auth_token});
 
           switch (registerResult) {
           | Ok(registerResult) =>
             let publicId = registerResult.public_id;
-            Js.Console.log3(publicId, clientRandom, derivedKey);
+            Js.Console.log3(publicId, clientRandom, freshDerivedKey);
           | Error(_) => ()
           };
 
