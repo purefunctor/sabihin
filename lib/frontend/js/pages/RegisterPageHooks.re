@@ -40,18 +40,11 @@ let useConfirm = (~password: string) => {
   {value, onChange, validation};
 };
 
-type generate = {
-  publicId: string,
-  clientRandom: Js.Typed_array.Uint8Array.t,
-  derivedKey: DerivedKey.fresh_t,
-};
-
 let useFormSubmit =
     (
       ~username: fieldHook(ValidationUsername.t),
       ~password: fieldHook(ValidationPassword.t),
       ~confirm: fieldHook(ValidationPasswordConfirm.t),
-      ~toGenerate: generate => unit,
     ) => {
   let register = Session.useRegister();
 
@@ -80,7 +73,7 @@ let useFormSubmit =
           switch (registerResult) {
           | Ok(registerResult) =>
             let publicId = registerResult.public_id;
-            toGenerate({publicId, clientRandom, derivedKey});
+            Js.Console.log3(publicId, clientRandom, derivedKey);
           | Error(_) => ()
           };
 
@@ -91,13 +84,4 @@ let useFormSubmit =
     },
     (username, password, confirm),
   );
-};
-
-let useStage = () => {
-  let (stage, setStage) = React.useState(() => Form);
-  {
-    current: stage,
-    toGenerate: generate => setStage(_ => Generate(generate)),
-    toSubmit: submit => setStage(_ => Submit(submit)),
-  };
 };

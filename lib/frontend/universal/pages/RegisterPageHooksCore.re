@@ -6,13 +6,3 @@ type fieldHook('kind) = {
   validation: ValidationResult.t('kind),
 };
 
-type t('generate, 'submit) =
-  | Form
-  | Generate('generate)
-  | Submit('submit);
-
-type hook('generate, 'submit) = {
-  current: t('generate, 'submit),
-  toGenerate: 'generate => unit,
-  toSubmit: 'submit => unit,
-};

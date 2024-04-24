@@ -6,21 +6,12 @@ let useNothing = () => {
 
 let useUsername = useNothing;
 
-let usePassword = (~username: string) => {
-  let _ = username;
+let usePassword = (~username as _: string) => {
   useNothing();
 };
 
-let useConfirm = (~password: string) => {
-  let _ = password;
+let useConfirm = (~password as _: string) => {
   useNothing();
 };
 
-let useFormSubmit = (~username, ~password, ~confirm, ~toGenerate) => {
-  let _ = (username, password, confirm, toGenerate);
-  _ => ();
-};
-
-let useStage = () => {
-  {current: Form, toGenerate: _ => (), toSubmit: _ => ()};
-};
+let useFormSubmit = (~username as _, ~password as _, ~confirm as _, _) => ();
