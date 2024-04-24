@@ -1,0 +1,5 @@
+(library
+ (name base64_js)
+ (modes melange)
+ (preprocess
+  (pps melange.ppx)))

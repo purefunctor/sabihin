@@ -8,29 +8,6 @@ module PromiseLet = {
   let ( let* ) = (x, f) => x |> then_(f);
 };
 
-module Base64Utils = {
-  let uint8array_to_base64: Uint8Array.t => string = [%mel.raw
-    {|(bytes) => {
-        const binaryString = Array.from(bytes, (byte) =>
-          String.fromCodePoint(byte)).join("");
-        return btoa(binaryString);
-      }|}
-  ];
-
-  let base64_to_uint8array: string => Uint8Array.t = [%mel.raw
-    {|(base64) => {
-        const binaryString = atob(base64);
-        return Uint8Array.from(binaryString, (c) => c.codePointAt(0));
-      }|}
-  ];
-
-  let array_buffer_to_base64: array_buffer => string =
-    buffer => buffer->Uint8Array.fromBuffer()->uint8array_to_base64;
-
-  let base64_to_array_buffer: string => array_buffer =
-    base64 => base64->base64_to_uint8array->Uint8Array.buffer;
-};
-
 module TextEncoder = {
   type t;
 

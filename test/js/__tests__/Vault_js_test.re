@@ -172,11 +172,9 @@ describe("Base64Utils", () => {
         fresh_master_key.master_key,
       );
 
-    let base64 = Base64Utils.array_buffer_to_base64(wrapped_master_key);
+    let base64 = Base64_js.ArrayBuffer.encode(wrapped_master_key);
     let base64' =
-      base64
-      |> Base64Utils.base64_to_array_buffer
-      |> Base64Utils.array_buffer_to_base64;
+      base64 |> Base64_js.ArrayBuffer.decode |> Base64_js.ArrayBuffer.encode;
 
     resolve(expect(base64) |> toBe(base64'));
   })
