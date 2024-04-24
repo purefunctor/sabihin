@@ -13,7 +13,8 @@ type freshKey = {
 };
 
 let create = (~saltBuffer: ArrayBuffer.t): Js.Promise.t(freshKey) => {
-  let randomData = getRandomValues_impl(Uint8Array.fromLength(128));
+  let randomData =
+    getRandomValues_impl(Uint8Array.fromLength(128)) |> Uint8Array.buffer;
   let protectionKeyIv = getRandomValues_impl(Uint8Array.fromLength(12));
   let verificationKeyIv = getRandomValues_impl(Uint8Array.fromLength(12));
 

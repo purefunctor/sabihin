@@ -13,7 +13,8 @@ type freshKey = {
 
 let create = (~password: string, ~saltBuffer: ArrayBuffer.t) => {
   let textEncoder = TextEncoder.create();
-  let encodedPassword = TextEncoder.encode(textEncoder, password);
+  let encodedPassword =
+    TextEncoder.encode(textEncoder, password) |> Uint8Array.buffer;
   let masterKeyIv = getRandomValues_impl(Uint8Array.fromLength(12));
 
   let* baseKey = {
@@ -39,7 +40,7 @@ let create = (~password: string, ~saltBuffer: ArrayBuffer.t) => {
 
   let* derivedKey = {
     let derivedEncryptionKeyRaw =
-      Uint8Array.fromBuffer(~off=0, ~len=16, keyBits, ());
+      ArrayBuffer.slice(~start=0, ~end_=16, keyBits);
     let format = "raw";
     let keyData = derivedEncryptionKeyRaw;
     let algorithm = {"name": "AES-GCM"};

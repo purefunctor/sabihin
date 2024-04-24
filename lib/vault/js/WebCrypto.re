@@ -58,7 +58,7 @@ external exportKey_impl: (string, cryptoKey) => Js.Promise.t(ArrayBuffer.t) =
 
 [@mel.scope "crypto.subtle"]
 external importKey_impl:
-  (string, Uint8Array.t, 'a, bool, array(string)) => Js.Promise.t(cryptoKey) =
+  (string, ArrayBuffer.t, 'a, bool, array(string)) => Js.Promise.t(cryptoKey) =
   "importKey";
 
 [@mel.scope "crypto.subtle"]
