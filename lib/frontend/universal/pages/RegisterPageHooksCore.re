@@ -5,4 +5,3 @@ type fieldHook('kind) = {
   onChange: Form.t => unit,
   validation: ValidationResult.t('kind),
 };
-
