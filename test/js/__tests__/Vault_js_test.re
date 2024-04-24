@@ -47,7 +47,21 @@ describe("Derived Key", () => {
       );
 
     resolve(pass);
-  })
+  });
+
+  testPromise("it can be exported and imported", () => {
+    let clientRandom = ClientRandom.create();
+    let* saltBuffer = Salt.computeDigest(clientRandom);
+    let* freshDerivedKey =
+      DerivedKey.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+
+    let* exportedDerivedKey =
+      Operations.exportDerivedKey(~derivedKey=freshDerivedKey.derivedKey);
+
+    let* _ = Operations.importDerivedKey(~exportedDerivedKey);
+
+    resolve(pass);
+  });
 });
 
 describe("Master Key", () => {

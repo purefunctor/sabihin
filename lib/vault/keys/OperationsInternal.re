@@ -2,6 +2,24 @@ open Js.Typed_array;
 open PromiseUtil;
 open WebCrypto;
 
+let exportDerivedKey =
+    (~derivedKey: DerivedKeyInternal.t): Js.Promise.t(ArrayBuffer.t) => {
+  let format = "raw";
+  exportKey_impl(format, derivedKey |> DerivedKeyInternal.toCryptoKey);
+};
+
+let importDerivedKey =
+    (~exportedDerivedKey: ArrayBuffer.t): Js.Promise.t(DerivedKeyInternal.t) => {
+  let format = "raw";
+  let keyData = exportedDerivedKey;
+  let algorithm = {"name": "AES-GCM"};
+  let extractable = true;
+  let keyUsages = [|"wrapKey", "unwrapKey"|];
+  let* derivedKeyRaw =
+    importKey_impl(format, keyData, algorithm, extractable, keyUsages);
+  resolve(derivedKeyRaw |> DerivedKeyInternal.fromCryptoKey);
+};
+
 let wrapMasterKey =
     (
       ~derivedKey: DerivedKeyInternal.t,
@@ -241,6 +259,12 @@ let decryptData =
 };
 
 module type S = {
+  let exportDerivedKey:
+    (~derivedKey: DerivedKeyInternal.t) => Js.Promise.t(ArrayBuffer.t);
+
+  let importDerivedKey:
+    (~exportedDerivedKey: ArrayBuffer.t) => Js.Promise.t(DerivedKeyInternal.t);
+
   let wrapMasterKey:
     (
       ~derivedKey: DerivedKeyInternal.t,

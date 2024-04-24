@@ -44,7 +44,7 @@ let create = (~password: string, ~saltBuffer: ArrayBuffer.t) => {
     let format = "raw";
     let keyData = derivedEncryptionKeyRaw;
     let algorithm = {"name": "AES-GCM"};
-    let extractable = false;
+    let extractable = true;
     let keyUsages = [|"wrapKey", "unwrapKey"|];
     importKey_impl(format, keyData, algorithm, extractable, keyUsages);
   };
