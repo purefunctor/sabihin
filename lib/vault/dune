@@ -2,6 +2,5 @@
  (name vault_js)
  (libraries melange.js)
  (modes melange)
- (wrapped false)
  (preprocess
   (pps melange.ppx)))

@@ -1,7 +1,7 @@
 open React.Event;
 open RegisterPageHooksCore;
 open Types_js.Definitions_bs;
-open Vault;
+open Vault_js;
 
 let useField = () => {
   let (state, setState) = React.useState(() => "");
