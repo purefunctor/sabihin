@@ -1,7 +1,5 @@
 open React.Event;
 open RegisterPageHooksCore;
-open Types_js.Definitions_bs;
-open Vault_js;
 
 let useField = () => {
   let (state, setState) = React.useState(() => "");
@@ -63,20 +61,8 @@ let useFormSubmit =
         let _ = {
           let ( let* ) = (f, x) => Js.Promise.then_(x, f);
 
-          let clientRandom = ClientRandom.create();
-          let* saltBuffer = Salt.computeDigest(clientRandom);
-          let* freshDerivedKey = DerivedKey.create(~password, ~saltBuffer);
-
-          let auth_token =
-            Salt.toHash(freshDerivedKey.hashedAuthenticationKey);
-          let* registerResult = register({username, auth_token});
-
-          switch (registerResult) {
-          | Ok(registerResult) =>
-            let publicId = registerResult.public_id;
-            Js.Console.log3(publicId, clientRandom, freshDerivedKey);
-          | Error(_) => ()
-          };
+          let* registerResult = register(~username, ~password);
+          Js.Console.log(registerResult);
 
           Js.Promise.resolve();
         };

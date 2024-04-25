@@ -1,3 +1,5 @@
+open Vault_js;
+
 let useSession = () => {
   let store = SessionContext.useContext();
   let (kind, setKind) = React.useState(() => `Guest);
@@ -12,11 +14,19 @@ let useSession = () => {
 
 let useRegister = () => {
   let store = SessionContext.useContext();
-  React.useCallback0(payload => {
-    open Js.Promise;
-    let ( let* ) = (f, x) => then_(x, f);
+  React.useCallback0((~username, ~password) => {
+    let ( let* ) = (f, x) => Js.Promise.then_(x, f);
 
-    let* registerResult = ApiRegister.register(payload);
+    let clientRandom = ClientRandom.create();
+    let* saltBuffer = Salt.computeDigest(clientRandom);
+    let* freshDerivedKey = DerivedKey.create(~password, ~saltBuffer);
+
+    let* registerResult =
+      ApiRegister.register({
+        username,
+        auth_token: Salt.toHash(freshDerivedKey.hashedAuthenticationKey),
+      });
+
     switch (registerResult) {
     | Ok(registerResult) =>
       store.set(`LoggedIn({public_id: registerResult.public_id}))
