@@ -2,12 +2,11 @@ open Js.Typed_array;
 open WebCrypto;
 
 type t;
-type masterKeyIv;
 
 type freshKey = {
   derivedKey: t,
   hashedAuthenticationKey: ArrayBuffer.t,
-  masterKeyIv,
+  masterKeyIv: Uint8Array.t,
 };
 
 let create:
@@ -18,7 +17,6 @@ external toCryptoKey: t => cryptoKey = "%identity";
 
 module type S = {
   type nonrec t = t;
-  type nonrec masterKeyIv = masterKeyIv;
   type nonrec freshKey = freshKey;
 
   let create:

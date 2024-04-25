@@ -23,7 +23,7 @@ let importDerivedKey =
 let wrapMasterKey =
     (
       ~derivedKey: DerivedKeyInternal.t,
-      ~masterKeyIv: DerivedKeyInternal.masterKeyIv,
+      ~masterKeyIv: Uint8Array.t,
       ~masterKey: MasterKeyInternal.t,
     ) => {
   let format = "raw";
@@ -36,7 +36,7 @@ let wrapMasterKey =
 let unwrapMasterKey =
     (
       ~derivedKey: DerivedKeyInternal.t,
-      ~masterKeyIv: DerivedKeyInternal.masterKeyIv,
+      ~masterKeyIv: Uint8Array.t,
       ~encryptedMasterKey: ArrayBuffer.t,
     )
     : Js.Promise.t(MasterKeyInternal.t) => {
@@ -268,7 +268,7 @@ module type S = {
   let wrapMasterKey:
     (
       ~derivedKey: DerivedKeyInternal.t,
-      ~masterKeyIv: DerivedKeyInternal.masterKeyIv,
+      ~masterKeyIv: Uint8Array.t,
       ~masterKey: MasterKeyInternal.t
     ) =>
     Js.Promise.t(ArrayBuffer.t);
@@ -276,7 +276,7 @@ module type S = {
   let unwrapMasterKey:
     (
       ~derivedKey: DerivedKeyInternal.t,
-      ~masterKeyIv: DerivedKeyInternal.masterKeyIv,
+      ~masterKeyIv: Uint8Array.t,
       ~encryptedMasterKey: ArrayBuffer.t
     ) =>
     Js.Promise.t(MasterKeyInternal.t);

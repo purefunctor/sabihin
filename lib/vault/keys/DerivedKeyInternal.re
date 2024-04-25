@@ -3,12 +3,11 @@ open PromiseUtil;
 open WebCrypto;
 
 type t = cryptoKey;
-type masterKeyIv = Uint8Array.t;
 
 type freshKey = {
   derivedKey: t,
   hashedAuthenticationKey: ArrayBuffer.t,
-  masterKeyIv,
+  masterKeyIv: Uint8Array.t,
 };
 
 let create = (~password: string, ~saltBuffer: ArrayBuffer.t) => {
@@ -63,7 +62,6 @@ external toCryptoKey: t => cryptoKey = "%identity";
 
 module type S = {
   type nonrec t = t;
-  type nonrec masterKeyIv = masterKeyIv;
   type nonrec freshKey = freshKey;
 
   let create:
