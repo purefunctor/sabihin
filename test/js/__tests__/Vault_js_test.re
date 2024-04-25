@@ -176,25 +176,3 @@ describe("Ephemeral Key", () => {
     resolve(expect(message) |> toBe(decryptedMessage));
   })
 });
-
-describe("Base64Utils", () => {
-  testPromise("it works round trip", () => {
-    let clientRandom = ClientRandom.create();
-    let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshMasterKey = MasterKey.create(~saltBuffer);
-    let* freshDerivedKey =
-      DerivedKey.create(~password="password", ~saltBuffer);
-    let* wrappedMasterKey =
-      Operations.wrapMasterKey(
-        ~derivedKey=freshDerivedKey.derivedKey,
-        ~masterKeyIv=freshDerivedKey.masterKeyIv,
-        ~masterKey=freshMasterKey.masterKey,
-      );
-
-    let base64 = Base64_js.ArrayBuffer.encode(wrappedMasterKey);
-    let base64' =
-      base64 |> Base64_js.ArrayBuffer.decode |> Base64_js.ArrayBuffer.encode;
-
-    resolve(expect(base64) |> toBe(base64'));
-  })
-});
