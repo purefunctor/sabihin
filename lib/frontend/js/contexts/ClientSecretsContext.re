@@ -67,8 +67,8 @@ let readFromSessionStorage = (): Js.Promise.t(option(clientSecrets)) => {
   };
 };
 
-include AsyncStore.MakeContext({
-  open AsyncStore;
+include Store.MakeContext({
+  open Store;
 
   type t = option(clientSecrets);
 

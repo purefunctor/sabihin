@@ -1,4 +1,3 @@
-open Store;
 open Types_js;
 open Types_universal;
 
@@ -12,27 +11,35 @@ let readSession = () => {
     | exception _ => None
     };
   };
-  switch (kind) {
-  | Some(kind) => kind
-  | None => `Guest
-  };
+  Js.Promise.resolve(
+    switch (kind) {
+    | Some(kind) => kind
+    | None => `Guest
+    },
+  );
 };
 
 let writeSession = kind => {
   let kindJson = Definitions_bs.write_session_kind(kind);
   let kindString = Json.stringify(kindJson);
   Dom.Storage.(localStorage |> setItem("sessionKind", kindString));
+  Js.Promise.resolve();
 };
 
-include MakeContext({
+include Store.MakeContext({
+  open Store;
+
   type t = Definitions_t.session_kind;
 
   let use = () => {
+    let ( let* ) = (f, x) => Js.Promise.then_(x, f);
+
     let subscribers = React.useRef(Subscribers_js.create());
     let get = readSession;
     let set = kind => {
-      writeSession(kind);
+      let* _ = writeSession(kind);
       Subscribers_js.forEach(subscribers.current, subscriber => subscriber());
+      Js.Promise.resolve();
     };
     let subscribe = callback => {
       let key = Subscribers_js.add(subscribers.current, callback);

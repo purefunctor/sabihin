@@ -5,8 +5,24 @@ let useSession = () => {
   let (kind, setKind) = React.useState(() => `Guest);
 
   React.useEffect0(() => {
-    setKind(_ => store.get());
-    Some(store.subscribe(() => setKind(_ => store.get())));
+    let ( let* ) = (f, x) => Js.Promise.then_(x, f);
+
+    let _ = {
+      let* current = store.get();
+      setKind(_ => current);
+      Js.Promise.resolve();
+    };
+
+    Some(
+      store.subscribe(() => {
+        let _ = {
+          let* current = store.get();
+          setKind(_ => current);
+          Js.Promise.resolve();
+        };
+        ();
+      }),
+    );
   });
 
   kind;
@@ -32,7 +48,8 @@ let useRegister = () => {
     let* _ =
       switch (registerResult) {
       | Ok(registerResult) =>
-        sessionStore.set(`LoggedIn({public_id: registerResult.public_id}));
+        let* _ =
+          sessionStore.set(`LoggedIn({public_id: registerResult.public_id}));
         clientSecretsStore.set(
           Some({
             clientRandom,
