@@ -63,7 +63,7 @@ let unwrapMasterKey =
 let wrapProtectionPrivateKey =
     (
       ~masterKey: MasterKeyInternal.t,
-      ~protectionKeyIv: MasterKeyInternal.protectionKeyIv,
+      ~protectionKeyIv: Uint8Array.t,
       ~protectionPrivateKey: ProtectionKeysInternal.privateKey,
     )
     : Js.Promise.t(ArrayBuffer.t) => {
@@ -77,7 +77,7 @@ let wrapProtectionPrivateKey =
 let unwrapProtectionPrivateKey =
     (
       ~masterKey: MasterKeyInternal.t,
-      ~protectionKeyIv: MasterKeyInternal.protectionKeyIv,
+      ~protectionKeyIv: Uint8Array.t,
       ~encryptedProtectionPrivateKey: ArrayBuffer.t,
     )
     : Js.Promise.t(ProtectionKeysInternal.privateKey) => {
@@ -114,7 +114,7 @@ let exportProtectionPublicKey =
 let wrapVerificationPrivateKey =
     (
       ~masterKey: MasterKeyInternal.t,
-      ~verificationKeyIv: MasterKeyInternal.verificationKeyIv,
+      ~verificationKeyIv: Uint8Array.t,
       ~verificationPrivateKey: VerificationKeysInternal.privateKey,
     )
     : Js.Promise.t(ArrayBuffer.t) => {
@@ -129,7 +129,7 @@ let wrapVerificationPrivateKey =
 let unwrapVerificationPrivateKey =
     (
       ~masterKey: MasterKeyInternal.t,
-      ~verificationKeyIv: MasterKeyInternal.verificationKeyIv,
+      ~verificationKeyIv: Uint8Array.t,
       ~encryptedVerificationPrivateKey: ArrayBuffer.t,
     )
     : Js.Promise.t(VerificationKeysInternal.privateKey) => {
@@ -237,7 +237,7 @@ let verifyData =
 let encryptData =
     (
       ~ephemeralKey: EphemeralKeyInternal.t,
-      ~messageIv: EphemeralKeyInternal.messageIv,
+      ~messageIv: Uint8Array.t,
       data: ArrayBuffer.t,
     )
     : Js.Promise.t(ArrayBuffer.t) => {
@@ -249,7 +249,7 @@ let encryptData =
 let decryptData =
     (
       ~ephemeralKey: EphemeralKeyInternal.t,
-      ~messageIv: EphemeralKeyInternal.messageIv,
+      ~messageIv: Uint8Array.t,
       data: ArrayBuffer.t,
     )
     : Js.Promise.t(ArrayBuffer.t) => {
@@ -283,14 +283,14 @@ module type S = {
   let wrapProtectionPrivateKey:
     (
       ~masterKey: MasterKeyInternal.t,
-      ~protectionKeyIv: MasterKeyInternal.protectionKeyIv,
+      ~protectionKeyIv: Uint8Array.t,
       ~protectionPrivateKey: ProtectionKeysInternal.privateKey
     ) =>
     Js.Promise.t(ArrayBuffer.t);
   let unwrapProtectionPrivateKey:
     (
       ~masterKey: MasterKeyInternal.t,
-      ~protectionKeyIv: MasterKeyInternal.protectionKeyIv,
+      ~protectionKeyIv: Uint8Array.t,
       ~encryptedProtectionPrivateKey: ArrayBuffer.t
     ) =>
     Js.Promise.t(ProtectionKeysInternal.privateKey);
@@ -301,7 +301,7 @@ module type S = {
   let wrapVerificationPrivateKey:
     (
       ~masterKey: MasterKeyInternal.t,
-      ~verificationKeyIv: MasterKeyInternal.verificationKeyIv,
+      ~verificationKeyIv: Uint8Array.t,
       ~verificationPrivateKey: VerificationKeysInternal.privateKey
     ) =>
     Js.Promise.t(ArrayBuffer.t);
@@ -309,7 +309,7 @@ module type S = {
   let unwrapVerificationPrivateKey:
     (
       ~masterKey: MasterKeyInternal.t,
-      ~verificationKeyIv: MasterKeyInternal.verificationKeyIv,
+      ~verificationKeyIv: Uint8Array.t,
       ~encryptedVerificationPrivateKey: ArrayBuffer.t
     ) =>
     Js.Promise.t(VerificationKeysInternal.privateKey);
@@ -350,7 +350,7 @@ module type S = {
   let encryptData:
     (
       ~ephemeralKey: EphemeralKeyInternal.t,
-      ~messageIv: EphemeralKeyInternal.messageIv,
+      ~messageIv: Uint8Array.t,
       ArrayBuffer.t
     ) =>
     Js.Promise.t(ArrayBuffer.t);
@@ -358,7 +358,7 @@ module type S = {
   let decryptData:
     (
       ~ephemeralKey: EphemeralKeyInternal.t,
-      ~messageIv: EphemeralKeyInternal.messageIv,
+      ~messageIv: Uint8Array.t,
       ArrayBuffer.t
     ) =>
     Js.Promise.t(ArrayBuffer.t);

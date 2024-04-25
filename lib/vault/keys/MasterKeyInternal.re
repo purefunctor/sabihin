@@ -3,13 +3,11 @@ open PromiseUtil;
 open WebCrypto;
 
 type t = cryptoKey;
-type protectionKeyIv = Uint8Array.t;
-type verificationKeyIv = Uint8Array.t;
 
 type freshKey = {
   masterKey: t,
-  protectionKeyIv,
-  verificationKeyIv,
+  protectionKeyIv: Uint8Array.t,
+  verificationKeyIv: Uint8Array.t,
 };
 
 let create = (~saltBuffer: ArrayBuffer.t): Js.Promise.t(freshKey) => {
@@ -55,8 +53,6 @@ external toCryptoKey: t => cryptoKey = "%identity";
 
 module type S = {
   type nonrec t = t;
-  type nonrec protectionKeyIv = protectionKeyIv;
-  type nonrec verificationKeyIv = verificationKeyIv;
   type nonrec freshKey = freshKey;
 
   let create: (~saltBuffer: ArrayBuffer.t) => Js.Promise.t(freshKey);

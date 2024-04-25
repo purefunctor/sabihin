@@ -3,11 +3,10 @@ open PromiseUtil;
 open WebCrypto;
 
 type t = cryptoKey;
-type messageIv = Uint8Array.t;
 
 type freshKey = {
   ephemeralKey: t,
-  messageIv,
+  messageIv: Uint8Array.t,
 };
 
 let create = () => {
@@ -28,7 +27,6 @@ external toCryptoKey: t => cryptoKey = "%identity";
 
 module type S = {
   type nonrec t = t;
-  type nonrec messageIv = messageIv;
   type nonrec freshKey = freshKey;
 
   let create: unit => Js.Promise.t(freshKey);
