@@ -1,6 +1,11 @@
 (melange.emit
  (target test)
  (alias test)
- (libraries melange-jest.jest base64_js subscribers_js vault_js)
+ (libraries
+  melange-jest.jest
+  base64_js
+  promise_syntax
+  subscribers_js
+  vault_js)
  (preprocess
   (pps melange.ppx)))

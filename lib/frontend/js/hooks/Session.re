@@ -1,3 +1,4 @@
+open Promise_syntax;
 open Vault_js;
 
 let useSession = () => {
@@ -5,20 +6,16 @@ let useSession = () => {
   let (kind, setKind) = React.useState(() => `Guest);
 
   React.useEffect0(() => {
-    let ( let* ) = (f, x) => Js.Promise.then_(x, f);
-
     let _ = {
-      let* current = store.get();
+      let+ current = store.get();
       setKind(_ => current);
-      Js.Promise.resolve();
     };
 
     Some(
       store.subscribe(() => {
         let _ = {
-          let* current = store.get();
+          let+ current = store.get();
           setKind(_ => current);
-          Js.Promise.resolve();
         };
         ();
       }),
@@ -33,8 +30,6 @@ let useRegister = () => {
   let clientSecretsStore = ClientSecretsContext.useContext();
 
   React.useCallback0((~username, ~password) => {
-    let ( let* ) = (f, x) => Js.Promise.then_(x, f);
-
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
     let* freshDerivedKey = DerivedKey.create(~password, ~saltBuffer);

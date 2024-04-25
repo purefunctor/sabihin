@@ -10,6 +10,7 @@
   styled-ppx.css
   styled-ppx.emotion
   base64_js
+  promise_syntax
   subscribers_js
   types_js
   types_universal

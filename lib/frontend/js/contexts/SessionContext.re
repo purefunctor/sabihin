@@ -1,3 +1,4 @@
+open Promise_syntax;
 open Types_js;
 open Types_universal;
 
@@ -32,14 +33,11 @@ include Store.MakeContext({
   type t = Definitions_t.session_kind;
 
   let use = () => {
-    let ( let* ) = (f, x) => Js.Promise.then_(x, f);
-
     let subscribers = React.useRef(Subscribers_js.create());
     let get = readSession;
     let set = kind => {
-      let* _ = writeSession(kind);
+      let+ _ = writeSession(kind);
       Subscribers_js.forEach(subscribers.current, subscriber => subscriber());
-      Js.Promise.resolve();
     };
     let subscribe = callback => {
       let key = Subscribers_js.add(subscribers.current, callback);

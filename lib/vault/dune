@@ -2,7 +2,7 @@
 
 (library
  (name vault_js)
- (libraries melange.js)
+ (libraries melange.js promise_syntax)
  (modes melange)
  (preprocess
   (pps melange.ppx)))

@@ -1,5 +1,5 @@
 open Js.Typed_array;
-open PromiseUtil;
+open Promise_syntax;
 open WebCrypto;
 
 type privateKey = cryptoKey;

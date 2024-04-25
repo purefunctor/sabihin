@@ -1,9 +1,7 @@
 open Jest;
 open Expect;
+open Promise_syntax;
 open Vault_js;
-
-let resolve = Js.Promise.resolve;
-let ( let* ) = (f, x) => Js.Promise.then_(x, f);
 
 describe("Base64Utils", () => {
   testPromise("it works round trip", () => {

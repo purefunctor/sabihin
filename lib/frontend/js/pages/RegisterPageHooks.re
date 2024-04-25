@@ -57,14 +57,7 @@ let useFormSubmit =
       if (allowUsername && allowPassword && allowConfirm) {
         let username = username.value;
         let password = password.value;
-
-        let _ = {
-          let ( let* ) = (f, x) => Js.Promise.then_(x, f);
-
-          let* _ = register(~username, ~password);
-
-          Js.Promise.resolve();
-        };
+        let _ = register(~username, ~password);
         ();
       };
     },

@@ -1,10 +1,8 @@
 open Jest;
 open Expect;
 open Js.Typed_array;
+open Promise_syntax;
 open Vault_js;
-
-let resolve = Js.Promise.resolve;
-let ( let* ) = (f, x) => Js.Promise.then_(x, f);
 
 describe("Salt", () => {
   test("it works", () => {

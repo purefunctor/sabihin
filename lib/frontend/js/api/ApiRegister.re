@@ -1,9 +1,9 @@
 open ApiCore;
+open Promise_syntax;
 open Types_js.Definitions_bs;
 
 let register = (payload: register_user_payload): Js.Promise.t(registerResult) => {
   open Js.Promise;
-  let ( let* ) = (f, x) => then_(x, f);
 
   let body =
     write_register_user_payload(payload)

@@ -1,4 +1,5 @@
 open Js.Typed_array;
+open Promise_syntax;
 open Vault_js;
 
 type clientSecrets = {
@@ -9,8 +10,6 @@ type clientSecrets = {
 
 let writeClientSecrets =
     (~clientSecrets: clientSecrets): Js.Promise.t(Js.Json.t) => {
-  let ( let* ) = (f, x) => Js.Promise.then_(x, f);
-
   let clientRandom = clientSecrets.clientRandom;
   let* derivedKey =
     Operations.exportDerivedKey(~derivedKey=clientSecrets.derivedKey);
@@ -27,8 +26,6 @@ let writeClientSecrets =
 
 let readClientSecrets =
     (~clientSecretsJson: Js.Json.t): Js.Promise.t(clientSecrets) => {
-  let ( let* ) = (f, x) => Js.Promise.then_(x, f);
-
   let Client_types_bs.{clientRandom, derivedKey, masterKeyIv} =
     Client_types_bs.read_clientSecretsCore(clientSecretsJson);
 
@@ -40,21 +37,15 @@ let readClientSecrets =
 
 let writeToSessionStorage =
     (~clientSecrets: clientSecrets): Js.Promise.t(unit) => {
-  let ( let* ) = (f, x) => Js.Promise.then_(x, f);
-
-  let* clientSecretsJson = writeClientSecrets(~clientSecrets);
+  let+ clientSecretsJson = writeClientSecrets(~clientSecrets);
   let clientSecretsString = Js.Json.stringify(clientSecretsJson);
 
   Dom.Storage.(
     sessionStorage |> setItem("clientSecrets", clientSecretsString)
   );
-
-  Js.Promise.resolve();
 };
 
 let readFromSessionStorage = (): Js.Promise.t(option(clientSecrets)) => {
-  let ( let* ) = (f, x) => Js.Promise.then_(x, f);
-
   let clientSecretsJson =
     Dom.Storage.(sessionStorage |> getItem("clientSecrets"))
     |> Option.map(Js.Json.parseExn);
@@ -73,18 +64,15 @@ include Store.MakeContext({
   type t = option(clientSecrets);
 
   let use = () => {
-    let ( let* ) = (f, x) => Js.Promise.then_(x, f);
-
     let subscribers = React.useRef(Subscribers_js.create());
     let get = readFromSessionStorage;
     let set = clientSecrets => {
-      let* _ =
+      let+ _ =
         switch (clientSecrets) {
         | Some(clientSecrets) => writeToSessionStorage(~clientSecrets)
         | None => Js.Promise.resolve()
         };
       Subscribers_js.forEach(subscribers.current, subscriber => subscriber());
-      Js.Promise.resolve();
     };
     let subscribe = callback => {
       let key = Subscribers_js.add(subscribers.current, callback);
