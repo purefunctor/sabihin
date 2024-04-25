@@ -61,8 +61,7 @@ let useFormSubmit =
         let _ = {
           let ( let* ) = (f, x) => Js.Promise.then_(x, f);
 
-          let* registerResult = register(~username, ~password);
-          Js.Console.log(registerResult);
+          let* _ = register(~username, ~password);
 
           Js.Promise.resolve();
         };

@@ -1,0 +1,11 @@
+(rule
+ (targets
+  client_types_t.ml
+  client_types_t.mli
+  client_types_bs.ml
+  client_types_bs.mli)
+ (deps client_types.atd)
+ (action
+  (progn
+   (run atdgen -t %{deps})
+   (run atdgen -bs %{deps}))))

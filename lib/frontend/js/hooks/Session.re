@@ -13,7 +13,9 @@ let useSession = () => {
 };
 
 let useRegister = () => {
-  let store = SessionContext.useContext();
+  let sessionStore = SessionContext.useContext();
+  let clientSecretsStore = ClientSecretsContext.useContext();
+
   React.useCallback0((~username, ~password) => {
     let ( let* ) = (f, x) => Js.Promise.then_(x, f);
 
@@ -27,11 +29,19 @@ let useRegister = () => {
         auth_token: Salt.toHash(freshDerivedKey.hashedAuthenticationKey),
       });
 
-    switch (registerResult) {
-    | Ok(registerResult) =>
-      store.set(`LoggedIn({public_id: registerResult.public_id}))
-    | Error(_) => ()
-    };
+    let* _ =
+      switch (registerResult) {
+      | Ok(registerResult) =>
+        sessionStore.set(`LoggedIn({public_id: registerResult.public_id}));
+        clientSecretsStore.set(
+          Some({
+            clientRandom,
+            derivedKey: freshDerivedKey.derivedKey,
+            masterKeyIv: freshDerivedKey.masterKeyIv,
+          }),
+        );
+      | Error(_) => Js.Promise.resolve()
+      };
 
     Js.Promise.resolve(registerResult);
   });
