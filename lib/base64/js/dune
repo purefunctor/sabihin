@@ -1,5 +1,18 @@
 (library
  (name base64_js)
  (modes melange)
+ (libraries melange-atdgen-codec-runtime)
  (preprocess
   (pps melange.ppx)))
+
+(rule
+ (targets
+  definitions_t.ml
+  definitions_t.mli
+  definitions_bs.ml
+  definitions_bs.mli)
+ (deps definitions.atd)
+ (action
+  (progn
+   (run atdgen -t %{deps})
+   (run atdgen -bs %{deps}))))
