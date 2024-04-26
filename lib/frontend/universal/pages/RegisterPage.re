@@ -7,8 +7,8 @@ flex-direction: column;
 align-items: stretch;
 
 $(Theme.afterMedium) {
-  margin-left: auto;
-  margin-right: auto;
+  align-self: center;
+  width: 100%;
   max-width: 768px;
 }
 |}
