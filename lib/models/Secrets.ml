@@ -86,7 +86,7 @@ FROM
 JOIN
   users
 ON
-  users.id = private_keys.user_id
+  users.id = secrets.user_id
 WHERE
   username = %string{username};
 |sql}
