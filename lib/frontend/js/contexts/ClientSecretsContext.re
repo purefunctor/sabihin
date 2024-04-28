@@ -35,19 +35,16 @@ let readClientSecrets =
   Js.Promise.resolve({clientRandom, derivedKey, masterKeyIv});
 };
 
-let writeToSessionStorage =
-    (~clientSecrets: clientSecrets): Js.Promise.t(unit) => {
+let writeToLocalStorage = (~clientSecrets: clientSecrets): Js.Promise.t(unit) => {
   let+ clientSecretsJson = writeClientSecrets(~clientSecrets);
   let clientSecretsString = Js.Json.stringify(clientSecretsJson);
 
-  Dom.Storage.(
-    sessionStorage |> setItem("clientSecrets", clientSecretsString)
-  );
+  Dom.Storage.(localStorage |> setItem("clientSecrets", clientSecretsString));
 };
 
-let readFromSessionStorage = (): Js.Promise.t(option(clientSecrets)) => {
+let readFromLocalStorage = (): Js.Promise.t(option(clientSecrets)) => {
   let clientSecretsJson =
-    Dom.Storage.(sessionStorage |> getItem("clientSecrets"))
+    Dom.Storage.(localStorage |> getItem("clientSecrets"))
     |> Option.map(Js.Json.parseExn);
 
   switch (clientSecretsJson) {
@@ -65,11 +62,11 @@ include Store.MakeContext({
 
   let use = () => {
     let subscribers = React.useRef(Subscribers_js.create());
-    let get = readFromSessionStorage;
+    let get = readFromLocalStorage;
     let set = clientSecrets => {
       let+ _ =
         switch (clientSecrets) {
-        | Some(clientSecrets) => writeToSessionStorage(~clientSecrets)
+        | Some(clientSecrets) => writeToLocalStorage(~clientSecrets)
         | None => Js.Promise.resolve()
         };
       Subscribers_js.forEach(subscribers.current, subscriber => subscriber());
