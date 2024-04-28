@@ -22,6 +22,14 @@ let () =
       ( "Secrets",
         List.map
           (fun f -> f pool)
-          Secrets_test.[ initialize; insert; insert_existing ] );
+          Secrets_test.
+            [
+              initialize;
+              insert;
+              insert_existing;
+              get_by_user_id;
+              get_by_username;
+              get_missing;
+            ] );
       ("Nanoid", [ Nanoid_test.simple pool ]);
     ]
