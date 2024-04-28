@@ -35,7 +35,7 @@ let useRegister = () => {
     let* freshDerivedKey = DerivedKey.create(~password, ~saltBuffer);
 
     let* registerResult =
-      ApiRegister.register({
+      ApiRegister.post({
         username,
         auth_token: Salt.toHash(freshDerivedKey.hashedAuthenticationKey),
       });
