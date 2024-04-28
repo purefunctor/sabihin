@@ -9,4 +9,5 @@ let route =
       get "/login" [ "login" ];
       get "/register" [ "register" ];
       get "/profile" [ "profile" ];
+      get "/get-started" [ "get-started" ];
     ]

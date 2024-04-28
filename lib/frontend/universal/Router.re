@@ -5,6 +5,7 @@ let make = () => {
   switch (url.path) {
   | [] => <IndexPage />
   | ["register"] => <RegisterPage />
+  | ["get-started"] => <GetStartedPage />
   | ["not-found"]
   | _ => <NotFoundPage />
   };

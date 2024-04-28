@@ -1,3 +1,4 @@
+open Promise_syntax;
 open React.Event;
 open RegisterPageHooksCore;
 
@@ -57,7 +58,10 @@ let useFormSubmit =
       if (allowUsername && allowPassword && allowConfirm) {
         let username = username.value;
         let password = password.value;
-        let _ = register(~username, ~password);
+        let _ = {
+          let+ _ = register(~username, ~password);
+          ReasonReactRouter.push("/get-started");
+        };
         ();
       };
     },
