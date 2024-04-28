@@ -1,14 +1,16 @@
+open Utils
+
 type t = {
   user_id : int32;
-  client_random_value : bytes;
-  encrypted_master_key : bytes;
-  master_key_iv : bytes;
-  encrypted_protection_key : bytes;
-  protection_key_iv : bytes;
-  exported_protection_key : bytes;
-  encrypted_verification_key : bytes;
-  verification_key_iv : bytes;
-  exported_verification_key : bytes;
+  client_random_value : string;
+  encrypted_master_key : string;
+  master_key_iv : string;
+  encrypted_protection_key : string;
+  protection_key_iv : string;
+  exported_protection_key : string;
+  encrypted_verification_key : string;
+  verification_key_iv : string;
+  exported_verification_key : string;
 }
 
 let create_table =
@@ -35,25 +37,24 @@ CREATE TABLE IF NOT EXISTS secrets (
     ()
 
 let get_by_user_id =
-  let open Utils in
   [%rapper
     get_opt
       {sql|
 SELECT
   @int32{user_id},
 
-  @ByteOctets{client_random_value},
+  @Base64Octets{client_random_value},
 
-  @ByteOctets{encrypted_master_key},
-  @ByteOctets{master_key_iv},
+  @Base64Octets{encrypted_master_key},
+  @Base64Octets{master_key_iv},
 
-  @ByteOctets{encrypted_protection_key},
-  @ByteOctets{protection_key_iv},
-  @ByteOctets{exported_protection_key},
+  @Base64Octets{encrypted_protection_key},
+  @Base64Octets{protection_key_iv},
+  @Base64Octets{exported_protection_key},
 
-  @ByteOctets{encrypted_verification_key},
-  @ByteOctets{verification_key_iv},
-  @ByteOctets{exported_verification_key}
+  @Base64Octets{encrypted_verification_key},
+  @Base64Octets{verification_key_iv},
+  @Base64Octets{exported_verification_key}
 FROM
   secrets
 WHERE
@@ -62,25 +63,24 @@ WHERE
       record_out]
 
 let get_by_username =
-  let open Utils in
   [%rapper
     get_opt
       {sql|
 SELECT
   @int32{user_id},
 
-  @ByteOctets{client_random_value},
+  @Base64Octets{client_random_value},
 
-  @ByteOctets{encrypted_master_key},
-  @ByteOctets{master_key_iv},
+  @Base64Octets{encrypted_master_key},
+  @Base64Octets{master_key_iv},
 
-  @ByteOctets{encrypted_protection_key},
-  @ByteOctets{protection_key_iv},
-  @ByteOctets{exported_protection_key},
+  @Base64Octets{encrypted_protection_key},
+  @Base64Octets{protection_key_iv},
+  @Base64Octets{exported_protection_key},
 
-  @ByteOctets{encrypted_verification_key},
-  @ByteOctets{verification_key_iv},
-  @ByteOctets{exported_verification_key}
+  @Base64Octets{encrypted_verification_key},
+  @Base64Octets{verification_key_iv},
+  @Base64Octets{exported_verification_key}
 FROM
   secrets
 JOIN
@@ -93,7 +93,6 @@ WHERE
       record_out]
 
 let insert =
-  let open Utils in
   [%rapper
     execute
       {sql|
@@ -116,17 +115,17 @@ INSERT INTO secrets (
 VALUES(
   %int32{user_id},
 
-  %ByteOctets{client_random_value},
+  %Base64Octets{client_random_value},
 
-  %ByteOctets{encrypted_master_key},
-  %ByteOctets{master_key_iv},
+  %Base64Octets{encrypted_master_key},
+  %Base64Octets{master_key_iv},
 
-  %ByteOctets{encrypted_protection_key},
-  %ByteOctets{protection_key_iv},
-  %ByteOctets{exported_protection_key},
+  %Base64Octets{encrypted_protection_key},
+  %Base64Octets{protection_key_iv},
+  %Base64Octets{exported_protection_key},
 
-  %ByteOctets{encrypted_verification_key},
-  %ByteOctets{verification_key_iv},
-  %ByteOctets{exported_verification_key}
+  %Base64Octets{encrypted_verification_key},
+  %Base64Octets{verification_key_iv},
+  %Base64Octets{exported_verification_key}
 );
 |sql}]

@@ -1,8 +1,10 @@
-module ByteOctets = struct
+module Base64Octets = struct
   let t =
-    Caqti_type.(
-      custom
-        ~encode:(fun v -> Ok (Bytes.to_string v))
-        ~decode:(fun v -> Ok (Bytes.of_string v))
-        octets)
+    let encode v =
+      Base64.decode v |> Result.map_error (fun (`Msg msg) -> msg)
+    in
+    let decode v =
+      Base64.encode v |> Result.map_error (fun (`Msg msg) -> msg)
+    in
+    Caqti_type.(custom ~encode ~decode octets)
 end

@@ -15,70 +15,49 @@ let get_secrets request (user_id : int32) =
   let* secrets =
     Dream.sql request (fun db -> Models.Secrets.get_by_user_id ~user_id db)
   in
-  let base64_encode field =
-    field |> String.of_bytes |> Base64.encode |> Lwt_result.lift
-  in
-
   match secrets with
-  | Some secrets ->
-      let* client_random_value = base64_encode secrets.client_random_value in
-      let* encrypted_master_key = base64_encode secrets.encrypted_master_key in
-      let* master_key_iv = base64_encode secrets.master_key_iv in
-      let* encrypted_protection_key =
-        base64_encode secrets.encrypted_protection_key
-      in
-      let* protection_key_iv = base64_encode secrets.protection_key_iv in
-      let* exported_protection_key =
-        base64_encode secrets.exported_protection_key
-      in
-      let* encrypted_verification_key =
-        base64_encode secrets.encrypted_verification_key
-      in
-      let* verification_key_iv = base64_encode secrets.verification_key_iv in
-      let* exported_verification_key =
-        base64_encode secrets.exported_verification_key
-      in
-      let secrets : register_keys_payload option =
-        Some
-          {
-            client_random_value;
-            encrypted_master_key;
-            master_key_iv;
-            encrypted_protection_key;
-            protection_key_iv;
-            exported_protection_key;
-            encrypted_verification_key;
-            verification_key_iv;
-            exported_verification_key;
-          }
-      in
-      Lwt.return_ok secrets
+  | Some
+      {
+        user_id = _;
+        client_random_value;
+        encrypted_master_key;
+        master_key_iv;
+        encrypted_protection_key;
+        protection_key_iv;
+        exported_protection_key;
+        encrypted_verification_key;
+        verification_key_iv;
+        exported_verification_key;
+      } ->
+      Lwt.return_ok
+      @@ Some
+           {
+             client_random_value;
+             encrypted_master_key;
+             master_key_iv;
+             encrypted_protection_key;
+             protection_key_iv;
+             exported_protection_key;
+             encrypted_verification_key;
+             verification_key_iv;
+             exported_verification_key;
+           }
   | None -> Lwt.return_ok None
 
-let insert_secrets request (user_id : int32) (secrets : register_keys_payload) =
+let insert_secrets request (user_id : int32)
+    ({
+       client_random_value;
+       encrypted_master_key;
+       master_key_iv;
+       encrypted_protection_key;
+       exported_protection_key;
+       protection_key_iv;
+       encrypted_verification_key;
+       exported_verification_key;
+       verification_key_iv;
+     } :
+      register_keys_payload) =
   let open Lwt_result.Syntax in
-  let base64_decode field =
-    field |> Base64.decode |> Result.map Bytes.of_string |> Lwt_result.lift
-  in
-
-  let* client_random_value = base64_decode secrets.client_random_value in
-  let* encrypted_master_key = base64_decode secrets.encrypted_master_key in
-  let* master_key_iv = base64_decode secrets.master_key_iv in
-  let* encrypted_protection_key =
-    base64_decode secrets.encrypted_protection_key
-  in
-  let* protection_key_iv = base64_decode secrets.protection_key_iv in
-  let* exported_protection_key =
-    base64_decode secrets.exported_protection_key
-  in
-  let* encrypted_verification_key =
-    base64_decode secrets.encrypted_verification_key
-  in
-  let* verification_key_iv = base64_decode secrets.verification_key_iv in
-  let* exported_verification_key =
-    base64_decode secrets.exported_verification_key
-  in
-
   Dream.sql request @@ fun connection ->
   let* has_keys =
     Models.Secrets.get_by_user_id ~user_id connection
