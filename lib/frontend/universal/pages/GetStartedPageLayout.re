@@ -18,7 +18,5 @@ $(Theme.afterMedium) {
 
 [@react.component]
 let make = (~children) => {
-  <main className=getStartedCss>
-    children
-  </main>;
+  <main className=getStartedCss> children </main>;
 };
