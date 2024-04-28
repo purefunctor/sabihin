@@ -112,6 +112,7 @@ let generateKeys =
     verification_key_iv:
       freshMasterKey.verificationKeyIv |> Base64_js.Uint8Array.encode,
   };
+  let* _ = ApiSecrets.post(registerKeysPayload);
   let* _ = sleep(500);
 
   setStage(_ => Some(Stage.Finished));
