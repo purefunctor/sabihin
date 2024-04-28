@@ -48,6 +48,7 @@
   (reason-react-ppx
    (>= "0.14.0"))
   server-reason-react
+  styled-ppx
   (yojson
    (>= "2.1.2"))
   (ppx_yojson_conv

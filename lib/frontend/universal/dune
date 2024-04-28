@@ -1,0 +1,19 @@
+(include_subdirs unqualified)
+
+(library
+ (name frontend_lib_universal)
+ (public_name sabihin.frontend_lib_universal)
+ (wrapped false)
+ (libraries
+  server-reason-react.react
+  server-reason-react.reactDom
+  styled-ppx.css_native
+  styled-ppx.emotion_native
+  types_universal
+  validation_universal)
+ (preprocess
+  (pps
+   styled-ppx
+   --native
+   server-reason-react.ppx
+   server-reason-react.melange_ppx)))

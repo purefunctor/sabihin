@@ -790,3 +790,58 @@ a {
 }
 
 /* #endregion */
+
+/* #region: Profile.re */
+
+.profile-content {
+    flex-grow: 1;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.profile-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    background-color: var(--neutral);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.profile-photo {
+    border-radius: 100%;
+    border-color: var(--white);
+    border-width: 2px;
+    border-style: solid;
+}
+
+.profile-info {
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.profile-info > p {
+    margin: 0;
+}
+
+.profile-username-button {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.profile-username-span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.profile-public-id {
+    color: var(--offwhite);
+}
+
+/* #endregion */

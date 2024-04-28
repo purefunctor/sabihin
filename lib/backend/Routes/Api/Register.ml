@@ -1,5 +1,5 @@
 open HigherOrderHandlers
-open Types_native.Defs_j
+open Types_native.Definitions_j
 
 let handler request =
   let inner { username; auth_token } =
@@ -14,10 +14,10 @@ let handler request =
         Dream.info (fun log -> log "Created User: %s" public_id);
         Dream.set_session_field request "id" id;%lwt
         Dream.set_session_field request "public_id" public_id;%lwt
-        Dream.json @@ string_of_register_response_t { public_id }
+        Dream.json @@ string_of_register_response { public_id }
     | Error e ->
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
         Dream.json ~code:422
-        @@ string_of_register_error_content_t `CouldNotRegister
+        @@ string_of_register_error_content `CouldNotRegister
   in
-  with_json_body request register_payload_t_of_string inner
+  with_json_body request register_user_payload_of_string inner

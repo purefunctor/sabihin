@@ -1,7 +1,8 @@
+(include_subdirs unqualified)
+
 (library
  (name vault_js)
- (libraries melange.js)
+ (libraries melange.js promise_syntax)
  (modes melange)
- (wrapped false)
  (preprocess
   (pps melange.ppx)))

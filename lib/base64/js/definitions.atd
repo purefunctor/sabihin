@@ -1,0 +1,5 @@
+type arrayBuffer = string wrap
+  <ocaml module="Base64_ArrayBuffer">
+
+type uint8Array = string wrap
+  <ocaml module="Base64_Uint8Array">

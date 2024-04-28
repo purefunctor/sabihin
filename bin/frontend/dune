@@ -1,7 +1,7 @@
 (melange.emit
  (target output)
  (alias frontend)
- (libraries components_js reason-react melange.belt)
+ (libraries frontend_lib_js reason-react melange.belt)
  (preprocess
   (pps melange.ppx reason-react-ppx))
  (module_systems es6))

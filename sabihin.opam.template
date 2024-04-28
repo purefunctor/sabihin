@@ -1,3 +1,4 @@
 pin-depends: [
-  ["server-reason-react.dev" "https://github.com/ml-in-barcelona/server-reason-react/archive/b8756a5c71345e5e8f087a9ec7209b43a066d5f0.tar.gz"]
+  ["server-reason-react.dev" "https://github.com/ml-in-barcelona/server-reason-react/archive/ded352952dc49fcc7cad22956e0887c964b3c68b.tar.gz"]
+  ["styled-ppx.dev" "https://github.com/davesnx/styled-ppx/archive/f7affb36656c63a69ab8256a5149d30ef684563e.tar.gz"]
 ]

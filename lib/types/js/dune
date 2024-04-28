@@ -1,19 +1,13 @@
 (library
  (name types_js)
  (modes melange)
- (libraries melange-atdgen-codec-runtime melange.js))
+ (libraries melange-atdgen-codec-runtime melange.js types_universal))
 
 (copy_files
  (files "../*.{atd}"))
 
 (rule
- (targets defs_t.ml defs_t.mli)
- (deps defs.atd)
+ (targets definitions_bs.ml definitions_bs.mli)
+ (deps definitions.atd)
  (action
-  (run atdgen -t %{deps})))
-
-(rule
- (targets defs_bs.ml defs_bs.mli)
- (deps defs.atd)
- (action
-  (run atdgen -bs %{deps})))
+  (run atdgen -open "Types_universal" -bs %{deps})))

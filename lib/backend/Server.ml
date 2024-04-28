@@ -6,7 +6,7 @@ let error_template _ _ suggested_response =
   match code with
   | 404 ->
       Dream.set_header suggested_response "Content-Type" Dream.text_html;
-      Dream.set_body suggested_response @@ Render.AppPage.render [ "not-found" ];
+      Dream.set_body suggested_response @@ Page.toString [ "not-found" ];
       Lwt.return suggested_response
   | _ ->
       let content_type = Dream.header suggested_response "Content-Type" in
@@ -36,12 +36,7 @@ let get_server_handler database_url server_secret () =
   @@ Dream.logger @@ Dream.cookie_sessions
   @@ Dream.sql_pool database_url
   @@ Dream.router
-       [
-         Routes.Static.route;
-         Routes.Pages.route;
-         Routes.Api.route;
-         Routes.LiveReload.route ();
-       ]
+       [ Routes.Static.route (); Routes.Pages.route; Routes.Api.route ]
 
 let run ~database_url ~server_secret () =
   Dream.run ~error_handler ~interface

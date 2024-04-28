@@ -6,6 +6,7 @@ let () =
   Dream.initialize_log ();
   let cipher_secret = Dream.to_base64url (Dream.random 128) in
   Backend_lib.Cipher.set_current_key cipher_secret;
+  Backend_lib.Vite.enable_dev ();
   Lwt_main.run
   @@ Alcotest_lwt.run "Backend"
        [

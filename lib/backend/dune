@@ -6,7 +6,7 @@
  (modes native)
  (libraries
   caqti-driver-postgresql
-  components_native
+  frontend_lib_universal
   dream
   models
   server-reason-react.react
