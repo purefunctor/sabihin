@@ -29,20 +29,16 @@ let register_fake_user () =
   in
   Lwt.return cookie_headers
 
-let fake_payload =
-  let get_random_base64 () =
-    Mirage_crypto_rng_unix.getrandom 16
-    |> Cstruct.to_string |> Base64.encode_string
-  in
-  let client_random_value = get_random_base64 () in
-  let encrypted_master_key = get_random_base64 () in
-  let master_key_iv = get_random_base64 () in
-  let encrypted_protection_key = get_random_base64 () in
-  let protection_key_iv = get_random_base64 () in
-  let encrypted_verification_key = get_random_base64 () in
-  let verification_key_iv = get_random_base64 () in
-  let exported_protection_key = get_random_base64 () in
-  let exported_verification_key = get_random_base64 () in
+let make_payload generate =
+  let client_random_value = generate () in
+  let encrypted_master_key = generate () in
+  let master_key_iv = generate () in
+  let encrypted_protection_key = generate () in
+  let protection_key_iv = generate () in
+  let encrypted_verification_key = generate () in
+  let verification_key_iv = generate () in
+  let exported_protection_key = generate () in
+  let exported_verification_key = generate () in
   string_of_register_keys_payload
     {
       client_random_value;
@@ -55,6 +51,17 @@ let fake_payload =
       exported_protection_key;
       exported_verification_key;
     }
+
+let fake_payload =
+  let generate () =
+    Mirage_crypto_rng_unix.getrandom 16
+    |> Cstruct.to_string |> Base64.encode_string
+  in
+  make_payload generate
+
+let bad_payload =
+  let generate () = String.make 16 ' ' in
+  make_payload generate
 
 let it_works =
   let inner () =
@@ -111,3 +118,18 @@ let already_registered =
     Lwt.return ()
   in
   make_test_case "already registered" inner
+
+let invalid_payload =
+  let inner () =
+    let%lwt cookie_headers = register_fake_user () in
+    let%lwt response, body =
+      post_json cookie_headers bad_payload "http://localhost:8080/api/secrets"
+    in
+    Cohttp_lwt.Body.drain_body body;%lwt
+
+    let code = response |> Response.status |> Code.code_of_status in
+    let _ = Alcotest.(check int) "status code is 400" 400 code in
+
+    Lwt.return ()
+  in
+  make_test_case "invalid payload" inner

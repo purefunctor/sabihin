@@ -20,5 +20,6 @@ let () =
                invalid_username;
              ] );
          ( "/api/secrets",
-           Secrets_Api_test.[ it_works; it_fails; already_registered ] );
+           Secrets_Api_test.
+             [ it_works; it_fails; already_registered; invalid_payload ] );
        ]
