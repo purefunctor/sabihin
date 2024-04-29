@@ -1,5 +1,6 @@
 module Username = {
   type t =
+    | ApiError(string)
     | TooShort
     | TooLong
     | InvalidCharacter(string)

@@ -5,6 +5,7 @@ let hintFn = (validation: ValidationResult.t(ValidationCore.Username.t)) => {
   | Validated(validated) =>
     let (className, text) =
       switch (validated) {
+      | ApiError(e) => (failureCss, "Error: " ++ e)
       | TooShort => (failureCss, "Must be more than 3 characters.")
       | TooLong => (failureCss, "Must be less than 16 characters.")
       | InvalidCharacter(c) => (
@@ -22,6 +23,7 @@ let fieldCssFn = (validation: ValidationResult.t(ValidationCore.Username.t)) => 
   switch (validation) {
   | Validated(validated) =>
     switch (validated) {
+    | ApiError(_)
     | TooShort
     | TooLong
     | InvalidCharacter(_) => " " ++ fieldFailureCss
