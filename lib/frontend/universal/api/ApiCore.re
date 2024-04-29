@@ -18,3 +18,19 @@ let tryParseError = (parser, json) => {
   | exception _ => Error(`CouldNotParse)
   };
 };
+
+let generalErrorToString = (generalError, apiErrorToString) => {
+  switch (generalError) {
+  | `CouldNotParse => "Could not parse error reponse."
+  | `ApiError(apiError) => apiErrorToString(apiError)
+  };
+};
+
+let registerErrorToString = (registerError: registerError) => {
+  generalErrorToString(registerError, ({content}) => {
+    switch (content) {
+    | `JSON(`CouldNotRegister) => "Could not register user."
+    | `Raw(message) => message
+    }
+  });
+};
