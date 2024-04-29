@@ -125,3 +125,30 @@ let creates_session =
     Lwt.return ()
   in
   make_test_case "creates session" inner
+
+let invalid_username =
+  let inner () =
+    let%lwt cookie_headers = get_cookie_headers () in
+    let%lwt response, body =
+      let json =
+        string_of_register_user_payload
+          {
+            username = "invalid&username";
+            auth_token = double_hmac "auth_token";
+          }
+      in
+      post_json cookie_headers json "http://localhost:8080/api/register"
+    in
+
+    let code = Response.status response |> Code.code_of_status in
+    let%lwt body = Cohttp_lwt.Body.to_string body in
+    let%lwt parsed = is_parsed_by body yojson_error_response_of_string in
+
+    let _ =
+      Alcotest.(check int) "status code is 422" 422 code;
+      Alcotest.(check bool) "response can be parsed" true parsed
+    in
+
+    Lwt.return ()
+  in
+  make_test_case "invalid username" inner

@@ -12,7 +12,13 @@ let () =
        [
          ( "/api/register",
            Register_Api_test.
-             [ it_works; it_fails; already_registered; creates_session ] );
+             [
+               it_works;
+               it_fails;
+               already_registered;
+               creates_session;
+               invalid_username;
+             ] );
          ( "/api/secrets",
            Secrets_Api_test.[ it_works; it_fails; already_registered ] );
        ]
