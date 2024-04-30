@@ -4,7 +4,6 @@ flex-grow: 1;
 display: flex;
 flex-direction: column;
 font-family: "Poppins";
-gap: 1rem;
 margin-top: 2rem;
 margin-bottom: 2rem;
 
