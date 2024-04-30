@@ -17,6 +17,12 @@ module Password = {
     | VeryStrong;
 };
 
+module PasswordBasic = {
+  type t =
+    | TooShort
+    | Success;
+};
+
 module PasswordConfirm = {
   type t =
     | Yes
