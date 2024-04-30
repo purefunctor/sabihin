@@ -26,5 +26,4 @@ let handler request =
         Dream.json ~code:422
         @@ string_of_register_error_content `CouldNotRegister
   in
-
   with_json_body request register_user_payload_of_string inner
