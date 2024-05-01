@@ -13,7 +13,10 @@ let handler request =
     match%lwt get_user request username with
     | Ok (Some { client_random; _ }) ->
         Dream.info (fun log -> log "User exists, serving client salt.");
-        let salt = client_random |> Bytes.of_string |> Salt.compute_digest in
+        let salt =
+          client_random |> Base64.decode_exn |> Bytes.of_string
+          |> Salt.compute_digest
+        in
         Dream.json @@ string_of_login_salt_response { salt }
     | Ok None ->
         Dream.info (fun log -> log "User does not exist, serving server salt.");
