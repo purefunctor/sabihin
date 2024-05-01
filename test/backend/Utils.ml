@@ -7,11 +7,11 @@ let perish action =
     | Ok o -> Lwt.return o
     | Error e -> raise (Caqti_error.Exn e))
 
-let make_test_case name ?(speed : Alcotest.speed_level = `Quick) action =
+let make_test_case prefix name ?(speed : Alcotest.speed_level = `Quick) action =
   let database_name =
     Cstruct.of_string name |> Mirage_crypto.Hash.SHA256.digest
     |> Cstruct.to_hex_string
-    |> Printf.sprintf "sabihin_backend_test_%s"
+    |> Printf.sprintf "sabihin_backend_test_%s_%s" prefix
   in
   let database_url = Test_toolbox.Database.make_url ~options database_name in
 

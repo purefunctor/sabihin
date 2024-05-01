@@ -8,7 +8,7 @@ let username = "purefunctor"
 let auth_token = String.make 128 ' '
 let client_random = String.make 16 ' ' |> Base64.encode_string
 
-let it_works =
+let it_works prefix =
   let inner () =
     let%lwt cookie_headers = get_cookie_headers () in
     let%lwt response, body =
@@ -29,9 +29,9 @@ let it_works =
 
     Lwt.return ()
   in
-  make_test_case "it works" inner
+  make_test_case prefix "it works" inner
 
-let it_fails =
+let it_fails prefix =
   let inner () =
     let%lwt response, body =
       Client.post (Uri.of_string "http://localhost:8080/api/register")
@@ -48,9 +48,9 @@ let it_fails =
 
     Lwt.return ()
   in
-  make_test_case "it fails" inner
+  make_test_case prefix "it fails" inner
 
-let already_registered =
+let already_registered prefix =
   let inner () =
     let%lwt cookie_headers = get_cookie_headers () in
     let%lwt _, body =
@@ -88,9 +88,9 @@ let already_registered =
 
     Lwt.return ()
   in
-  make_test_case "already registered" inner
+  make_test_case prefix "already registered" inner
 
-let creates_session =
+let creates_session prefix =
   let inner () =
     let%lwt cookie_headers = get_cookie_headers () in
     let original_session_cookie =
@@ -118,9 +118,9 @@ let creates_session =
 
     Lwt.return ()
   in
-  make_test_case "creates session" inner
+  make_test_case prefix "creates session" inner
 
-let invalid_username =
+let invalid_username prefix =
   let inner () =
     let%lwt cookie_headers = get_cookie_headers () in
     let%lwt response, body =
@@ -142,4 +142,4 @@ let invalid_username =
 
     Lwt.return ()
   in
-  make_test_case "invalid username" inner
+  make_test_case prefix "invalid username" inner

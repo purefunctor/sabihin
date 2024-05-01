@@ -15,15 +15,19 @@ let () =
   @@ Alcotest_lwt.run "Backend"
        [
          ( "/api/register",
-           Register_Api_test.
-             [
-               it_works;
-               it_fails;
-               already_registered;
-               creates_session;
-               invalid_username;
-             ] );
+           List.map
+             (fun f -> f "register")
+             Register_Api_test.
+               [
+                 it_works;
+                 it_fails;
+                 already_registered;
+                 creates_session;
+                 invalid_username;
+               ] );
          ( "/api/secrets",
-           Secrets_Api_test.
-             [ it_works; it_fails; already_registered; invalid_payload ] );
+           List.map
+             (fun f -> f "secrets")
+             Secrets_Api_test.
+               [ it_works; it_fails; already_registered; invalid_payload ] );
        ]

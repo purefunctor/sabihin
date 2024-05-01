@@ -65,7 +65,7 @@ let bad_payload =
   let generate () = String.make 16 ' ' in
   make_payload generate
 
-let it_works =
+let it_works prefix =
   let inner () =
     let%lwt cookie_headers = register_fake_user () in
     let%lwt response, body =
@@ -78,9 +78,9 @@ let it_works =
 
     Lwt.return ()
   in
-  make_test_case "it works" inner
+  make_test_case prefix "it works" inner
 
-let it_fails =
+let it_fails prefix =
   let inner () =
     let%lwt cookie_headers = register_fake_user () in
     let%lwt response, body =
@@ -93,9 +93,9 @@ let it_fails =
 
     Lwt.return ()
   in
-  make_test_case "it fails" inner
+  make_test_case prefix "it fails" inner
 
-let already_registered =
+let already_registered prefix =
   let inner () =
     let%lwt cookie_headers = register_fake_user () in
     let%lwt first_response, body =
@@ -119,9 +119,9 @@ let already_registered =
 
     Lwt.return ()
   in
-  make_test_case "already registered" inner
+  make_test_case prefix "already registered" inner
 
-let invalid_payload =
+let invalid_payload prefix =
   let inner () =
     let%lwt cookie_headers = register_fake_user () in
     let%lwt response, body =
@@ -134,4 +134,4 @@ let invalid_payload =
 
     Lwt.return ()
   in
-  make_test_case "invalid payload" inner
+  make_test_case prefix "invalid payload" inner
