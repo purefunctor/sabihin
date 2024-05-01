@@ -5,20 +5,25 @@ open Promise_syntax;
 open Vault_js;
 
 describe("Salt", () => {
-  test("it works", () => {
-    let text_encoder = TextEncoder.create();
-    let text_decoder = TextDecoder.create();
+  testPromise("it works", () => {
+    let textEncoder = TextEncoder.create();
+    let textDecoder = TextDecoder.create();
 
-    let encoded_text = TextEncoder.encode(text_encoder, "ABCDEF0123456789");
-    let salt_base = Salt.computeBase(encoded_text);
-    let decoded_salt = TextDecoder.decode(text_decoder, salt_base);
+    let encodedText = TextEncoder.encode(textEncoder, "ABCDEF0123456789");
+    let saltBase = Salt.computeBase(encodedText);
+    let* saltDigest = Salt.computeDigest(encodedText);
+    let decodedSalt = TextDecoder.decode(textDecoder, saltBase);
+    let digestHash = Salt.toHash(saltDigest);
 
-    assert(Uint8Array.length(salt_base) == 256);
+    assert(Uint8Array.length(saltBase) == 256);
 
-    expect(decoded_salt)
-    |> toBe(
-         "sabihin.phLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLABCDEF0123456789",
-       );
+    resolve(
+      expect([|decodedSalt, digestHash|])
+      |> toEqual([|
+           "sabihin.phLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLABCDEF0123456789",
+           "817a0d4828d8fd886f6443962c8d34b0ab44e7cc85cc377cd6676f491c35be34",
+         |]),
+    );
   })
 });
 
