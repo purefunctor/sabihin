@@ -1,7 +1,9 @@
 open Mirage_crypto.Hash
 
 let compute_base (salt : Bytes.t) =
-  assert (Bytes.length salt == 16);
+  if Bytes.length salt != 16 then
+    invalid_arg
+    @@ Printf.sprintf "expected 16 bytes got %i bytes" (Bytes.length salt);
   let salt_buffer = Buffer.create 256 in
 
   (* Encode first 10 bytes. *)
