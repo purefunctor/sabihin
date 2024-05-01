@@ -22,4 +22,6 @@ let get_server_random () =
   | Some value -> value
   | None -> failwith "set_server_random was not called."
 
-let server_salt () = get_server_random () |> Salt.compute_digest
+let server_salt () =
+  let server_random = get_server_random () in
+  Salt.compute_digest (`Bytes server_random)

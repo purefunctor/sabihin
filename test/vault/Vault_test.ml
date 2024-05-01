@@ -1,9 +1,12 @@
 open Vault_native
 
 let it_works () =
-  let not_random = Bytes.of_string "ABCDEF0123456789" in
-  let salt_base = Salt.compute_base not_random |> Bytes.to_string in
-  let salt_digest = Salt.compute_digest not_random in
+  let salt_base =
+    Salt.compute_base (`String "ABCDEF0123456789") |> Bytes.to_string
+  in
+  let salt_digest =
+    Salt.compute_digest (`String "ABCDEF0123456789") |> Cstruct.to_hex_string
+  in
   Alcotest.(check int) "length is 256" 256 (String.length salt_base);
   Alcotest.(check string)
     "salt is equal"

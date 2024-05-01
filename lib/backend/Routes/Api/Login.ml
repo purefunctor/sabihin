@@ -14,13 +14,16 @@ let handler request =
     | Ok (Some { client_random; _ }) ->
         Dream.info (fun log -> log "User exists, serving client salt.");
         let salt =
-          client_random |> Base64.decode_exn |> Bytes.of_string
-          |> Salt.compute_digest
+          let client_random = Base64.decode_exn client_random in
+          let client_salt = Salt.compute_digest (`String client_random) in
+          client_salt |> Cstruct.to_string |> Base64.encode_exn
         in
         Dream.json @@ string_of_login_salt_response { salt }
     | Ok None ->
         Dream.info (fun log -> log "User does not exist, serving server salt.");
-        let salt = Cipher.server_salt () in
+        let salt =
+          Cipher.server_salt () |> Cstruct.to_string |> Base64.encode_exn
+        in
         Dream.json @@ string_of_login_salt_response { salt }
     | Error (#Caqti_error.t as e) ->
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);

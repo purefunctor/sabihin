@@ -8,8 +8,14 @@ let username = "purefunctor"
 let auth_token = String.make 128 'A'
 let client_random_raw = String.make 16 'P'
 let client_random = Base64.encode_string client_random_raw
-let client_salt = Salt.compute_digest @@ Bytes.of_string client_random_raw
-let server_salt = Salt.compute_digest @@ Bytes.of_string server_random
+
+let client_salt =
+  Salt.compute_digest (`String client_random_raw)
+  |> Cstruct.to_string |> Base64.encode_exn
+
+let server_salt =
+  Salt.compute_digest (`String server_random)
+  |> Cstruct.to_string |> Base64.encode_exn
 
 let default_register () =
   let%lwt cookie_headers = get_cookie_headers () in

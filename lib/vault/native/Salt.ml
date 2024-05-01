@@ -1,9 +1,15 @@
 open Mirage_crypto.Hash
 
-let compute_base (salt : Bytes.t) =
-  if Bytes.length salt != 16 then
-    invalid_arg
-    @@ Printf.sprintf "expected 16 bytes got %i bytes" (Bytes.length salt);
+type input = [ `String of String.t | `Bytes of Bytes.t ]
+
+let compute_base (input : input) =
+  let length =
+    match input with
+    | `String input -> String.length input
+    | `Bytes input -> Bytes.length input
+  in
+  if length != 16 then
+    invalid_arg @@ Printf.sprintf "expected length 16 got %i" length;
   let salt_buffer = Buffer.create 256 in
 
   (* Encode first 10 bytes. *)
@@ -15,10 +21,11 @@ let compute_base (salt : Bytes.t) =
   done;
 
   (* Encode next 16 bytes. *)
-  Buffer.add_bytes salt_buffer salt;
+  (match input with
+  | `String input -> Buffer.add_string salt_buffer input
+  | `Bytes input -> Buffer.add_bytes salt_buffer input);
 
   Buffer.to_bytes salt_buffer
 
-let compute_digest (salt : Bytes.t) =
-  compute_base salt |> Cstruct.of_bytes |> SHA256.digest
-  |> Cstruct.to_hex_string
+let compute_digest (input : input) =
+  compute_base input |> Cstruct.of_bytes |> SHA256.digest

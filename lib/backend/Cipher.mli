@@ -31,6 +31,6 @@ val double_hmac : string -> string
 (** [double_hmac value] calculates the HMAC of the HMAC of the [value] with the
     cipher secret as the key. *)
 
-val server_salt : unit -> string
+val server_salt : unit -> Cstruct.t
 (** [server_salt ()] calculates the salt sent to the client if a user does not
     exist in the database during the login process. *)
