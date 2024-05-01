@@ -16,7 +16,11 @@ let () =
            List.map
              (fun f -> f "login")
              Login_Api_test.
-               [ login_returns_client_salt; login_returns_server_salt ] );
+               [
+                 login_returns_client_salt;
+                 login_returns_server_salt;
+                 login_creates_session;
+               ] );
          ( "/api/register",
            List.map
              (fun f -> f "register")

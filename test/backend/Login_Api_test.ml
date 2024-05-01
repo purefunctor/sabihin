@@ -64,3 +64,37 @@ let login_returns_server_salt prefix =
     Lwt.return ()
   in
   make_test_case prefix "it returns server salt" inner
+
+let login_creates_session prefix =
+  let inner () =
+    default_register ();%lwt
+
+    let%lwt cookie_headers = get_cookie_headers () in
+    let original_session_cookie =
+      Cookie.Cookie_hdr.extract cookie_headers |> List.assoc "dream.session"
+    in
+
+    let%lwt response, body =
+      let json =
+        string_of_login_payload { username; auth_token = Some auth_token }
+      in
+      post_json cookie_headers json "http://localhost:8080/api/login"
+    in
+    Cohttp_lwt.Body.drain_body body;%lwt
+
+    let code = Response.status response |> Code.code_of_status in
+    let fresh_session_cookie =
+      Response.headers response |> Cookie.Set_cookie_hdr.extract
+      |> List.assoc "dream.session" |> Cookie.Set_cookie_hdr.value
+    in
+
+    let _ =
+      Alcotest.(check int) "status code is 204" 204 code;
+      Alcotest.(check bool)
+        "fresh session cookie is sent" true
+        (not @@ String.equal original_session_cookie fresh_session_cookie)
+    in
+
+    Lwt.return ()
+  in
+  make_test_case prefix "it creates a session" inner

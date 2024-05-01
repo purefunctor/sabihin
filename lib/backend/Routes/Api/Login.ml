@@ -26,7 +26,25 @@ let handler request =
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
         Dream.respond ~code:422 @@ string_of_login_error_content `CouldNotLogIn
   in
-  let handle_auth _ _ = assert false in
+  let handle_auth submitted_username submitted_auth_token =
+    let submitted_auth_token = Cipher.double_hmac submitted_auth_token in
+    match%lwt get_user request submitted_username with
+    | Ok (Some user)
+      when String.equal submitted_username user.username
+           && String.equal submitted_auth_token user.auth_token ->
+        let id = Printf.sprintf "%li" user.id in
+        let public_id = user.public_id in
+        Dream.info (fun log -> log "User exists, creating session.");
+        Dream.set_session_field request "id" id;%lwt
+        Dream.set_session_field request "public_id" public_id;%lwt
+        Dream.empty `No_Content
+    | Ok (Some _) | Ok None ->
+        Dream.error (fun log -> log "Invalid credentials, serving error.");
+        Dream.respond ~code:422 @@ string_of_login_error_content `CouldNotLogIn
+    | Error (#Caqti_error.t as e) ->
+        Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
+        Dream.respond ~code:422 @@ string_of_login_error_content `CouldNotLogIn
+  in
   let inner ({ username; auth_token } : login_payload) =
     match ValidationUsername.validate username with
     | Validated Success -> (
