@@ -4,16 +4,19 @@ let () =
      to use colors if this isn't called, so it's better overall to keep
      it here. *)
   Dream.initialize_log ();
-  let cipher_secret = Dream.random 128 in
-  let server_random = Dream.random 16 in
 
-  Backend_lib.Cipher.set_cipher_secret cipher_secret;
-  Backend_lib.Cipher.set_server_random server_random;
+  Backend_lib.Cipher.set_cipher_secret Utils.cipher_secret;
+  Backend_lib.Cipher.set_server_random Utils.server_random;
   Backend_lib.Vite.enable_dev ();
 
   Lwt_main.run
   @@ Alcotest_lwt.run "Backend"
        [
+         ( "/api/login",
+           List.map
+             (fun f -> f "login")
+             Login_Api_test.
+               [ login_returns_client_salt; login_returns_server_salt ] );
          ( "/api/register",
            List.map
              (fun f -> f "register")

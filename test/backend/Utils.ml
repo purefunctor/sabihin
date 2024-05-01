@@ -1,6 +1,8 @@
 let options = Test_toolbox.Database.get_options_from_env ()
 let default_db_url = Test_toolbox.Database.make_url ~options ""
 let server_secret = "a_totally_legit_server_secret_you_should_use"
+let cipher_secret = String.make 128 'C'
+let server_random = String.make 16 'S'
 
 let perish action =
   Lwt.bind action (function
