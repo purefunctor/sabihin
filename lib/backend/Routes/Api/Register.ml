@@ -2,7 +2,7 @@ open HigherOrderHandlers
 open Types_native.Definitions_j
 
 let handler request =
-  let inner { username; auth_token } =
+  let inner ({ username; auth_token } : register_user_payload) =
     match ValidationUsername.validate username with
     | Validated Success -> (
         let auth_token = Cipher.double_hmac auth_token in

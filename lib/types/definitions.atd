@@ -38,6 +38,21 @@ type register_error_content = [
 
 type register_error_response = register_error_content base_error_response
 
+(* login api types *)
+
+type login_payload = {
+  username: string;
+  ?auth_token: string option;
+}
+
+type login_salt_response = {
+  salt: string;
+}
+
+type login_error_content = [
+  | CouldNotLogIn
+]
+
 (* client session types *)
 
 type logged_in = {
