@@ -1,0 +1,4 @@
+(library
+ (name vault_native)
+ (public_name sabihin.vault_native)
+ (libraries mirage-crypto))
