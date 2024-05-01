@@ -38,6 +38,7 @@ let useRegister = () => {
       ApiRegister.post({
         username,
         auth_token: Salt.toHash(freshDerivedKey.hashedAuthenticationKey),
+        client_random: Base64_js.Uint8Array.encode(clientRandom),
       });
 
     let* _ =

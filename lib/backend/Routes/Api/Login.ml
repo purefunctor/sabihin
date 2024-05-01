@@ -2,20 +2,18 @@ open HigherOrderHandlers
 open Types_native.Definitions_j
 open Vault_native
 
-let get_secrets request username =
+let get_user request username =
   Dream.sql request @@ fun db ->
-  match%lwt Models.Secrets.get_by_username ~username db with
+  match%lwt Models.User.get_by_username ~username db with
   | Ok user -> Lwt.return_ok user
   | Error e -> Lwt.return_error e
 
 let handler request =
   let handle_salt username =
-    match%lwt get_secrets request username with
-    | Ok (Some { client_random_value; _ }) ->
+    match%lwt get_user request username with
+    | Ok (Some { client_random; _ }) ->
         Dream.info (fun log -> log "User exists, serving client salt.");
-        let salt =
-          client_random_value |> Bytes.of_string |> Salt.compute_digest
-        in
+        let salt = client_random |> Bytes.of_string |> Salt.compute_digest in
         Dream.json @@ string_of_login_salt_response { salt }
     | Ok None ->
         Dream.info (fun log -> log "User does not exist, serving server salt.");

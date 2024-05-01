@@ -2,7 +2,6 @@ open Utils
 
 type t = {
   user_id : int32;
-  client_random_value : string;
   encrypted_master_key : string;
   master_key_iv : string;
   encrypted_protection_key : string;
@@ -19,8 +18,6 @@ let create_table =
       {sql|
 CREATE TABLE IF NOT EXISTS secrets (
   user_id INT PRIMARY KEY REFERENCES users(id),
-
-  client_random_value BYTEA NOT NULL,
 
   encrypted_master_key BYTEA NOT NULL,
   master_key_iv BYTEA NOT NULL,
@@ -42,8 +39,6 @@ let get_by_user_id =
       {sql|
 SELECT
   @int32{user_id},
-
-  @Base64Octets{client_random_value},
 
   @Base64Octets{encrypted_master_key},
   @Base64Octets{master_key_iv},
@@ -68,8 +63,6 @@ let get_by_username =
       {sql|
 SELECT
   @int32{user_id},
-
-  @Base64Octets{client_random_value},
 
   @Base64Octets{encrypted_master_key},
   @Base64Octets{master_key_iv},
@@ -99,8 +92,6 @@ let insert =
 INSERT INTO secrets (
   user_id,
 
-  client_random_value,
-
   encrypted_master_key,
   master_key_iv,
 
@@ -114,8 +105,6 @@ INSERT INTO secrets (
 )
 VALUES(
   %int32{user_id},
-
-  %Base64Octets{client_random_value},
 
   %Base64Octets{encrypted_master_key},
   %Base64Octets{master_key_iv},

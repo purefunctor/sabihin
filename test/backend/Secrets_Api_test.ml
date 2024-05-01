@@ -8,7 +8,11 @@ let register_fake_user () =
   let%lwt response, body =
     let json =
       string_of_register_user_payload
-        { username = "purefunctor"; auth_token = "auth_token" }
+        {
+          username = "purefunctor";
+          auth_token = String.make 128 'J';
+          client_random = String.make 16 'K';
+        }
     in
     post_json cookie_headers json "http://localhost:8080/api/register"
   in
@@ -30,7 +34,6 @@ let register_fake_user () =
   Lwt.return cookie_headers
 
 let make_payload generate =
-  let client_random_value = generate () in
   let encrypted_master_key = generate () in
   let master_key_iv = generate () in
   let encrypted_protection_key = generate () in
@@ -41,7 +44,6 @@ let make_payload generate =
   let exported_verification_key = generate () in
   string_of_register_keys_payload
     {
-      client_random_value;
       encrypted_master_key;
       master_key_iv;
       encrypted_protection_key;

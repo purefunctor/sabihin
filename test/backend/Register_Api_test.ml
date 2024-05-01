@@ -16,7 +16,11 @@ let it_works =
     let%lwt response, body =
       let json =
         string_of_register_user_payload
-          { username = "purefunctor"; auth_token = double_hmac "auth_token" }
+          {
+            username = "purefunctor";
+            auth_token = String.make 128 'J';
+            client_random = String.make 16 'K';
+          }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in
@@ -59,7 +63,11 @@ let already_registered =
     let%lwt _, body =
       let json =
         string_of_register_user_payload
-          { username = "purefunctor"; auth_token = double_hmac "auth_token" }
+          {
+            username = "purefunctor";
+            auth_token = String.make 128 'J';
+            client_random = String.make 16 'K';
+          }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in
@@ -68,7 +76,11 @@ let already_registered =
     let%lwt response, body =
       let json =
         string_of_register_user_payload
-          { username = "purefunctor"; auth_token = double_hmac "auth_token" }
+          {
+            username = "purefunctor";
+            auth_token = String.make 128 'J';
+            client_random = String.make 16 'K';
+          }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in
@@ -105,7 +117,11 @@ let creates_session =
     let%lwt response, body =
       let json =
         string_of_register_user_payload
-          { username = "purefunctor"; auth_token = double_hmac "auth_token" }
+          {
+            username = "purefunctor";
+            auth_token = String.make 128 'J';
+            client_random = String.make 16 'K';
+          }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in
@@ -134,7 +150,8 @@ let invalid_username =
         string_of_register_user_payload
           {
             username = "invalid&username";
-            auth_token = double_hmac "auth_token";
+            auth_token = String.make 128 'J';
+            client_random = String.make 16 'K';
           }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"

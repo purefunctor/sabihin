@@ -14,10 +14,10 @@ type 'json base_error_response = {
 type register_user_payload = {
   username: string;
   auth_token: string;
+  client_random: string;
 }
 
 type register_keys_payload = {
-  client_random_value: string;
   encrypted_master_key: string;
   master_key_iv: string;
   encrypted_protection_key: string;

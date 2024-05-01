@@ -19,7 +19,6 @@ let get_secrets request (user_id : int32) =
   | Some
       {
         user_id = _;
-        client_random_value;
         encrypted_master_key;
         master_key_iv;
         encrypted_protection_key;
@@ -32,7 +31,6 @@ let get_secrets request (user_id : int32) =
       Lwt.return_ok
       @@ Some
            {
-             client_random_value;
              encrypted_master_key;
              master_key_iv;
              encrypted_protection_key;
@@ -46,7 +44,6 @@ let get_secrets request (user_id : int32) =
 
 let insert_secrets request (user_id : int32)
     ({
-       client_random_value;
        encrypted_master_key;
        master_key_iv;
        encrypted_protection_key;
@@ -66,10 +63,10 @@ let insert_secrets request (user_id : int32)
   if has_keys then Lwt.return_ok false
   else
     let* () =
-      Models.Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
-        ~exported_verification_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_protection_key connection
+      Models.Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
+        ~encrypted_protection_key ~protection_key_iv ~exported_verification_key
+        ~encrypted_verification_key ~verification_key_iv
+        ~exported_protection_key connection
     in
     Lwt.return_ok true
 

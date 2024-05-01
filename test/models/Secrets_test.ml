@@ -10,7 +10,6 @@ module Secrets = struct
     record
       [
         field "user_id" (fun k -> k.user_id) int32;
-        field "client_random_value" (fun k -> k.client_random_value) string;
         field "encrypted_master_key" (fun k -> k.encrypted_master_key) string;
         field "master_key_iv" (fun k -> k.master_key_iv) string;
         field "encrypted_protection_key"
@@ -33,7 +32,6 @@ module Secrets = struct
     List.for_all Fun.id
       [
         Int32.equal x.user_id y.user_id;
-        String.equal x.client_random_value y.client_random_value;
         String.equal x.encrypted_master_key y.encrypted_master_key;
         String.equal x.master_key_iv y.master_key_iv;
         String.equal x.encrypted_protection_key y.encrypted_protection_key;
@@ -70,13 +68,14 @@ let insert =
     let* user_id, _ =
       let username = "insert.test" in
       let auth_token = String.make 128 ' ' in
-      User.insert ~username ~auth_token db
+      let client_random = String.make 16 ' ' in
+      User.insert ~username ~auth_token ~client_random db
     in
     let* _ =
-      Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
-        ~exported_protection_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_verification_key db
+      Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
+        ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
+        ~encrypted_verification_key ~verification_key_iv
+        ~exported_verification_key db
     in
     Lwt.return_ok ()
   in
@@ -89,19 +88,20 @@ let insert_existing =
     let* user_id, _ =
       let username = "insert.test" in
       let auth_token = String.make 128 ' ' in
-      User.insert ~username ~auth_token db
+      let client_random = String.make 16 ' ' in
+      User.insert ~username ~auth_token ~client_random db
     in
     let* _ =
-      Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
-        ~exported_protection_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_verification_key db
+      Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
+        ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
+        ~encrypted_verification_key ~verification_key_iv
+        ~exported_verification_key db
     in
     let errorful =
-      Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
-        ~exported_protection_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_verification_key db
+      Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
+        ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
+        ~encrypted_verification_key ~verification_key_iv
+        ~exported_verification_key db
     in
     Lwt.bind errorful (function
       | Ok _ -> Alcotest.fail "Expected an error."
@@ -116,19 +116,19 @@ let get_by_user_id =
     let* user_id, _ =
       let username = "insert.test" in
       let auth_token = String.make 128 ' ' in
-      User.insert ~username ~auth_token db
+      let client_random = String.make 16 ' ' in
+      User.insert ~username ~auth_token ~client_random db
     in
     let* _ =
-      Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
-        ~exported_protection_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_verification_key db
+      Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
+        ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
+        ~encrypted_verification_key ~verification_key_iv
+        ~exported_verification_key db
     in
     let expected =
       Secrets.
         {
           user_id;
-          client_random_value;
           encrypted_master_key;
           master_key_iv;
           encrypted_protection_key;
@@ -155,19 +155,19 @@ let get_by_username =
     let username = "insert.test" in
     let* user_id, _ =
       let auth_token = String.make 128 ' ' in
-      User.insert ~username ~auth_token db
+      let client_random = String.make 16 ' ' in
+      User.insert ~username ~auth_token ~client_random db
     in
     let* _ =
-      Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
-        ~exported_protection_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_verification_key db
+      Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
+        ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
+        ~encrypted_verification_key ~verification_key_iv
+        ~exported_verification_key db
     in
     let expected =
       Secrets.
         {
           user_id;
-          client_random_value;
           encrypted_master_key;
           master_key_iv;
           encrypted_protection_key;

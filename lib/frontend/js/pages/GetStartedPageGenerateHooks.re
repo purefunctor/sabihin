@@ -77,8 +77,6 @@ let useGenerateKeys = () => {
 
       push({kind: Loading, message: "Submitting"});
       let registerKeysPayload: Types_universal.Definitions_t.register_keys_payload = {
-        client_random_value:
-          clientSecrets.clientRandom |> Base64_js.Uint8Array.encode,
         encrypted_master_key: wrappedMasterKey |> Base64_js.ArrayBuffer.encode,
         master_key_iv:
           clientSecrets.masterKeyIv |> Base64_js.Uint8Array.encode,
