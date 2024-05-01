@@ -53,6 +53,8 @@ type login_error_content = [
   | CouldNotLogIn
 ]
 
+type login_error_response = register_error_content base_error_response
+
 (* client session types *)
 
 type logged_in = {

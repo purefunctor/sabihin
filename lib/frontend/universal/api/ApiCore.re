@@ -5,6 +5,10 @@ type generalError('apiError) = [ | `CouldNotParse | `ApiError('apiError)];
 type registerError = generalError(register_error_response);
 type registerResult = result(register_response, registerError);
 
+type loginError = generalError(login_error_response);
+type loginSaltResult = result(login_salt_response, loginError);
+type loginAuthResult = result(unit, loginError);
+
 let tryParse = (parser, json) => {
   switch (parser(json)) {
   | result => Ok(result)
