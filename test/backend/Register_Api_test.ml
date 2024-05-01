@@ -4,23 +4,16 @@ open Types_native.Definitions_j
 open Types_native.Dynamic
 open Utils
 
-let double_hmac data =
-  let open Mirage_crypto.Hash in
-  let key = Cstruct.of_string "an_obviously_fake_key" in
-  data |> Cstruct.of_string |> SHA512.hmac ~key |> SHA512.hmac ~key
-  |> Cstruct.to_hex_string
+let username = "purefunctor"
+let auth_token = String.make 128 ' '
+let client_random = String.make 16 ' ' |> Base64.encode_string
 
 let it_works =
   let inner () =
     let%lwt cookie_headers = get_cookie_headers () in
     let%lwt response, body =
       let json =
-        string_of_register_user_payload
-          {
-            username = "purefunctor";
-            auth_token = String.make 128 'J';
-            client_random = String.make 16 'K';
-          }
+        string_of_register_user_payload { username; auth_token; client_random }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in
@@ -62,12 +55,7 @@ let already_registered =
     let%lwt cookie_headers = get_cookie_headers () in
     let%lwt _, body =
       let json =
-        string_of_register_user_payload
-          {
-            username = "purefunctor";
-            auth_token = String.make 128 'J';
-            client_random = String.make 16 'K';
-          }
+        string_of_register_user_payload { username; auth_token; client_random }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in
@@ -75,12 +63,7 @@ let already_registered =
 
     let%lwt response, body =
       let json =
-        string_of_register_user_payload
-          {
-            username = "purefunctor";
-            auth_token = String.make 128 'J';
-            client_random = String.make 16 'K';
-          }
+        string_of_register_user_payload { username; auth_token; client_random }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in
@@ -116,12 +99,7 @@ let creates_session =
 
     let%lwt response, body =
       let json =
-        string_of_register_user_payload
-          {
-            username = "purefunctor";
-            auth_token = String.make 128 'J';
-            client_random = String.make 16 'K';
-          }
+        string_of_register_user_payload { username; auth_token; client_random }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in
@@ -148,11 +126,7 @@ let invalid_username =
     let%lwt response, body =
       let json =
         string_of_register_user_payload
-          {
-            username = "invalid&username";
-            auth_token = String.make 128 'J';
-            client_random = String.make 16 'K';
-          }
+          { username = "invalid&username"; auth_token; client_random }
       in
       post_json cookie_headers json "http://localhost:8080/api/register"
     in

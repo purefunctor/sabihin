@@ -21,6 +21,10 @@ module User = struct
     && String.equal x.auth_token y.auth_token
 end
 
+let username = "maho.akashi"
+let auth_token = String.make 128 ' '
+let client_random = String.make 16 ' ' |> Base64.encode_exn
+
 let initialize =
   let inner db =
     let open Lwt_result.Syntax in
@@ -33,16 +37,9 @@ let insert =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* first_id, _ =
-      let username = "maho.akashi" in
-      let auth_token = String.make 128 ' ' in
-      let client_random = String.make 16 ' ' in
-      User.insert ~username ~auth_token ~client_random db
-    in
+    let* first_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* second_id, _ =
       let username = "rinku.aimoto" in
-      let auth_token = String.make 128 ' ' in
-      let client_random = String.make 16 ' ' in
       User.insert ~username ~auth_token ~client_random db
     in
     let _ = Alcotest.(check int32) "first_id = 1" first_id 1l in
@@ -55,9 +52,6 @@ let insert_existing =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let username = "maho.akashi" in
-    let auth_token = String.make 128 ' ' in
-    let client_random = String.make 16 ' ' in
     let* _ = User.insert ~username ~auth_token ~client_random db in
     let errorful = User.insert ~username ~auth_token ~client_random db in
     Lwt.bind errorful @@ function
@@ -70,9 +64,6 @@ let get_by_id =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let username = "maho.akashi" in
-    let auth_token = String.make 128 ' ' in
-    let client_random = String.make 16 ' ' in
     let* id, public_id = User.insert ~username ~auth_token ~client_random db in
     let expected =
       User.{ id; public_id; username; auth_token; client_random }
@@ -90,9 +81,6 @@ let get_by_username =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let username = "maho.akashi" in
-    let auth_token = String.make 128 ' ' in
-    let client_random = String.make 16 ' ' in
     let* id, public_id = User.insert ~username ~auth_token ~client_random db in
     let expected =
       User.{ id; public_id; username; auth_token; client_random }

@@ -43,7 +43,9 @@ module Secrets = struct
       ]
 end
 
-let client_random_value = String.make 16 ' ' |> Base64.encode_exn
+let username = "purefunctor"
+let auth_token = String.make 128 ' '
+let client_random = String.make 16 ' ' |> Base64.encode_exn
 let encrypted_master_key = String.make 512 ' ' |> Base64.encode_exn
 let master_key_iv = String.make 12 ' ' |> Base64.encode_exn
 let encrypted_protection_key = String.make 512 ' ' |> Base64.encode_exn
@@ -65,12 +67,7 @@ let insert =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* user_id, _ =
-      let username = "insert.test" in
-      let auth_token = String.make 128 ' ' in
-      let client_random = String.make 16 ' ' in
-      User.insert ~username ~auth_token ~client_random db
-    in
+    let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
       Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
         ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
@@ -85,12 +82,7 @@ let insert_existing =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* user_id, _ =
-      let username = "insert.test" in
-      let auth_token = String.make 128 ' ' in
-      let client_random = String.make 16 ' ' in
-      User.insert ~username ~auth_token ~client_random db
-    in
+    let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
       Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
         ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
@@ -113,12 +105,7 @@ let get_by_user_id =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* user_id, _ =
-      let username = "insert.test" in
-      let auth_token = String.make 128 ' ' in
-      let client_random = String.make 16 ' ' in
-      User.insert ~username ~auth_token ~client_random db
-    in
+    let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
       Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
         ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
@@ -152,12 +139,7 @@ let get_by_username =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let username = "insert.test" in
-    let* user_id, _ =
-      let auth_token = String.make 128 ' ' in
-      let client_random = String.make 16 ' ' in
-      User.insert ~username ~auth_token ~client_random db
-    in
+    let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
       Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
         ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
