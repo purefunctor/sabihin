@@ -46,8 +46,6 @@ let login_returns_client_salt prefix =
 
 let login_returns_server_salt prefix =
   let inner () =
-    default_register ();%lwt
-
     let%lwt cookie_headers = get_cookie_headers () in
     let%lwt response, body =
       let json = string_of_login_payload { username; auth_token = None } in
@@ -60,7 +58,7 @@ let login_returns_server_salt prefix =
 
     let _ =
       Alcotest.(check int) "status code is 200" 200 code;
-      Alcotest.(check string) "salt is from server" client_salt salt
+      Alcotest.(check string) "salt is from server" server_salt salt
     in
 
     Lwt.return ()
