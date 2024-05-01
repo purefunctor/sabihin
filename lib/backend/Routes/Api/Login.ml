@@ -24,7 +24,7 @@ let handler request =
         Dream.json @@ string_of_login_salt_response { salt }
     | Error (#Caqti_error.t as e) ->
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
-        Dream.respond ~code:422 "Invalid payload."
+        Dream.respond ~code:422 @@ string_of_login_error_content `CouldNotLogIn
   in
   let handle_auth _ _ = assert false in
   let inner ({ username; auth_token } : login_payload) =
