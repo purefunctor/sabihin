@@ -6,7 +6,7 @@ let hintFn = (validated: ValidationResult.t(ValidationCore.PasswordBasic.t)) => 
     let (className, text) =
       switch (validated) {
       | TooShort => (failureCss, "Password must be at least 8 characters.")
-      | Success => (successCss, "Awesome, you're good to go.")
+      | Success => (successCss, "Awesome! You're good to go.")
       };
     <span className> {React.string(text)} </span>;
   | NotValidated => React.null
