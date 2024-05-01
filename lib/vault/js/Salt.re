@@ -10,7 +10,7 @@ let computeBase = (salt: Uint8Array.t) => {
   TextEncoder.encodeInto(textEncoder, "sabihin.ph", saltBuffer);
 
   // Encode next 230 bytes.
-  for (index in 10 to 240) {
+  for (index in 10 to 239) {
     Uint8Array.unsafe_set(saltBuffer, index, Char.code('L'));
   };
 
