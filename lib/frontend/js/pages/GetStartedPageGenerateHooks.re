@@ -78,20 +78,14 @@ let useGenerateKeys = () => {
       push({kind: Loading, message: "Submitting"});
       let registerKeysPayload: Types_universal.Definitions_t.register_keys_payload = {
         encrypted_master_key: wrappedMasterKey |> Base64_js.ArrayBuffer.encode,
-        master_key_iv:
-          clientSecrets.masterKeyIv |> Base64_js.Uint8Array.encode,
         encrypted_protection_key:
           wrappedProtectionKey |> Base64_js.ArrayBuffer.encode,
         exported_protection_key:
           exportedProtectionKey |> Base64_js.ArrayBuffer.encode,
-        protection_key_iv:
-          clientSecrets.protectionKeyIv |> Base64_js.Uint8Array.encode,
         encrypted_verification_key:
           wrappedVerificationKey |> Base64_js.ArrayBuffer.encode,
         exported_verification_key:
           exportedVerificationKey |> Base64_js.ArrayBuffer.encode,
-        verification_key_iv:
-          clientSecrets.verificationKeyIv |> Base64_js.Uint8Array.encode,
       };
       let* _ = ApiSecrets.post(registerKeysPayload);
       let* _ = sleep(500);

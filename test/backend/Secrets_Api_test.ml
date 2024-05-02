@@ -35,21 +35,15 @@ let register_fake_user () =
 
 let make_payload generate =
   let encrypted_master_key = generate () in
-  let master_key_iv = generate () in
   let encrypted_protection_key = generate () in
-  let protection_key_iv = generate () in
   let encrypted_verification_key = generate () in
-  let verification_key_iv = generate () in
   let exported_protection_key = generate () in
   let exported_verification_key = generate () in
   string_of_register_keys_payload
     {
       encrypted_master_key;
-      master_key_iv;
       encrypted_protection_key;
-      protection_key_iv;
       encrypted_verification_key;
-      verification_key_iv;
       exported_protection_key;
       exported_verification_key;
     }

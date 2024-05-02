@@ -11,18 +11,15 @@ module Secrets = struct
       [
         field "user_id" (fun k -> k.user_id) int32;
         field "encrypted_master_key" (fun k -> k.encrypted_master_key) string;
-        field "master_key_iv" (fun k -> k.master_key_iv) string;
         field "encrypted_protection_key"
           (fun k -> k.encrypted_protection_key)
           string;
-        field "protection_key_iv" (fun k -> k.protection_key_iv) string;
         field "exported_protection_key"
           (fun k -> k.exported_protection_key)
           string;
         field "encrypted_verification_key"
           (fun k -> k.encrypted_verification_key)
           string;
-        field "verification_key_iv" (fun k -> k.verification_key_iv) string;
         field "exported_verification_key"
           (fun k -> k.exported_verification_key)
           string;
@@ -33,12 +30,9 @@ module Secrets = struct
       [
         Int32.equal x.user_id y.user_id;
         String.equal x.encrypted_master_key y.encrypted_master_key;
-        String.equal x.master_key_iv y.master_key_iv;
         String.equal x.encrypted_protection_key y.encrypted_protection_key;
-        String.equal x.protection_key_iv y.protection_key_iv;
         String.equal x.exported_protection_key y.exported_protection_key;
         String.equal x.encrypted_verification_key y.encrypted_verification_key;
-        String.equal x.verification_key_iv y.verification_key_iv;
         String.equal x.exported_verification_key y.exported_verification_key;
       ]
 end
@@ -47,12 +41,9 @@ let username = "purefunctor"
 let auth_token = String.make 128 ' '
 let client_random = String.make 16 ' ' |> Base64.encode_exn
 let encrypted_master_key = String.make 512 ' ' |> Base64.encode_exn
-let master_key_iv = String.make 12 ' ' |> Base64.encode_exn
 let encrypted_protection_key = String.make 512 ' ' |> Base64.encode_exn
-let protection_key_iv = String.make 12 ' ' |> Base64.encode_exn
 let exported_protection_key = String.make 512 ' ' |> Base64.encode_exn
 let encrypted_verification_key = String.make 512 ' ' |> Base64.encode_exn
-let verification_key_iv = String.make 12 ' ' |> Base64.encode_exn
 let exported_verification_key = String.make 512 ' ' |> Base64.encode_exn
 
 let initialize =
@@ -69,9 +60,8 @@ let insert =
     let* _ = Initialize.initialize db in
     let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
-      Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
-        ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
-        ~encrypted_verification_key ~verification_key_iv
+      Secrets.insert ~user_id ~encrypted_master_key ~encrypted_protection_key
+        ~exported_protection_key ~encrypted_verification_key
         ~exported_verification_key db
     in
     Lwt.return_ok ()
@@ -84,15 +74,13 @@ let insert_existing =
     let* _ = Initialize.initialize db in
     let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
-      Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
-        ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
-        ~encrypted_verification_key ~verification_key_iv
+      Secrets.insert ~user_id ~encrypted_master_key ~encrypted_protection_key
+        ~exported_protection_key ~encrypted_verification_key
         ~exported_verification_key db
     in
     let errorful =
-      Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
-        ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
-        ~encrypted_verification_key ~verification_key_iv
+      Secrets.insert ~user_id ~encrypted_master_key ~encrypted_protection_key
+        ~exported_protection_key ~encrypted_verification_key
         ~exported_verification_key db
     in
     Lwt.bind errorful (function
@@ -107,9 +95,8 @@ let get_by_user_id =
     let* _ = Initialize.initialize db in
     let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
-      Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
-        ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
-        ~encrypted_verification_key ~verification_key_iv
+      Secrets.insert ~user_id ~encrypted_master_key ~encrypted_protection_key
+        ~exported_protection_key ~encrypted_verification_key
         ~exported_verification_key db
     in
     let expected =
@@ -117,12 +104,9 @@ let get_by_user_id =
         {
           user_id;
           encrypted_master_key;
-          master_key_iv;
           encrypted_protection_key;
-          protection_key_iv;
           exported_protection_key;
           encrypted_verification_key;
-          verification_key_iv;
           exported_verification_key;
         }
     in
@@ -141,9 +125,8 @@ let get_by_username =
     let* _ = Initialize.initialize db in
     let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
-      Secrets.insert ~user_id ~encrypted_master_key ~master_key_iv
-        ~encrypted_protection_key ~protection_key_iv ~exported_protection_key
-        ~encrypted_verification_key ~verification_key_iv
+      Secrets.insert ~user_id ~encrypted_master_key ~encrypted_protection_key
+        ~exported_protection_key ~encrypted_verification_key
         ~exported_verification_key db
     in
     let expected =
@@ -151,12 +134,9 @@ let get_by_username =
         {
           user_id;
           encrypted_master_key;
-          master_key_iv;
           encrypted_protection_key;
-          protection_key_iv;
           exported_protection_key;
           encrypted_verification_key;
-          verification_key_iv;
           exported_verification_key;
         }
     in

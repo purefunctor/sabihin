@@ -19,13 +19,10 @@ type register_user_payload = {
 
 type register_keys_payload = {
   encrypted_master_key: string;
-  master_key_iv: string;
   encrypted_protection_key: string;
   exported_protection_key: string;
-  protection_key_iv: string;
   encrypted_verification_key: string;
   exported_verification_key: string;
-  verification_key_iv: string;
 }
 
 type register_response = {

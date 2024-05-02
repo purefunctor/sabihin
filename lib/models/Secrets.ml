@@ -3,12 +3,9 @@ open Utils
 type t = {
   user_id : int32;
   encrypted_master_key : string;
-  master_key_iv : string;
   encrypted_protection_key : string;
-  protection_key_iv : string;
   exported_protection_key : string;
   encrypted_verification_key : string;
-  verification_key_iv : string;
   exported_verification_key : string;
 }
 
@@ -20,14 +17,11 @@ CREATE TABLE IF NOT EXISTS secrets (
   user_id INT PRIMARY KEY REFERENCES users(id),
 
   encrypted_master_key BYTEA NOT NULL,
-  master_key_iv BYTEA NOT NULL,
 
   encrypted_protection_key BYTEA NOT NULL,
-  protection_key_iv BYTEA NOT NULL,
   exported_protection_key BYTEA NOT NULL,
 
   encrypted_verification_key BYTEA NOT NULL,
-  verification_key_iv BYTEA NOT NULL,
   exported_verification_key BYTEA NOT NULL
 );   
 |sql}]
@@ -41,14 +35,11 @@ SELECT
   @int32{user_id},
 
   @Base64Octets{encrypted_master_key},
-  @Base64Octets{master_key_iv},
 
   @Base64Octets{encrypted_protection_key},
-  @Base64Octets{protection_key_iv},
   @Base64Octets{exported_protection_key},
 
   @Base64Octets{encrypted_verification_key},
-  @Base64Octets{verification_key_iv},
   @Base64Octets{exported_verification_key}
 FROM
   secrets
@@ -65,14 +56,11 @@ SELECT
   @int32{user_id},
 
   @Base64Octets{encrypted_master_key},
-  @Base64Octets{master_key_iv},
 
   @Base64Octets{encrypted_protection_key},
-  @Base64Octets{protection_key_iv},
   @Base64Octets{exported_protection_key},
 
   @Base64Octets{encrypted_verification_key},
-  @Base64Octets{verification_key_iv},
   @Base64Octets{exported_verification_key}
 FROM
   secrets
@@ -93,28 +81,22 @@ INSERT INTO secrets (
   user_id,
 
   encrypted_master_key,
-  master_key_iv,
 
   encrypted_protection_key,
-  protection_key_iv,
   exported_protection_key,
 
   encrypted_verification_key,
-  verification_key_iv,
   exported_verification_key
 )
 VALUES(
   %int32{user_id},
 
   %Base64Octets{encrypted_master_key},
-  %Base64Octets{master_key_iv},
 
   %Base64Octets{encrypted_protection_key},
-  %Base64Octets{protection_key_iv},
   %Base64Octets{exported_protection_key},
 
   %Base64Octets{encrypted_verification_key},
-  %Base64Octets{verification_key_iv},
   %Base64Octets{exported_verification_key}
 );
 |sql}]
