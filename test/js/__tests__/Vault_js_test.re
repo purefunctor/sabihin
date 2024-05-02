@@ -31,7 +31,7 @@ describe("Derived Secrets", () => {
   testPromise("it encrypts and decryps the master key", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshMasterKey = MasterKey.create(~saltBuffer);
+    let* masterKey = MasterKey.create(~saltBuffer);
     let* derivedSecrets =
       DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
 
@@ -39,7 +39,7 @@ describe("Derived Secrets", () => {
       Operations.wrapMasterKey(
         ~derivedKey=derivedSecrets.derivedKey,
         ~masterKeyIv=derivedSecrets.masterKeyIv,
-        ~masterKey=freshMasterKey.masterKey,
+        ~masterKey,
       );
 
     let* _ =
@@ -109,18 +109,20 @@ describe("Master Key", () => {
   testPromise("it wraps and unwraps a protection private key", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshMasterKey = MasterKey.create(~saltBuffer);
+    let* derivedSecrets =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+    let* masterKey = MasterKey.create(~saltBuffer);
     let* protectionKeyPair = ProtectionKeys.create();
     let* encryptedProtectionPrivateKey =
       Operations.wrapProtectionPrivateKey(
-        ~masterKey=freshMasterKey.masterKey,
-        ~protectionKeyIv=freshMasterKey.protectionKeyIv,
+        ~masterKey,
+        ~protectionKeyIv=derivedSecrets.protectionKeyIv,
         ~protectionPrivateKey=protectionKeyPair.privateKey,
       );
     let* _ =
       Operations.unwrapProtectionPrivateKey(
-        ~masterKey=freshMasterKey.masterKey,
-        ~protectionKeyIv=freshMasterKey.protectionKeyIv,
+        ~masterKey,
+        ~protectionKeyIv=derivedSecrets.protectionKeyIv,
         ~encryptedProtectionPrivateKey,
       );
     resolve(pass);
@@ -129,18 +131,20 @@ describe("Master Key", () => {
   testPromise("it wraps and unwraps a verification private key", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshMasterKey = MasterKey.create(~saltBuffer);
+    let* derivedKey =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+    let* masterKey = MasterKey.create(~saltBuffer);
     let* verificationKeyPair = VerificationKeys.create();
     let* encryptedVerificationPrivateKey =
       Operations.wrapVerificationPrivateKey(
-        ~masterKey=freshMasterKey.masterKey,
-        ~verificationKeyIv=freshMasterKey.verificationKeyIv,
+        ~masterKey,
+        ~verificationKeyIv=derivedKey.verificationKeyIv,
         ~verificationPrivateKey=verificationKeyPair.privateKey,
       );
     let* _ =
       Operations.unwrapVerificationPrivateKey(
-        ~masterKey=freshMasterKey.masterKey,
-        ~verificationKeyIv=freshMasterKey.verificationKeyIv,
+        ~masterKey,
+        ~verificationKeyIv=derivedKey.verificationKeyIv,
         ~encryptedVerificationPrivateKey,
       );
     resolve(pass);

@@ -7,14 +7,14 @@ describe("Base64Utils", () => {
   testPromise("it works round trip", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshMasterKey = MasterKey.create(~saltBuffer);
+    let* masterKey = MasterKey.create(~saltBuffer);
     let* derivedSecrets =
       DerivedSecrets.create(~password="password", ~saltBuffer);
     let* wrappedMasterKey =
       Operations.wrapMasterKey(
         ~derivedKey=derivedSecrets.derivedKey,
         ~masterKeyIv=derivedSecrets.masterKeyIv,
-        ~masterKey=freshMasterKey.masterKey,
+        ~masterKey,
       );
 
     let base64 = Base64_js.ArrayBuffer.encode(wrappedMasterKey);
