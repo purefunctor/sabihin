@@ -24,7 +24,7 @@ let handler request =
         Dream.json @@ string_of_login_salt_response { salt }
     | Error (#Caqti_error.t as e) ->
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
-        Dream.respond ~code:422 @@ string_of_login_error_content `CouldNotLogIn
+        Dream.json ~code:422 @@ string_of_login_error_content `CouldNotLogIn
   in
   let handle_auth submitted_username submitted_auth_token =
     let submitted_auth_token = Cipher.double_hmac submitted_auth_token in
@@ -40,10 +40,10 @@ let handler request =
         Dream.json @@ string_of_login_auth_response { public_id }
     | Ok (Some _) | Ok None ->
         Dream.error (fun log -> log "Invalid credentials, serving error.");
-        Dream.respond ~code:422 @@ string_of_login_error_content `CouldNotLogIn
+        Dream.json ~code:422 @@ string_of_login_error_content `CouldNotLogIn
     | Error (#Caqti_error.t as e) ->
         Dream.error (fun log -> log "Failed with %s" @@ Caqti_error.show e);
-        Dream.respond ~code:422 @@ string_of_login_error_content `CouldNotLogIn
+        Dream.json ~code:422 @@ string_of_login_error_content `CouldNotLogIn
   in
   let inner ({ username; auth_token } : login_payload) =
     match ValidationUsername.validate username with
@@ -53,6 +53,6 @@ let handler request =
         | Some auth_token -> handle_auth username auth_token)
     | _ ->
         Dream.error (fun log -> log "Rejecting invalid username: %s" username);
-        Dream.respond ~code:422 @@ string_of_login_error_content `CouldNotLogIn
+        Dream.json ~code:422 @@ string_of_login_error_content `CouldNotLogIn
   in
   with_json_body request login_payload_of_string inner
