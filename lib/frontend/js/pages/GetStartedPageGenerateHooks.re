@@ -24,7 +24,7 @@ let useGenerateKeys = () => {
       open Vault_js;
 
       setState(_ => Generating);
-      let* saltBuffer = Salt.computeDigest(clientSecrets.clientRandom);
+      let saltBuffer = clientSecrets.saltBuffer;
 
       push({kind: Loading, message: "Generating Master Key"});
       let* freshMasterKey = MasterKey.create(~saltBuffer);

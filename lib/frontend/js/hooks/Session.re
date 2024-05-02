@@ -48,7 +48,7 @@ let useRegister = () => {
           sessionStore.set(`LoggedIn({public_id: registerResult.public_id}));
         clientSecretsStore.set(
           Some({
-            clientRandom,
+            saltBuffer,
             derivedKey: freshDerivedKey.derivedKey,
             masterKeyIv: freshDerivedKey.masterKeyIv,
           }),

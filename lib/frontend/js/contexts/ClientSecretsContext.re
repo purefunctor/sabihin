@@ -3,21 +3,21 @@ open Promise_syntax;
 open Vault_js;
 
 type clientSecrets = {
-  clientRandom: Uint8Array.t,
+  saltBuffer: ArrayBuffer.t,
   derivedKey: DerivedKey.t,
   masterKeyIv: Uint8Array.t,
 };
 
 let writeClientSecrets =
     (~clientSecrets: clientSecrets): Js.Promise.t(Js.Json.t) => {
-  let clientRandom = clientSecrets.clientRandom;
+  let saltBuffer = clientSecrets.saltBuffer;
   let* derivedKey =
     Operations.exportDerivedKey(~derivedKey=clientSecrets.derivedKey);
   let masterKeyIv = clientSecrets.masterKeyIv;
 
   Js.Promise.resolve(
     Client_types_bs.write_clientSecretsCore({
-      clientRandom,
+      saltBuffer,
       derivedKey,
       masterKeyIv,
     }),
@@ -26,13 +26,13 @@ let writeClientSecrets =
 
 let readClientSecrets =
     (~clientSecretsJson: Js.Json.t): Js.Promise.t(clientSecrets) => {
-  let Client_types_bs.{clientRandom, derivedKey, masterKeyIv} =
+  let Client_types_bs.{saltBuffer, derivedKey, masterKeyIv} =
     Client_types_bs.read_clientSecretsCore(clientSecretsJson);
 
   let* derivedKey =
     Operations.importDerivedKey(~exportedDerivedKey=derivedKey);
 
-  Js.Promise.resolve({clientRandom, derivedKey, masterKeyIv});
+  Js.Promise.resolve({saltBuffer, derivedKey, masterKeyIv});
 };
 
 let writeToLocalStorage = (~clientSecrets: clientSecrets): Js.Promise.t(unit) => {
