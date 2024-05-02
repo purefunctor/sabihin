@@ -1,3 +1,4 @@
+open Promise_syntax;
 open React.Event;
 open RegisterPageHooksCore;
 
@@ -31,6 +32,27 @@ let usePassword = () => {
   {value, onChange, validation, setValidation};
 };
 
+let submitCore =
+    (
+      ~login:
+         (~username: string, ~password: string) =>
+         Js.Promise.t(ApiCore.loginAuthResult),
+      ~username: fieldHook(ValidationUsername.t),
+      ~password: fieldHook(ValidationPasswordBasic.t),
+    ) => {
+  let+ submitResult = {
+    let username = username.value;
+    let password = password.value;
+    login(~username, ~password);
+  };
+  switch (submitResult) {
+  | Ok(_) => ()
+  | Error(e) =>
+    let apiError = ApiCore.loginErrorToString(e);
+    username.setValidation(_ => Validated(ApiError(apiError)));
+  };
+};
+
 let useFormSubmit =
     (
       ~username: fieldHook(ValidationUsername.t),
@@ -46,9 +68,7 @@ let useFormSubmit =
       let allowPassword = ValidationPasswordBasic.allow(password.validation);
 
       if (allowUsername && allowPassword) {
-        let username = username.value;
-        let password = password.value;
-        ignore(login(~username, ~password));
+        ignore(submitCore(~login, ~username, ~password));
       };
     },
     (username, password),
