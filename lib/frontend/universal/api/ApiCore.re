@@ -33,7 +33,16 @@ let generalErrorToString = (generalError, apiErrorToString) => {
 let registerErrorToString = (registerError: registerError) => {
   generalErrorToString(registerError, ({content}) => {
     switch (content) {
-    | `JSON(`CouldNotRegister) => "Could not register user."
+    | `JSON(`CouldNotRegister) => "Could not perform registration."
+    | `Raw(message) => message
+    }
+  });
+};
+
+let loginErrorToString = (loginError: loginError) => {
+  generalErrorToString(loginError, ({content}) => {
+    switch (content) {
+    | `JSON(`CouldNotLogIn) => "Could not perform login."
     | `Raw(message) => message
     }
   });
