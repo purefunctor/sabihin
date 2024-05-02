@@ -5,7 +5,7 @@ type t;
 
 type derivedSecrets = {
   derivedKey: t,
-  authenticationKey: Uint8Array.t,
+  authenticationKey: string,
   masterKeyIv: Uint8Array.t,
   protectionKeyIv: Uint8Array.t,
   verificationKeyIv: Uint8Array.t,

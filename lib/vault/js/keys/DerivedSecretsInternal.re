@@ -6,7 +6,7 @@ type t = cryptoKey;
 
 type derivedSecrets = {
   derivedKey: t,
-  authenticationKey: Uint8Array.t,
+  authenticationKey: string,
   masterKeyIv: Uint8Array.t,
   protectionKeyIv: Uint8Array.t,
   verificationKeyIv: Uint8Array.t,
@@ -63,8 +63,9 @@ let create =
   };
 
   let* authenticationKey = {
-    let+ digest = digest_impl("SHA-256", authenticationKeyRaw);
-    Uint8Array.fromBuffer(digest, ());
+    let+ authenticationKeyDigest =
+      digest_impl("SHA-256", authenticationKeyRaw);
+    Salt.toHash(authenticationKeyDigest);
   };
 
   resolve({
