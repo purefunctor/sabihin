@@ -29,16 +29,16 @@ let handler request =
   let handle_auth submitted_username submitted_auth_token =
     let submitted_auth_token = Cipher.double_hmac submitted_auth_token in
     match%lwt get_user request submitted_username with
-    | Ok (Some user)
-      when String.equal submitted_username user.username
-           && String.equal submitted_auth_token user.auth_token ->
-        let id = Printf.sprintf "%li" user.id in
-        let public_id = user.public_id in
-        Dream.info (fun log -> log "User exists, creating session.");
-        Dream.set_session_field request "id" id;%lwt
-        Dream.set_session_field request "public_id" public_id;%lwt
-        Dream.json @@ string_of_login_auth_response { public_id }
-    | Ok (Some _) | Ok None ->
+    | Ok (Some { id; public_id; username; auth_token; _ }) ->
+        let same_username = String.equal submitted_username username in
+        let same_auth_token = String.equal submitted_auth_token auth_token in
+        if same_username && same_auth_token then (
+          Session.create_session request id public_id;%lwt
+          Dream.json @@ string_of_login_auth_response { public_id })
+        else (
+          Dream.error (fun log -> log "Invalid credentials, serving error.");
+          Dream.json ~code:422 @@ string_of_login_error_content `CouldNotLogIn)
+    | Ok None ->
         Dream.error (fun log -> log "Invalid credentials, serving error.");
         Dream.json ~code:422 @@ string_of_login_error_content `CouldNotLogIn
     | Error (#Caqti_error.t as e) ->
