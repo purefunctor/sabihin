@@ -59,3 +59,22 @@ let useRegister = () => {
     Js.Promise.resolve(registerResult);
   });
 };
+
+let useLogin = () => {
+  React.useCallback0((~username, ~password) => {
+    let* saltResult = ApiLogin.postSalt(~username);
+    switch (saltResult) {
+    | Error(e) => resolve(Error(e))
+    | Ok({salt}) =>
+      let saltBuffer = Base64_js.ArrayBuffer.decode(salt);
+      let* derivedKey = DerivedKey.create(~password, ~saltBuffer);
+      let auth_token = Salt.toHash(derivedKey.hashedAuthenticationKey);
+
+      let* authResult = ApiLogin.postAuth(~username, ~auth_token);
+      switch (authResult) {
+      | Error(e) => resolve(Error(e))
+      | Ok(_) => resolve(Ok())
+      };
+    };
+  });
+};

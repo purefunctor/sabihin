@@ -36,6 +36,8 @@ let useFormSubmit =
       ~username: fieldHook(ValidationUsername.t),
       ~password: fieldHook(ValidationPasswordBasic.t),
     ) => {
+  let login = Session.useLogin();
+
   React.useCallback2(
     event => {
       Form.preventDefault(event);
@@ -44,7 +46,9 @@ let useFormSubmit =
       let allowPassword = ValidationPasswordBasic.allow(password.validation);
 
       if (allowUsername && allowPassword) {
-        Js.Console.log((username, password));
+        let username = username.value;
+        let password = password.value;
+        ignore(login(~username, ~password));
       };
     },
     (username, password),
