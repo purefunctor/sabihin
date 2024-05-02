@@ -3,13 +3,14 @@ open Promise_syntax;
 open WebCrypto;
 
 let exportDerivedKey =
-    (~derivedKey: DerivedKeyInternal.t): Js.Promise.t(ArrayBuffer.t) => {
+    (~derivedKey: DerivedSecretsInternal.t): Js.Promise.t(ArrayBuffer.t) => {
   let format = "raw";
-  exportKey_impl(format, derivedKey |> DerivedKeyInternal.toCryptoKey);
+  exportKey_impl(format, derivedKey |> DerivedSecretsInternal.toCryptoKey);
 };
 
 let importDerivedKey =
-    (~exportedDerivedKey: ArrayBuffer.t): Js.Promise.t(DerivedKeyInternal.t) => {
+    (~exportedDerivedKey: ArrayBuffer.t)
+    : Js.Promise.t(DerivedSecretsInternal.t) => {
   let format = "raw";
   let keyData = exportedDerivedKey;
   let algorithm = {"name": "AES-GCM"};
@@ -17,32 +18,32 @@ let importDerivedKey =
   let keyUsages = [|"wrapKey", "unwrapKey"|];
   let* derivedKeyRaw =
     importKey_impl(format, keyData, algorithm, extractable, keyUsages);
-  resolve(derivedKeyRaw |> DerivedKeyInternal.fromCryptoKey);
+  resolve(derivedKeyRaw |> DerivedSecretsInternal.fromCryptoKey);
 };
 
 let wrapMasterKey =
     (
-      ~derivedKey: DerivedKeyInternal.t,
+      ~derivedKey: DerivedSecretsInternal.t,
       ~masterKeyIv: Uint8Array.t,
       ~masterKey: MasterKeyInternal.t,
     ) => {
   let format = "raw";
   let key = masterKey |> MasterKeyInternal.toCryptoKey;
-  let wrapping_key = derivedKey |> DerivedKeyInternal.toCryptoKey;
+  let wrapping_key = derivedKey |> DerivedSecretsInternal.toCryptoKey;
   let wrapAlgo = {"name": "AES-GCM", "iv": masterKeyIv};
   wrapKey_impl(format, key, wrapping_key, wrapAlgo);
 };
 
 let unwrapMasterKey =
     (
-      ~derivedKey: DerivedKeyInternal.t,
+      ~derivedKey: DerivedSecretsInternal.t,
       ~masterKeyIv: Uint8Array.t,
       ~encryptedMasterKey: ArrayBuffer.t,
     )
     : Js.Promise.t(MasterKeyInternal.t) => {
   let format = "raw";
   let wrappedKey = encryptedMasterKey;
-  let unwrappingKey = derivedKey |> DerivedKeyInternal.toCryptoKey;
+  let unwrappingKey = derivedKey |> DerivedSecretsInternal.toCryptoKey;
   let unwrapAlgo = {"name": "AES-GCM", "iv": masterKeyIv};
   let unwrappedKeyAlgo = {"name": "AES-GCM"};
   let extractable = true;
@@ -260,14 +261,15 @@ let decryptData =
 
 module type S = {
   let exportDerivedKey:
-    (~derivedKey: DerivedKeyInternal.t) => Js.Promise.t(ArrayBuffer.t);
+    (~derivedKey: DerivedSecretsInternal.t) => Js.Promise.t(ArrayBuffer.t);
 
   let importDerivedKey:
-    (~exportedDerivedKey: ArrayBuffer.t) => Js.Promise.t(DerivedKeyInternal.t);
+    (~exportedDerivedKey: ArrayBuffer.t) =>
+    Js.Promise.t(DerivedSecretsInternal.t);
 
   let wrapMasterKey:
     (
-      ~derivedKey: DerivedKeyInternal.t,
+      ~derivedKey: DerivedSecretsInternal.t,
       ~masterKeyIv: Uint8Array.t,
       ~masterKey: MasterKeyInternal.t
     ) =>
@@ -275,7 +277,7 @@ module type S = {
 
   let unwrapMasterKey:
     (
-      ~derivedKey: DerivedKeyInternal.t,
+      ~derivedKey: DerivedSecretsInternal.t,
       ~masterKeyIv: Uint8Array.t,
       ~encryptedMasterKey: ArrayBuffer.t
     ) =>

@@ -8,12 +8,12 @@ describe("Base64Utils", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
     let* freshMasterKey = MasterKey.create(~saltBuffer);
-    let* freshDerivedKey =
-      DerivedKey.create(~password="password", ~saltBuffer);
+    let* derivedSecrets =
+      DerivedSecrets.create(~password="password", ~saltBuffer);
     let* wrappedMasterKey =
       Operations.wrapMasterKey(
-        ~derivedKey=freshDerivedKey.derivedKey,
-        ~masterKeyIv=freshDerivedKey.masterKeyIv,
+        ~derivedKey=derivedSecrets.derivedKey,
+        ~masterKeyIv=derivedSecrets.masterKeyIv,
         ~masterKey=freshMasterKey.masterKey,
       );
 

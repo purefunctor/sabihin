@@ -27,39 +27,77 @@ describe("Salt", () => {
   })
 });
 
-describe("Derived Key", () => {
-  testPromise("it works", () => {
+describe("Derived Secrets", () => {
+  testPromise("it encrypts and decryps the master key", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
     let* freshMasterKey = MasterKey.create(~saltBuffer);
-    let* freshDerivedKey =
-      DerivedKey.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+    let* derivedSecrets =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
 
     let* encryptedMasterKey =
       Operations.wrapMasterKey(
-        ~derivedKey=freshDerivedKey.derivedKey,
-        ~masterKeyIv=freshDerivedKey.masterKeyIv,
+        ~derivedKey=derivedSecrets.derivedKey,
+        ~masterKeyIv=derivedSecrets.masterKeyIv,
         ~masterKey=freshMasterKey.masterKey,
       );
 
     let* _ =
       Operations.unwrapMasterKey(
-        ~derivedKey=freshDerivedKey.derivedKey,
-        ~masterKeyIv=freshDerivedKey.masterKeyIv,
+        ~derivedKey=derivedSecrets.derivedKey,
+        ~masterKeyIv=derivedSecrets.masterKeyIv,
         ~encryptedMasterKey,
       );
 
     resolve(pass);
   });
 
+  testPromise("it is deterministic", () => {
+    let clientRandom = ClientRandom.create();
+    let* saltBuffer = Salt.computeDigest(clientRandom);
+
+    let* firstDerivedSecrets =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+    let* secondDerivedSecrets =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+
+    let ivToHexString = iv => iv |> Uint8Array.buffer |> Salt.toHash;
+
+    let firstMasterKeyIv = firstDerivedSecrets.masterKeyIv |> ivToHexString;
+    let secondMasterKeyIv = secondDerivedSecrets.masterKeyIv |> ivToHexString;
+
+    let firstProtectionKeyIv =
+      firstDerivedSecrets.protectionKeyIv |> ivToHexString;
+    let secondProtectionKeyIv =
+      secondDerivedSecrets.protectionKeyIv |> ivToHexString;
+
+    let firstVerificationKeyIv =
+      firstDerivedSecrets.verificationKeyIv |> ivToHexString;
+    let secondVerificationKeyIv =
+      secondDerivedSecrets.verificationKeyIv |> ivToHexString;
+
+    resolve(
+      expect([|
+        firstMasterKeyIv,
+        firstProtectionKeyIv,
+        firstVerificationKeyIv,
+      |])
+      |> toEqual([|
+           secondMasterKeyIv,
+           secondProtectionKeyIv,
+           secondVerificationKeyIv,
+         |]),
+    );
+  });
+
   testPromise("it can be exported and imported", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshDerivedKey =
-      DerivedKey.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+    let* derivedSecrets =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
 
     let* exportedDerivedKey =
-      Operations.exportDerivedKey(~derivedKey=freshDerivedKey.derivedKey);
+      Operations.exportDerivedKey(~derivedKey=derivedSecrets.derivedKey);
 
     let* _ = Operations.importDerivedKey(~exportedDerivedKey);
 
