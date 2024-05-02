@@ -3,10 +3,7 @@ open Types_native.Definitions_j
 open Vault_native
 
 let get_user request username =
-  Dream.sql request @@ fun db ->
-  match%lwt Models.User.get_by_username ~username db with
-  | Ok user -> Lwt.return_ok user
-  | Error e -> Lwt.return_error e
+  Dream.sql request @@ Models.User.get_by_username ~username
 
 let handler request =
   let handle_salt username =
