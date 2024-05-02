@@ -41,11 +41,12 @@ let useRegister = () => {
         client_random: Base64_js.Uint8Array.encode(clientRandom),
       });
 
-    let* _ =
-      switch (registerResult) {
-      | Ok(registerResult) =>
-        let* _ =
-          sessionStore.set(`LoggedIn({public_id: registerResult.public_id}));
+    switch (registerResult) {
+    | Error(e) => resolve(Error(e))
+    | Ok(registerResult) =>
+      let* _ =
+        sessionStore.set(`LoggedIn({public_id: registerResult.public_id}));
+      let* _ =
         clientSecretsStore.set(
           Some({
             saltBuffer,
@@ -55,10 +56,8 @@ let useRegister = () => {
             verificationKeyIv: derivedSecrets.verificationKeyIv,
           }),
         );
-      | Error(_) => Js.Promise.resolve()
-      };
-
-    Js.Promise.resolve(registerResult);
+      resolve(Ok(registerResult));
+    };
   });
 };
 
