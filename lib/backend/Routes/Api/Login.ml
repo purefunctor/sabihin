@@ -37,7 +37,7 @@ let handler request =
         Dream.info (fun log -> log "User exists, creating session.");
         Dream.set_session_field request "id" id;%lwt
         Dream.set_session_field request "public_id" public_id;%lwt
-        Dream.empty `No_Content
+        Dream.json @@ string_of_login_auth_response { public_id }
     | Ok (Some _) | Ok None ->
         Dream.error (fun log -> log "Invalid credentials, serving error.");
         Dream.respond ~code:422 @@ string_of_login_error_content `CouldNotLogIn

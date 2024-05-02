@@ -46,6 +46,10 @@ type login_salt_response = {
   salt: string;
 }
 
+type login_auth_response = {
+  public_id: string;
+}
+
 type login_error_content = [
   | CouldNotLogIn
 ]

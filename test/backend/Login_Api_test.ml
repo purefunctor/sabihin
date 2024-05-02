@@ -86,16 +86,18 @@ let login_creates_session prefix =
       in
       post_json cookie_headers json "http://localhost:8080/api/login"
     in
-    Cohttp_lwt.Body.drain_body body;%lwt
 
     let code = Response.status response |> Code.code_of_status in
+    let%lwt body = Cohttp_lwt.Body.to_string body in
+    let%lwt parsed = is_parsed_by body login_auth_response_of_string in
     let fresh_session_cookie =
       Response.headers response |> Cookie.Set_cookie_hdr.extract
       |> List.assoc "dream.session" |> Cookie.Set_cookie_hdr.value
     in
 
     let _ =
-      Alcotest.(check int) "status code is 204" 204 code;
+      Alcotest.(check int) "status code is 200" 200 code;
+      Alcotest.(check bool) "response can be parsed" true parsed;
       Alcotest.(check bool)
         "fresh session cookie is sent" true
         (not @@ String.equal original_session_cookie fresh_session_cookie)
