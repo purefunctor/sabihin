@@ -63,6 +63,9 @@ let useRegister = () => {
 };
 
 let useLogin = () => {
+  let sessionStore = SessionContext.useContext();
+  let clientSecretsStore = ClientSecretsContext.useContext();
+
   React.useCallback0((~username, ~password) => {
     let* saltResult = ApiLogin.postSalt(~username);
     switch (saltResult) {
@@ -75,7 +78,20 @@ let useLogin = () => {
       let* authResult = ApiLogin.postAuth(~username, ~auth_token);
       switch (authResult) {
       | Error(e) => resolve(Error(e))
-      | Ok(_) => resolve(Ok())
+      | Ok(authResult) =>
+        let* _ =
+          sessionStore.set(`LoggedIn({public_id: authResult.public_id}));
+        let* _ =
+          clientSecretsStore.set(
+            Some({
+              saltBuffer,
+              derivedKey: derivedSecrets.derivedKey,
+              masterKeyIv: derivedSecrets.masterKeyIv,
+              protectionKeyIv: derivedSecrets.protectionKeyIv,
+              verificationKeyIv: derivedSecrets.verificationKeyIv,
+            }),
+          );
+        resolve(Ok(authResult));
       };
     };
   });

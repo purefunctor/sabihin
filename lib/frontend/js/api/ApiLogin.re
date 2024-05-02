@@ -50,7 +50,8 @@ let postAuth =
 
   let loginResult =
     switch (loginStatus, loginJson) {
-    | (204, None) => Ok()
+    | (200, Some(loginJson)) =>
+      tryParse(read_login_auth_response, loginJson)
     | (_, Some(loginJson)) =>
       tryParseError(read_login_error_response, loginJson)
     | _ => Error(`CouldNotParse)

@@ -7,7 +7,7 @@ type registerResult = result(register_response, registerError);
 
 type loginError = generalError(login_error_response);
 type loginSaltResult = result(login_salt_response, loginError);
-type loginAuthResult = result(unit, loginError);
+type loginAuthResult = result(login_auth_response, loginError);
 
 let tryParse = (parser, json) => {
   switch (parser(json)) {
