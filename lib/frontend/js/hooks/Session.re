@@ -32,12 +32,12 @@ let useRegister = () => {
   React.useCallback0((~username, ~password) => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshDerivedKey = DerivedKey.create(~password, ~saltBuffer);
+    let* derivedSecrets = DerivedSecrets.create(~password, ~saltBuffer);
 
     let* registerResult =
       ApiRegister.post({
         username,
-        auth_token: Salt.toHash(freshDerivedKey.hashedAuthenticationKey),
+        auth_token: derivedSecrets.authenticationKey,
         client_random: Base64_js.Uint8Array.encode(clientRandom),
       });
 
@@ -49,8 +49,10 @@ let useRegister = () => {
         clientSecretsStore.set(
           Some({
             saltBuffer,
-            derivedKey: freshDerivedKey.derivedKey,
-            masterKeyIv: freshDerivedKey.masterKeyIv,
+            derivedKey: derivedSecrets.derivedKey,
+            masterKeyIv: derivedSecrets.masterKeyIv,
+            protectionKeyIv: derivedSecrets.protectionKeyIv,
+            verificationKeyIv: derivedSecrets.verificationKeyIv,
           }),
         );
       | Error(_) => Js.Promise.resolve()
@@ -67,8 +69,8 @@ let useLogin = () => {
     | Error(e) => resolve(Error(e))
     | Ok({salt}) =>
       let saltBuffer = Base64_js.ArrayBuffer.decode(salt);
-      let* derivedKey = DerivedKey.create(~password, ~saltBuffer);
-      let auth_token = Salt.toHash(derivedKey.hashedAuthenticationKey);
+      let* derivedSecrets = DerivedSecrets.create(~password, ~saltBuffer);
+      let auth_token = derivedSecrets.authenticationKey;
 
       let* authResult = ApiLogin.postAuth(~username, ~auth_token);
       switch (authResult) {

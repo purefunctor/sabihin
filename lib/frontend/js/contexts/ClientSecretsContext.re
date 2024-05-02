@@ -4,8 +4,10 @@ open Vault_js;
 
 type clientSecrets = {
   saltBuffer: ArrayBuffer.t,
-  derivedKey: DerivedKey.t,
+  derivedKey: DerivedSecrets.t,
   masterKeyIv: Uint8Array.t,
+  protectionKeyIv: Uint8Array.t,
+  verificationKeyIv: Uint8Array.t,
 };
 
 let writeClientSecrets =
@@ -14,25 +16,41 @@ let writeClientSecrets =
   let* derivedKey =
     Operations.exportDerivedKey(~derivedKey=clientSecrets.derivedKey);
   let masterKeyIv = clientSecrets.masterKeyIv;
+  let protectionKeyIv = clientSecrets.protectionKeyIv;
+  let verificationKeyIv = clientSecrets.verificationKeyIv;
 
   Js.Promise.resolve(
     Client_types_bs.write_clientSecretsCore({
       saltBuffer,
       derivedKey,
       masterKeyIv,
+      protectionKeyIv,
+      verificationKeyIv,
     }),
   );
 };
 
 let readClientSecrets =
     (~clientSecretsJson: Js.Json.t): Js.Promise.t(clientSecrets) => {
-  let Client_types_bs.{saltBuffer, derivedKey, masterKeyIv} =
+  let Client_types_bs.{
+        saltBuffer,
+        derivedKey,
+        masterKeyIv,
+        protectionKeyIv,
+        verificationKeyIv,
+      } =
     Client_types_bs.read_clientSecretsCore(clientSecretsJson);
 
   let* derivedKey =
     Operations.importDerivedKey(~exportedDerivedKey=derivedKey);
 
-  Js.Promise.resolve({saltBuffer, derivedKey, masterKeyIv});
+  Js.Promise.resolve({
+    saltBuffer,
+    derivedKey,
+    masterKeyIv,
+    protectionKeyIv,
+    verificationKeyIv,
+  });
 };
 
 let writeToLocalStorage = (~clientSecrets: clientSecrets): Js.Promise.t(unit) => {

@@ -27,7 +27,7 @@ let useGenerateKeys = () => {
       let saltBuffer = clientSecrets.saltBuffer;
 
       push({kind: Loading, message: "Generating Master Key"});
-      let* freshMasterKey = MasterKey.create(~saltBuffer);
+      let* masterKey = MasterKey.create(~saltBuffer);
       let* _ = sleep(500);
       replaceKind(Success);
 
@@ -45,20 +45,20 @@ let useGenerateKeys = () => {
       let* wrappedMasterKey =
         Operations.wrapMasterKey(
           ~derivedKey=clientSecrets.derivedKey,
-          ~masterKey=freshMasterKey.masterKey,
+          ~masterKey,
           ~masterKeyIv=clientSecrets.masterKeyIv,
         );
       let* wrappedProtectionKey =
         Operations.wrapProtectionPrivateKey(
-          ~masterKey=freshMasterKey.masterKey,
+          ~masterKey,
           ~protectionPrivateKey=freshProtectionKeys.privateKey,
-          ~protectionKeyIv=freshMasterKey.protectionKeyIv,
+          ~protectionKeyIv=clientSecrets.protectionKeyIv,
         );
       let* wrappedVerificationKey =
         Operations.wrapVerificationPrivateKey(
-          ~masterKey=freshMasterKey.masterKey,
+          ~masterKey,
           ~verificationPrivateKey=freshVerificationKeys.privateKey,
-          ~verificationKeyIv=freshMasterKey.verificationKeyIv,
+          ~verificationKeyIv=clientSecrets.verificationKeyIv,
         );
       let* _ = sleep(500);
       replaceKind(Success);
@@ -85,13 +85,13 @@ let useGenerateKeys = () => {
         exported_protection_key:
           exportedProtectionKey |> Base64_js.ArrayBuffer.encode,
         protection_key_iv:
-          freshMasterKey.protectionKeyIv |> Base64_js.Uint8Array.encode,
+          clientSecrets.protectionKeyIv |> Base64_js.Uint8Array.encode,
         encrypted_verification_key:
           wrappedVerificationKey |> Base64_js.ArrayBuffer.encode,
         exported_verification_key:
           exportedVerificationKey |> Base64_js.ArrayBuffer.encode,
         verification_key_iv:
-          freshMasterKey.verificationKeyIv |> Base64_js.Uint8Array.encode,
+          clientSecrets.verificationKeyIv |> Base64_js.Uint8Array.encode,
       };
       let* _ = ApiSecrets.post(registerKeysPayload);
       let* _ = sleep(500);
