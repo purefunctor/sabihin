@@ -48,26 +48,52 @@ let readGeneratedSecrets =
   });
 };
 
-let writeToLocalStorage =
+let writeToSessionStorage =
     (~generatedSecrets: generatedSecrets): Js.Promise.t(unit) => {
   let+ generatedSecretsJson = writeGeneratedSecrets(~generatedSecrets);
   let generatedSecretsString = Js.Json.stringify(generatedSecretsJson);
 
   Dom.Storage.(
-    localStorage |> setItem("generatedSecrets", generatedSecretsString)
+    sessionStorage |> setItem("generatedSecrets", generatedSecretsString)
   );
 };
 
-let readFromLocalStorage = (): Js.Promise.t(option(generatedSecrets)) => {
+let requestFromServer = (): Js.Promise.t(option(generatedSecrets)) => {
+  let* keysFromServer = ApiSecrets.get();
+  switch (keysFromServer) {
+  | None => resolve(None)
+  | Some({
+      encrypted_master_key,
+      encrypted_protection_key,
+      exported_protection_key,
+      encrypted_verification_key,
+      exported_verification_key,
+    }) =>
+    let generatedSecrets = {
+      encryptedMasterKey: encrypted_master_key |> Base64_js.ArrayBuffer.decode,
+      encryptedProtectionKey:
+        encrypted_protection_key |> Base64_js.ArrayBuffer.decode,
+      exportedProtectionKey:
+        exported_protection_key |> Base64_js.ArrayBuffer.decode,
+      encryptedVerificationKey:
+        encrypted_verification_key |> Base64_js.ArrayBuffer.decode,
+      exportedVerificationKey:
+        exported_verification_key |> Base64_js.ArrayBuffer.decode,
+    };
+    resolve(Some(generatedSecrets));
+  };
+};
+
+let readFromSessionStorage = (): Js.Promise.t(option(generatedSecrets)) => {
   let generatedSecretsJson =
-    Dom.Storage.(localStorage |> getItem("generatedSecrets"))
+    Dom.Storage.(sessionStorage |> getItem("generatedSecrets"))
     |> Option.map(Js.Json.parseExn);
 
   switch (generatedSecretsJson) {
   | Some(generatedSecretsJson) =>
     let* generatedSecrets = readGeneratedSecrets(~generatedSecretsJson);
-    Js.Promise.resolve(Some(generatedSecrets));
-  | None => Js.Promise.resolve(None)
+    resolve(Some(generatedSecrets));
+  | None => resolve(None)
   };
 };
 
@@ -78,11 +104,11 @@ include Store.MakeContext({
 
   let use = () => {
     let subscribers = React.useRef(Subscribers_js.create());
-    let get = readFromLocalStorage;
+    let get = readFromSessionStorage;
     let set = generatedSecrets => {
       let+ _ =
         switch (generatedSecrets) {
-        | Some(generatedSecrets) => writeToLocalStorage(~generatedSecrets)
+        | Some(generatedSecrets) => writeToSessionStorage(~generatedSecrets)
         | None => Js.Promise.resolve()
         };
       Subscribers_js.forEach(subscribers.current, subscriber => subscriber());
