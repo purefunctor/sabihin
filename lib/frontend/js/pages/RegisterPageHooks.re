@@ -81,7 +81,7 @@ let useFormSubmit =
       ~password: fieldHook(ValidationPassword.t),
       ~confirm: fieldHook(ValidationPasswordConfirm.t),
     ) => {
-  let register = Session.useRegister();
+  let register = SessionHook.useRegister();
 
   React.useCallback3(
     event => {

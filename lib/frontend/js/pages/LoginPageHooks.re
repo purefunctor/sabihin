@@ -58,7 +58,7 @@ let useFormSubmit =
       ~username: fieldHook(ValidationUsername.t),
       ~password: fieldHook(ValidationPasswordBasic.t),
     ) => {
-  let login = Session.useLogin();
+  let login = SessionHook.useLogin();
 
   React.useCallback2(
     event => {
