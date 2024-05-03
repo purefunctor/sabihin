@@ -14,6 +14,7 @@ let sleep = time =>
   });
 
 let useGenerateKeys = () => {
+  let generatedSecretsStore = GeneratedSecretsContext.useContext();
   let (state, setState) = React.useState(() => State.Initial);
   let (logs, push, replaceKind, clear) =
     GetStartedPageGenerateLogs.useLogStack();
@@ -42,19 +43,19 @@ let useGenerateKeys = () => {
       replaceKind(Success);
 
       push({kind: Loading, message: "Encrypting Private Keys"});
-      let* wrappedMasterKey =
+      let* encryptedMasterkey =
         Operations.wrapMasterKey(
           ~derivedKey=derivedSecrets.derivedKey,
           ~masterKey,
           ~masterKeyIv=derivedSecrets.masterKeyIv,
         );
-      let* wrappedProtectionKey =
+      let* encryptedProtectionKey =
         Operations.wrapProtectionPrivateKey(
           ~masterKey,
           ~protectionPrivateKey=freshProtectionKeys.privateKey,
           ~protectionKeyIv=derivedSecrets.protectionKeyIv,
         );
-      let* wrappedVerificationKey =
+      let* encryptedVerificationKey =
         Operations.wrapVerificationPrivateKey(
           ~masterKey,
           ~verificationPrivateKey=freshVerificationKeys.privateKey,
@@ -77,17 +78,30 @@ let useGenerateKeys = () => {
 
       push({kind: Loading, message: "Submitting"});
       let registerKeysPayload: Types_universal.Definitions_t.register_keys_payload = {
-        encrypted_master_key: wrappedMasterKey |> Base64_js.ArrayBuffer.encode,
+        encrypted_master_key:
+          encryptedMasterkey |> Base64_js.ArrayBuffer.encode,
         encrypted_protection_key:
-          wrappedProtectionKey |> Base64_js.ArrayBuffer.encode,
+          encryptedProtectionKey |> Base64_js.ArrayBuffer.encode,
         exported_protection_key:
           exportedProtectionKey |> Base64_js.ArrayBuffer.encode,
         encrypted_verification_key:
-          wrappedVerificationKey |> Base64_js.ArrayBuffer.encode,
+          encryptedVerificationKey |> Base64_js.ArrayBuffer.encode,
         exported_verification_key:
           exportedVerificationKey |> Base64_js.ArrayBuffer.encode,
       };
       let* _ = ApiSecrets.post(registerKeysPayload);
+      let* _ = sleep(500);
+      replaceKind(Success);
+
+      push({kind: Loading, message: "Saving"});
+      let generatedSecrets: GeneratedSecretsContext.generatedSecrets = {
+        encryptedMasterKey: encryptedMasterkey,
+        encryptedProtectionKey,
+        exportedProtectionKey,
+        encryptedVerificationKey,
+        exportedVerificationKey,
+      };
+      let* _ = generatedSecretsStore.set(Some(generatedSecrets));
       let* _ = sleep(500);
       replaceKind(Success);
 
