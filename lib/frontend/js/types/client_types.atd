@@ -8,3 +8,11 @@ type derivedSecretsCore = {
   protectionKeyIv: uint8Array;
   verificationKeyIv: uint8Array;
 }
+
+type generatedSecretsCore = {
+  encryptedMasterKey: arrayBuffer;
+  encryptedProtectionKey: arrayBuffer;
+  exportedProtectionKey: arrayBuffer;
+  encryptedVerificationKey: arrayBuffer;
+  exportedVerificationKey: arrayBuffer;
+}
