@@ -27,7 +27,7 @@ let useSession = () => {
 
 let useRegister = () => {
   let sessionStore = SessionContext.useContext();
-  let clientSecretsStore = ClientSecretsContext.useContext();
+  let derivedSecretsStore = DerivedSecretsContext.useContext();
 
   React.useCallback0((~username, ~password) => {
     let clientRandom = ClientRandom.create();
@@ -47,7 +47,7 @@ let useRegister = () => {
       let* _ =
         sessionStore.set(`LoggedIn({public_id: registerResult.public_id}));
       let* _ =
-        clientSecretsStore.set(
+        derivedSecretsStore.set(
           Some({
             saltBuffer,
             derivedKey: derivedSecrets.derivedKey,
@@ -63,7 +63,7 @@ let useRegister = () => {
 
 let useLogin = () => {
   let sessionStore = SessionContext.useContext();
-  let clientSecretsStore = ClientSecretsContext.useContext();
+  let derivedSecretsStore = DerivedSecretsContext.useContext();
 
   React.useCallback0((~username, ~password) => {
     let* saltResult = ApiLogin.postSalt(~username);
@@ -81,7 +81,7 @@ let useLogin = () => {
         let* _ =
           sessionStore.set(`LoggedIn({public_id: authResult.public_id}));
         let* _ =
-          clientSecretsStore.set(
+          derivedSecretsStore.set(
             Some({
               saltBuffer,
               derivedKey: derivedSecrets.derivedKey,

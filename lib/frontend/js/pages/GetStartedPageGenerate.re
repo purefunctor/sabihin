@@ -92,7 +92,7 @@ module Actions = {
 
 [@react.component]
 let make = (~onFinish) => {
-  let clientSecretsStore = ClientSecretsContext.useContext();
+  let derivedSecretsStore = DerivedSecretsContext.useContext();
   let (logs, state, generateKeys, clear) = useGenerateKeys();
 
   let onStart =
@@ -100,10 +100,10 @@ let make = (~onFinish) => {
       open Js.Promise;
       open Promise_syntax;
 
-      let* clientSecrets = clientSecretsStore.get();
-      switch (clientSecrets) {
-      | Some(clientSecrets) =>
-        generateKeys(clientSecrets) |> then_(onFinish)
+      let* derivedSecrets = derivedSecretsStore.get();
+      switch (derivedSecrets) {
+      | Some(derivedSecrets) =>
+        generateKeys(derivedSecrets) |> then_(onFinish)
       | None => resolve()
       };
     });

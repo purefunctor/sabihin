@@ -19,12 +19,12 @@ let useGenerateKeys = () => {
     GetStartedPageGenerateLogs.useLogStack();
 
   let generateKeysCore =
-    React.useCallback0((clientSecrets: ClientSecretsContext.clientSecrets) => {
+    React.useCallback0((derivedSecrets: DerivedSecretsContext.derivedSecrets) => {
       open Promise_syntax;
       open Vault_js;
 
       setState(_ => Generating);
-      let saltBuffer = clientSecrets.saltBuffer;
+      let saltBuffer = derivedSecrets.saltBuffer;
 
       push({kind: Loading, message: "Generating Master Key"});
       let* masterKey = MasterKey.create(~saltBuffer);
@@ -44,21 +44,21 @@ let useGenerateKeys = () => {
       push({kind: Loading, message: "Encrypting Private Keys"});
       let* wrappedMasterKey =
         Operations.wrapMasterKey(
-          ~derivedKey=clientSecrets.derivedKey,
+          ~derivedKey=derivedSecrets.derivedKey,
           ~masterKey,
-          ~masterKeyIv=clientSecrets.masterKeyIv,
+          ~masterKeyIv=derivedSecrets.masterKeyIv,
         );
       let* wrappedProtectionKey =
         Operations.wrapProtectionPrivateKey(
           ~masterKey,
           ~protectionPrivateKey=freshProtectionKeys.privateKey,
-          ~protectionKeyIv=clientSecrets.protectionKeyIv,
+          ~protectionKeyIv=derivedSecrets.protectionKeyIv,
         );
       let* wrappedVerificationKey =
         Operations.wrapVerificationPrivateKey(
           ~masterKey,
           ~verificationPrivateKey=freshVerificationKeys.privateKey,
-          ~verificationKeyIv=clientSecrets.verificationKeyIv,
+          ~verificationKeyIv=derivedSecrets.verificationKeyIv,
         );
       let* _ = sleep(500);
       replaceKind(Success);
@@ -99,8 +99,8 @@ let useGenerateKeys = () => {
     });
 
   let generateKeys =
-    React.useCallback0(clientSecrets => {
-      generateKeysCore(clientSecrets)
+    React.useCallback0(derivedSecrets => {
+      generateKeysCore(derivedSecrets)
       |> Js.Promise.(
            catch(error => {
              open Promise_syntax;
