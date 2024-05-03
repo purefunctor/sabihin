@@ -64,6 +64,18 @@ let useRegister = () => {
 let useLogin = () => {
   let sessionStore = SessionContext.useContext();
   let derivedSecretsStore = DerivedSecretsContext.useContext();
+  let generatedSecretsStore = GeneratedSecretsContext.useContext();
+
+  let setGeneratedSecrets =
+    React.useCallback0(() => {
+      let* fromLocal = generatedSecretsStore.get();
+      switch (fromLocal) {
+      | Some(_) => resolve()
+      | None =>
+        let* fromServer = GeneratedSecretsContext.requestFromServer();
+        generatedSecretsStore.set(fromServer);
+      };
+    });
 
   React.useCallback0((~username, ~password) => {
     let* saltResult = ApiLogin.postSalt(~username);
@@ -90,6 +102,7 @@ let useLogin = () => {
               verificationKeyIv: derivedSecrets.verificationKeyIv,
             }),
           );
+        let* _ = setGeneratedSecrets();
         resolve(Ok(authResult));
       };
     };
