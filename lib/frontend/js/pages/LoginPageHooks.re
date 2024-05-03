@@ -32,25 +32,34 @@ let usePassword = () => {
   {value, onChange, validation, setValidation};
 };
 
-let submitCore =
+let useSubmitCore = () => {
+  let login = SessionHook.useLogin();
+  let generatedSecretsContext = GeneratedSecretsContext.useContext();
+
+  React.useCallback0(
     (
-      ~login:
-         (~username: string, ~password: string) =>
-         Js.Promise.t(ApiCore.loginAuthResult),
       ~username: fieldHook(ValidationUsername.t),
       ~password: fieldHook(ValidationPasswordBasic.t),
     ) => {
-  let+ submitResult = {
-    let username = username.value;
-    let password = password.value;
-    login(~username, ~password);
-  };
-  switch (submitResult) {
-  | Ok(_) => ()
-  | Error(e) =>
-    let apiError = ApiCore.loginErrorToString(e);
-    username.setValidation(_ => Validated(ApiError(apiError)));
-  };
+    let* submitResult = {
+      let username = username.value;
+      let password = password.value;
+      login(~username, ~password);
+    };
+
+    switch (submitResult) {
+    | Ok(_) =>
+      let+ generatedSecrets = generatedSecretsContext.get();
+      switch (generatedSecrets) {
+      | Some(_) => ReasonReactRouter.push("/inbox")
+      | None => ReasonReactRouter.push("/get-started")
+      };
+    | Error(e) =>
+      let apiError = ApiCore.loginErrorToString(e);
+      username.setValidation(_ => Validated(ApiError(apiError)));
+      resolve();
+    };
+  });
 };
 
 let useFormSubmit =
@@ -58,7 +67,7 @@ let useFormSubmit =
       ~username: fieldHook(ValidationUsername.t),
       ~password: fieldHook(ValidationPasswordBasic.t),
     ) => {
-  let login = SessionHook.useLogin();
+  let submitCore = useSubmitCore();
 
   React.useCallback2(
     event => {
@@ -68,7 +77,7 @@ let useFormSubmit =
       let allowPassword = ValidationPasswordBasic.allow(password.validation);
 
       if (allowUsername && allowPassword) {
-        ignore(submitCore(~login, ~username, ~password));
+        ignore(submitCore(~username, ~password));
       };
     },
     (username, password),
