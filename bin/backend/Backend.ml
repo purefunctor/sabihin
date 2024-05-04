@@ -28,7 +28,18 @@ let get_cipher_secret () =
   | None ->
       Backend_lib.Logging.warn (fun log ->
           log "SABIHIN_CIPHER_SECRET: Development Mode");
-      Dream.to_base64url (Dream.random 128)
+      Dream.random 128
+
+let get_server_random () =
+  match Sys.getenv_opt "SABIHIN_SERVER_RANDOM" with
+  | Some cipher_secret ->
+      Backend_lib.Logging.info (fun log ->
+          log "SABIHIN_SERVER_RANDOM: Production Mode");
+      cipher_secret
+  | None ->
+      Backend_lib.Logging.warn (fun log ->
+          log "SABIHIN_SERVER_RANDOM: Development Mode");
+      Dream.random 16
 
 let get_vite_dev () =
   let has_vite_dev = Sys.getenv_opt "SABIHIN_VITE_DEV" |> Option.is_some in
@@ -47,8 +58,10 @@ let () =
   let database_url = get_database_url () in
   let server_secret = get_server_secret () in
   let cipher_secret = get_cipher_secret () in
+  let server_random = get_server_random () in
   let vite_dev = get_vite_dev () in
 
-  Backend_lib.Cipher.set_current_key cipher_secret;
+  Backend_lib.Cipher.set_cipher_secret cipher_secret;
+  Backend_lib.Cipher.set_server_random server_random;
   if vite_dev then Backend_lib.Vite.enable_dev ();
   Backend_lib.Server.run ~database_url ~server_secret ()

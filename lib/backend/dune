@@ -12,6 +12,8 @@
   server-reason-react.react
   server-reason-react.reactDom
   types_native
+  validation_universal
+  vault_native
   yojson)
  (preprocess
   (pps lwt_ppx ppx_yojson_conv server-reason-react.ppx)))

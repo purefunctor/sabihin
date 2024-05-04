@@ -1,5 +1,6 @@
 module Username = {
   type t =
+    | ApiError(string)
     | TooShort
     | TooLong
     | InvalidCharacter(string)
@@ -14,6 +15,12 @@ module Password = {
     | Medium
     | ModeratelyStrong
     | VeryStrong;
+};
+
+module PasswordBasic = {
+  type t =
+    | TooShort
+    | Success;
 };
 
 module PasswordConfirm = {

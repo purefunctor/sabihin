@@ -5,56 +5,99 @@ open Promise_syntax;
 open Vault_js;
 
 describe("Salt", () => {
-  test("it works", () => {
-    let text_encoder = TextEncoder.create();
-    let text_decoder = TextDecoder.create();
+  testPromise("it works", () => {
+    let textEncoder = TextEncoder.create();
+    let textDecoder = TextDecoder.create();
 
-    let encoded_text = TextEncoder.encode(text_encoder, "ABCDEF0123456789");
-    let salt_base = Salt.computeBase(encoded_text);
-    let decoded_salt = TextDecoder.decode(text_decoder, salt_base);
+    let encodedText = TextEncoder.encode(textEncoder, "ABCDEF0123456789");
+    let saltBase = Salt.computeBase(encodedText);
+    let* saltDigest = Salt.computeDigest(encodedText);
+    let decodedSalt = TextDecoder.decode(textDecoder, saltBase);
+    let digestHash = Salt.toHash(saltDigest);
 
-    assert(Uint8Array.length(salt_base) == 256);
+    assert(Uint8Array.length(saltBase) == 256);
 
-    expect(decoded_salt)
-    |> toBe(
-         "sabihin.phLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLABCDEF0123456789",
-       );
+    resolve(
+      expect([|decodedSalt, digestHash|])
+      |> toEqual([|
+           "sabihin.phLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLABCDEF0123456789",
+           "817a0d4828d8fd886f6443962c8d34b0ab44e7cc85cc377cd6676f491c35be34",
+         |]),
+    );
   })
 });
 
-describe("Derived Key", () => {
-  testPromise("it works", () => {
+describe("Derived Secrets", () => {
+  testPromise("it encrypts and decryps the master key", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshMasterKey = MasterKey.create(~saltBuffer);
-    let* freshDerivedKey =
-      DerivedKey.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+    let* masterKey = MasterKey.create(~saltBuffer);
+    let* derivedSecrets =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
 
     let* encryptedMasterKey =
       Operations.wrapMasterKey(
-        ~derivedKey=freshDerivedKey.derivedKey,
-        ~masterKeyIv=freshDerivedKey.masterKeyIv,
-        ~masterKey=freshMasterKey.masterKey,
+        ~derivedKey=derivedSecrets.derivedKey,
+        ~masterKeyIv=derivedSecrets.masterKeyIv,
+        ~masterKey,
       );
 
     let* _ =
       Operations.unwrapMasterKey(
-        ~derivedKey=freshDerivedKey.derivedKey,
-        ~masterKeyIv=freshDerivedKey.masterKeyIv,
+        ~derivedKey=derivedSecrets.derivedKey,
+        ~masterKeyIv=derivedSecrets.masterKeyIv,
         ~encryptedMasterKey,
       );
 
     resolve(pass);
   });
 
+  testPromise("it is deterministic", () => {
+    let clientRandom = ClientRandom.create();
+    let* saltBuffer = Salt.computeDigest(clientRandom);
+
+    let* firstDerivedSecrets =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+    let* secondDerivedSecrets =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+
+    let ivToHexString = iv => iv |> Uint8Array.buffer |> Salt.toHash;
+
+    let firstMasterKeyIv = firstDerivedSecrets.masterKeyIv |> ivToHexString;
+    let secondMasterKeyIv = secondDerivedSecrets.masterKeyIv |> ivToHexString;
+
+    let firstProtectionKeyIv =
+      firstDerivedSecrets.protectionKeyIv |> ivToHexString;
+    let secondProtectionKeyIv =
+      secondDerivedSecrets.protectionKeyIv |> ivToHexString;
+
+    let firstVerificationKeyIv =
+      firstDerivedSecrets.verificationKeyIv |> ivToHexString;
+    let secondVerificationKeyIv =
+      secondDerivedSecrets.verificationKeyIv |> ivToHexString;
+
+    resolve(
+      expect([|
+        firstMasterKeyIv,
+        firstProtectionKeyIv,
+        firstVerificationKeyIv,
+      |])
+      |> toEqual([|
+           secondMasterKeyIv,
+           secondProtectionKeyIv,
+           secondVerificationKeyIv,
+         |]),
+    );
+  });
+
   testPromise("it can be exported and imported", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshDerivedKey =
-      DerivedKey.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+    let* derivedSecrets =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
 
     let* exportedDerivedKey =
-      Operations.exportDerivedKey(~derivedKey=freshDerivedKey.derivedKey);
+      Operations.exportDerivedKey(~derivedKey=derivedSecrets.derivedKey);
 
     let* _ = Operations.importDerivedKey(~exportedDerivedKey);
 
@@ -66,18 +109,20 @@ describe("Master Key", () => {
   testPromise("it wraps and unwraps a protection private key", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshMasterKey = MasterKey.create(~saltBuffer);
+    let* derivedSecrets =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+    let* masterKey = MasterKey.create(~saltBuffer);
     let* protectionKeyPair = ProtectionKeys.create();
     let* encryptedProtectionPrivateKey =
       Operations.wrapProtectionPrivateKey(
-        ~masterKey=freshMasterKey.masterKey,
-        ~protectionKeyIv=freshMasterKey.protectionKeyIv,
+        ~masterKey,
+        ~protectionKeyIv=derivedSecrets.protectionKeyIv,
         ~protectionPrivateKey=protectionKeyPair.privateKey,
       );
     let* _ =
       Operations.unwrapProtectionPrivateKey(
-        ~masterKey=freshMasterKey.masterKey,
-        ~protectionKeyIv=freshMasterKey.protectionKeyIv,
+        ~masterKey,
+        ~protectionKeyIv=derivedSecrets.protectionKeyIv,
         ~encryptedProtectionPrivateKey,
       );
     resolve(pass);
@@ -86,18 +131,20 @@ describe("Master Key", () => {
   testPromise("it wraps and unwraps a verification private key", () => {
     let clientRandom = ClientRandom.create();
     let* saltBuffer = Salt.computeDigest(clientRandom);
-    let* freshMasterKey = MasterKey.create(~saltBuffer);
+    let* derivedKey =
+      DerivedSecrets.create(~password="Maho_Akashi_9_20", ~saltBuffer);
+    let* masterKey = MasterKey.create(~saltBuffer);
     let* verificationKeyPair = VerificationKeys.create();
     let* encryptedVerificationPrivateKey =
       Operations.wrapVerificationPrivateKey(
-        ~masterKey=freshMasterKey.masterKey,
-        ~verificationKeyIv=freshMasterKey.verificationKeyIv,
+        ~masterKey,
+        ~verificationKeyIv=derivedKey.verificationKeyIv,
         ~verificationPrivateKey=verificationKeyPair.privateKey,
       );
     let* _ =
       Operations.unwrapVerificationPrivateKey(
-        ~masterKey=freshMasterKey.masterKey,
-        ~verificationKeyIv=freshMasterKey.verificationKeyIv,
+        ~masterKey,
+        ~verificationKeyIv=derivedKey.verificationKeyIv,
         ~encryptedVerificationPrivateKey,
       );
     resolve(pass);

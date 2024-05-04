@@ -14,18 +14,15 @@ type 'json base_error_response = {
 type register_user_payload = {
   username: string;
   auth_token: string;
+  client_random: string;
 }
 
 type register_keys_payload = {
-  client_random_value: string;
   encrypted_master_key: string;
-  master_key_iv: string;
   encrypted_protection_key: string;
   exported_protection_key: string;
-  protection_key_iv: string;
   encrypted_verification_key: string;
   exported_verification_key: string;
-  verification_key_iv: string;
 }
 
 type register_response = {
@@ -37,6 +34,27 @@ type register_error_content = [
 ]
 
 type register_error_response = register_error_content base_error_response
+
+(* login api types *)
+
+type login_payload = {
+  username: string;
+  ?auth_token: string option;
+}
+
+type login_salt_response = {
+  salt: string;
+}
+
+type login_auth_response = {
+  public_id: string;
+}
+
+type login_error_content = [
+  | CouldNotLogIn
+]
+
+type login_error_response = login_error_content base_error_response
 
 (* client session types *)
 

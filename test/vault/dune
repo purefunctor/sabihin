@@ -1,0 +1,3 @@
+(test
+ (name vault_test)
+ (libraries alcotest vault_native))

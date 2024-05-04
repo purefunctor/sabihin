@@ -1,8 +1,18 @@
 type arrayBuffer <ocaml from="Base64_js.Definitions" t="arrayBuffer"> = abstract
 type uint8Array <ocaml from="Base64_js.Definitions" t="uint8Array"> = abstract
 
-type clientSecretsCore = {
-  clientRandom: uint8Array;
+type derivedSecretsCore = {
+  saltBuffer: arrayBuffer;
   derivedKey: arrayBuffer;
   masterKeyIv: uint8Array;
+  protectionKeyIv: uint8Array;
+  verificationKeyIv: uint8Array;
+}
+
+type generatedSecretsCore = {
+  encryptedMasterKey: arrayBuffer;
+  encryptedProtectionKey: arrayBuffer;
+  exportedProtectionKey: arrayBuffer;
+  encryptedVerificationKey: arrayBuffer;
+  exportedVerificationKey: arrayBuffer;
 }

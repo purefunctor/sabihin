@@ -1,7 +1,12 @@
 open RegisterPageHooksCore;
 
 let useNothing = () => {
-  {value: "", onChange: _ => (), validation: NotValidated};
+  {
+    value: "",
+    onChange: _ => (),
+    validation: NotValidated,
+    setValidation: _ => (),
+  };
 };
 
 let useUsername = useNothing;

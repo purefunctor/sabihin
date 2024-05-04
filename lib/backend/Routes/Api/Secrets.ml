@@ -1,44 +1,93 @@
 open HigherOrderHandlers
 open Types_native.Definitions_j
 
-let insert request (user_id : int32) (keys : register_keys_payload) =
+let secrets_to_register_keys
+    ({
+       user_id = _;
+       encrypted_master_key;
+       encrypted_protection_key;
+       exported_protection_key;
+       encrypted_verification_key;
+       exported_verification_key;
+     } :
+      Models.Secrets.t) =
+  {
+    encrypted_master_key;
+    encrypted_protection_key;
+    exported_protection_key;
+    encrypted_verification_key;
+    exported_verification_key;
+  }
+
+let get_secrets request (user_id : int32) =
   let open Lwt_result.Syntax in
-  let base64_decode field =
-    field |> Base64.decode |> Result.map Bytes.of_string |> Lwt_result.lift
+  let* secrets =
+    Dream.sql request (fun db -> Models.Secrets.get_by_user_id ~user_id db)
   in
+  Lwt.return_ok @@ Option.map secrets_to_register_keys secrets
 
-  let* client_random_value = base64_decode keys.client_random_value in
-  let* encrypted_master_key = base64_decode keys.encrypted_master_key in
-  let* master_key_iv = base64_decode keys.master_key_iv in
-  let* encrypted_protection_key = base64_decode keys.encrypted_protection_key in
-  let* protection_key_iv = base64_decode keys.protection_key_iv in
-  let* exported_protection_key = base64_decode keys.exported_protection_key in
-  let* encrypted_verification_key =
-    base64_decode keys.encrypted_verification_key
+let insert_secrets request (user_id : int32) (secrets : register_keys_payload) =
+  let open Lwt_result.Syntax in
+  Dream.sql request @@ fun connection ->
+  match%lwt Models.Secrets.get_by_user_id ~user_id connection with
+  | Error _ -> Lwt.return_ok false
+  | Ok _ ->
+      let {
+        encrypted_master_key;
+        encrypted_protection_key;
+        exported_protection_key;
+        encrypted_verification_key;
+        exported_verification_key;
+      } =
+        secrets
+      in
+      let* () =
+        Models.Secrets.insert ~user_id ~encrypted_master_key
+          ~encrypted_protection_key ~exported_verification_key
+          ~encrypted_verification_key ~exported_protection_key connection
+      in
+      Lwt.return_ok true
+
+let secrets_log message =
+  match message with
+  | `AlreadyRegistered -> Dream.error (fun log -> log "Already registered.")
+  | `CreatedSecrets -> Dream.info (fun log -> log "Secrets created.")
+  | `HasSecrets -> Dream.info (fun log -> log "Secrets found.")
+  | `NoSecrets -> Dream.error (fun log -> log "No secrets found.")
+  | #Caqti_error.t as e ->
+      Dream.error (fun log -> log "Failed with: %s." (Caqti_error.show e))
+
+let secrets_400 = Dream.empty `Bad_Request
+let secrets_404 = Dream.empty `Not_Found
+
+let get request =
+  let inner ({ id; _ } : Session.t) =
+    match%lwt get_secrets request id with
+    | Ok (Some secrets) ->
+        secrets_log `HasSecrets;
+        Dream.json @@ string_of_register_keys_payload secrets
+    | Ok None ->
+        secrets_log `NoSecrets;
+        secrets_404
+    | Error e ->
+        secrets_log e;
+        secrets_404
   in
-  let* verification_key_iv = base64_decode keys.verification_key_iv in
-  let* exported_verification_key =
-    base64_decode keys.exported_verification_key
-  in
+  with_session request inner
 
-  Dream.sql request (fun db ->
-      let (module Db) = db in
-      Db.with_transaction (fun () ->
-          let* _ =
-            Models.Secrets.insert ~user_id ~client_random_value
-              ~encrypted_master_key ~master_key_iv ~encrypted_protection_key
-              ~protection_key_iv ~exported_verification_key
-              ~encrypted_verification_key ~verification_key_iv
-              ~exported_protection_key db
-          in
-          Lwt.return_ok ()))
-
-let handler request =
+let post request =
   let inner (session : Session.t) =
     let inner (payload : register_keys_payload) =
-      match%lwt insert request session.id payload with
-      | Ok () -> Dream.empty `No_Content
-      | Error _ -> Dream.respond ~status:`Bad_Request "Invalid payload."
+      match%lwt insert_secrets request session.id payload with
+      | Ok true ->
+          secrets_log `CreatedSecrets;
+          Dream.empty `No_Content
+      | Ok false ->
+          secrets_log `AlreadyRegistered;
+          secrets_400
+      | Error e ->
+          secrets_log e;
+          secrets_400
     in
     with_json_body request register_keys_payload_of_string inner
   in

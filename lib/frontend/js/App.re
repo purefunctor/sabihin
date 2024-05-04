@@ -1,6 +1,8 @@
 [@react.component]
 let make = () => {
-  <ClientSecretsContext.Provider>
-    <SessionContext.Provider> <Layout /> </SessionContext.Provider>
-  </ClientSecretsContext.Provider>;
+  <DerivedSecretsContext.Provider>
+    <GeneratedSecretsContext.Provider>
+      <SessionContext.Provider> <Layout /> </SessionContext.Provider>
+    </GeneratedSecretsContext.Provider>
+  </DerivedSecretsContext.Provider>;
 };

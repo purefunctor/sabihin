@@ -7,44 +7,44 @@ module Secrets = struct
   let pp =
     let open Fmt in
     let open Secrets in
-    let bytes = of_to_string Bytes.to_string in
     record
       [
         field "user_id" (fun k -> k.user_id) int32;
-        field "client_random_value" (fun k -> k.client_random_value) bytes;
-        field "encrypted_master_key" (fun k -> k.encrypted_master_key) bytes;
-        field "master_key_iv" (fun k -> k.master_key_iv) bytes;
+        field "encrypted_master_key" (fun k -> k.encrypted_master_key) string;
         field "encrypted_protection_key"
           (fun k -> k.encrypted_protection_key)
-          bytes;
-        field "protection_key_iv" (fun k -> k.protection_key_iv) bytes;
+          string;
         field "exported_protection_key"
           (fun k -> k.exported_protection_key)
-          bytes;
+          string;
         field "encrypted_verification_key"
           (fun k -> k.encrypted_verification_key)
-          bytes;
-        field "verification_key_iv" (fun k -> k.verification_key_iv) bytes;
+          string;
         field "exported_verification_key"
           (fun k -> k.exported_verification_key)
-          bytes;
+          string;
       ]
 
   let equal x y =
     List.for_all Fun.id
       [
         Int32.equal x.user_id y.user_id;
-        Bytes.equal x.client_random_value y.client_random_value;
-        Bytes.equal x.encrypted_master_key y.encrypted_master_key;
-        Bytes.equal x.master_key_iv y.master_key_iv;
-        Bytes.equal x.encrypted_protection_key y.encrypted_protection_key;
-        Bytes.equal x.protection_key_iv y.protection_key_iv;
-        Bytes.equal x.exported_protection_key y.exported_protection_key;
-        Bytes.equal x.encrypted_verification_key y.encrypted_verification_key;
-        Bytes.equal x.verification_key_iv y.verification_key_iv;
-        Bytes.equal x.exported_verification_key y.exported_verification_key;
+        String.equal x.encrypted_master_key y.encrypted_master_key;
+        String.equal x.encrypted_protection_key y.encrypted_protection_key;
+        String.equal x.exported_protection_key y.exported_protection_key;
+        String.equal x.encrypted_verification_key y.encrypted_verification_key;
+        String.equal x.exported_verification_key y.exported_verification_key;
       ]
 end
+
+let username = "purefunctor"
+let auth_token = String.make 128 ' '
+let client_random = String.make 16 ' ' |> Base64.encode_exn
+let encrypted_master_key = String.make 512 ' ' |> Base64.encode_exn
+let encrypted_protection_key = String.make 512 ' ' |> Base64.encode_exn
+let exported_protection_key = String.make 512 ' ' |> Base64.encode_exn
+let encrypted_verification_key = String.make 512 ' ' |> Base64.encode_exn
+let exported_verification_key = String.make 512 ' ' |> Base64.encode_exn
 
 let initialize =
   let inner db =
@@ -58,25 +58,11 @@ let insert =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* user_id, _ =
-      let username = "insert.test" in
-      let auth_token = String.make 128 ' ' in
-      User.insert ~username ~auth_token db
-    in
+    let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
-      let client_random_value = Bytes.make 16 ' ' in
-      let encrypted_master_key = Bytes.make 512 ' ' in
-      let master_key_iv = Bytes.make 12 ' ' in
-      let encrypted_protection_key = Bytes.make 512 ' ' in
-      let protection_key_iv = Bytes.make 12 ' ' in
-      let exported_protection_key = Bytes.make 512 ' ' in
-      let encrypted_verification_key = Bytes.make 512 ' ' in
-      let verification_key_iv = Bytes.make 12 ' ' in
-      let exported_verification_key = Bytes.make 512 ' ' in
-      Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
+      Secrets.insert ~user_id ~encrypted_master_key ~encrypted_protection_key
         ~exported_protection_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_verification_key db
+        ~exported_verification_key db
     in
     Lwt.return_ok ()
   in
@@ -86,31 +72,16 @@ let insert_existing =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* user_id, _ =
-      let username = "insert.test" in
-      let auth_token = String.make 128 ' ' in
-      User.insert ~username ~auth_token db
-    in
-    let client_random_value = Bytes.make 16 ' ' in
-    let encrypted_master_key = Bytes.make 512 ' ' in
-    let master_key_iv = Bytes.make 12 ' ' in
-    let encrypted_protection_key = Bytes.make 512 ' ' in
-    let protection_key_iv = Bytes.make 12 ' ' in
-    let exported_protection_key = Bytes.make 512 ' ' in
-    let encrypted_verification_key = Bytes.make 512 ' ' in
-    let verification_key_iv = Bytes.make 12 ' ' in
-    let exported_verification_key = Bytes.make 512 ' ' in
+    let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
-      Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
+      Secrets.insert ~user_id ~encrypted_master_key ~encrypted_protection_key
         ~exported_protection_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_verification_key db
+        ~exported_verification_key db
     in
     let errorful =
-      Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
+      Secrets.insert ~user_id ~encrypted_master_key ~encrypted_protection_key
         ~exported_protection_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_verification_key db
+        ~exported_verification_key db
     in
     Lwt.bind errorful (function
       | Ok _ -> Alcotest.fail "Expected an error."
@@ -122,38 +93,20 @@ let get_by_user_id =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let* user_id, _ =
-      let username = "insert.test" in
-      let auth_token = String.make 128 ' ' in
-      User.insert ~username ~auth_token db
-    in
-    let client_random_value = Bytes.make 16 ' ' in
-    let encrypted_master_key = Bytes.make 512 ' ' in
-    let master_key_iv = Bytes.make 12 ' ' in
-    let encrypted_protection_key = Bytes.make 512 ' ' in
-    let protection_key_iv = Bytes.make 12 ' ' in
-    let exported_protection_key = Bytes.make 512 ' ' in
-    let encrypted_verification_key = Bytes.make 512 ' ' in
-    let verification_key_iv = Bytes.make 12 ' ' in
-    let exported_verification_key = Bytes.make 512 ' ' in
+    let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
-      Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
+      Secrets.insert ~user_id ~encrypted_master_key ~encrypted_protection_key
         ~exported_protection_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_verification_key db
+        ~exported_verification_key db
     in
     let expected =
       Secrets.
         {
           user_id;
-          client_random_value;
           encrypted_master_key;
-          master_key_iv;
           encrypted_protection_key;
-          protection_key_iv;
           exported_protection_key;
           encrypted_verification_key;
-          verification_key_iv;
           exported_verification_key;
         }
     in
@@ -170,38 +123,20 @@ let get_by_username =
   let inner db =
     let open Lwt_result.Syntax in
     let* _ = Initialize.initialize db in
-    let username = "insert.test" in
-    let* user_id, _ =
-      let auth_token = String.make 128 ' ' in
-      User.insert ~username ~auth_token db
-    in
-    let client_random_value = Bytes.make 16 ' ' in
-    let encrypted_master_key = Bytes.make 512 ' ' in
-    let master_key_iv = Bytes.make 12 ' ' in
-    let encrypted_protection_key = Bytes.make 512 ' ' in
-    let protection_key_iv = Bytes.make 12 ' ' in
-    let exported_protection_key = Bytes.make 512 ' ' in
-    let encrypted_verification_key = Bytes.make 512 ' ' in
-    let verification_key_iv = Bytes.make 12 ' ' in
-    let exported_verification_key = Bytes.make 512 ' ' in
+    let* user_id, _ = User.insert ~username ~auth_token ~client_random db in
     let* _ =
-      Secrets.insert ~user_id ~client_random_value ~encrypted_master_key
-        ~master_key_iv ~encrypted_protection_key ~protection_key_iv
+      Secrets.insert ~user_id ~encrypted_master_key ~encrypted_protection_key
         ~exported_protection_key ~encrypted_verification_key
-        ~verification_key_iv ~exported_verification_key db
+        ~exported_verification_key db
     in
     let expected =
       Secrets.
         {
           user_id;
-          client_random_value;
           encrypted_master_key;
-          master_key_iv;
           encrypted_protection_key;
-          protection_key_iv;
           exported_protection_key;
           encrypted_verification_key;
-          verification_key_iv;
           exported_verification_key;
         }
     in

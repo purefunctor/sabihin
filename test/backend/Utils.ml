@@ -1,17 +1,19 @@
 let options = Test_toolbox.Database.get_options_from_env ()
 let default_db_url = Test_toolbox.Database.make_url ~options ""
 let server_secret = "a_totally_legit_server_secret_you_should_use"
+let cipher_secret = String.make 128 'C'
+let server_random = String.make 16 'S'
 
 let perish action =
   Lwt.bind action (function
     | Ok o -> Lwt.return o
     | Error e -> raise (Caqti_error.Exn e))
 
-let make_test_case name ?(speed : Alcotest.speed_level = `Quick) action =
+let make_test_case prefix name ?(speed : Alcotest.speed_level = `Quick) action =
   let database_name =
     Cstruct.of_string name |> Mirage_crypto.Hash.SHA256.digest
     |> Cstruct.to_hex_string
-    |> Printf.sprintf "sabihin_backend_test_%s"
+    |> Printf.sprintf "sabihin_backend_test_%s_%s" prefix
   in
   let database_url = Test_toolbox.Database.make_url ~options database_name in
 
