@@ -45,7 +45,7 @@ let useRegister = () => {
     | Error(e) => resolve(Error(e))
     | Ok(registerResult) =>
       let* _ =
-        sessionStore.set(`LoggedIn({public_id: registerResult.public_id}));
+        sessionStore.set(`LoggedIn({publicId: registerResult.public_id}));
       let* _ =
         derivedSecretsStore.set(
           Some({
@@ -91,7 +91,7 @@ let useLogin = () => {
       | Error(e) => resolve(Error(e))
       | Ok(authResult) =>
         let* _ =
-          sessionStore.set(`LoggedIn({public_id: authResult.public_id}));
+          sessionStore.set(`LoggedIn({publicId: authResult.public_id}));
         let* _ =
           derivedSecretsStore.set(
             Some({

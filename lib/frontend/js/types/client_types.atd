@@ -16,3 +16,12 @@ type generatedSecretsCore = {
   encryptedVerificationKey: arrayBuffer;
   exportedVerificationKey: arrayBuffer;
 }
+
+type loggedIn = {
+  publicId: string;
+}
+
+type sessionKind = [
+  | Guest
+  | LoggedIn of loggedIn
+]

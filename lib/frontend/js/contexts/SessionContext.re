@@ -1,13 +1,12 @@
 open Promise_syntax;
-open Types_js;
-open Types_universal;
+open Client_types_bs;
 
 let readSession = () => {
   let ( let* ) = Option.bind;
   let kind = {
     let* kindString = Dom.Storage.(localStorage |> getItem("sessionKind"));
     let* kindJson = Json.parse(kindString);
-    switch (Definitions_bs.read_session_kind(kindJson)) {
+    switch (read_sessionKind(kindJson)) {
     | kind => Some(kind)
     | exception _ => None
     };
@@ -21,7 +20,7 @@ let readSession = () => {
 };
 
 let writeSession = kind => {
-  let kindJson = Definitions_bs.write_session_kind(kind);
+  let kindJson = write_sessionKind(kind);
   let kindString = Json.stringify(kindJson);
   Dom.Storage.(localStorage |> setItem("sessionKind", kindString));
   Js.Promise.resolve();
@@ -30,7 +29,7 @@ let writeSession = kind => {
 include Store.MakeContext({
   open Store;
 
-  type t = Definitions_t.session_kind;
+  type t = sessionKind;
 
   let use = () => {
     let subscribers = React.useRef(Subscribers_js.create());
