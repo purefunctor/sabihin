@@ -22,12 +22,5 @@ let create = () => {
   resolve({ephemeralKey, messageIv});
 };
 
-external fromCryptoKey: cryptoKey => t = "%identity";
-external toCryptoKey: t => cryptoKey = "%identity";
-
-module type S = {
-  type nonrec t = t;
-  type nonrec freshKey = freshKey;
-
-  let create: unit => Js.Promise.t(freshKey);
-};
+let fromCryptoKey: cryptoKey => t = Fun.id;
+let toCryptoKey: t => cryptoKey = Fun.id;

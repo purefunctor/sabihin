@@ -77,14 +77,5 @@ let create =
   });
 };
 
-external fromCryptoKey: cryptoKey => t = "%identity";
-external toCryptoKey: t => cryptoKey = "%identity";
-
-module type S = {
-  type nonrec t = t;
-  type nonrec derivedSecrets = derivedSecrets;
-
-  let create:
-    (~password: string, ~saltBuffer: ArrayBuffer.t) =>
-    Js.Promise.t(derivedSecrets);
-};
+let fromCryptoKey: cryptoKey => t = Fun.id;
+let toCryptoKey: t => cryptoKey = Fun.id;

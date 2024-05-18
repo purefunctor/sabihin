@@ -1,15 +1,9 @@
 open Js.Typed_array;
 open WebCrypto;
 
-type t;
+type t = pri cryptoKey;
 
 let create: (~saltBuffer: ArrayBuffer.t) => Js.Promise.t(t);
 
-external fromCryptoKey: cryptoKey => t = "%identity";
-external toCryptoKey: t => cryptoKey = "%identity";
-
-module type S = {
-  type nonrec t = t;
-
-  let create: (~saltBuffer: ArrayBuffer.t) => Js.Promise.t(t);
-};
+let fromCryptoKey: cryptoKey => t;
+let toCryptoKey: t => cryptoKey;

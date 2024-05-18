@@ -40,11 +40,5 @@ let create = (~saltBuffer: ArrayBuffer.t): Js.Promise.t(t) => {
   resolve(masterKey);
 };
 
-external fromCryptoKey: cryptoKey => t = "%identity";
-external toCryptoKey: t => cryptoKey = "%identity";
-
-module type S = {
-  type nonrec t = t;
-
-  let create: (~saltBuffer: ArrayBuffer.t) => Js.Promise.t(t);
-};
+let fromCryptoKey: cryptoKey => t = Fun.id;
+let toCryptoKey: t => cryptoKey = Fun.id;
