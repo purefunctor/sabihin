@@ -2,34 +2,14 @@ open Promise_syntax;
 open React.Event;
 open RegisterPageHooksCore;
 
-let useField = RegisterPageHooks.useField;
+let useValidatedField = RegisterPageHooks.useValidatedField;
 
 let useUsername = () => {
-  let (value, onChange) = useField();
-  let (validation, setValidation) =
-    React.useState(() => ValidationUsername.validate(value));
-  React.useEffect1(
-    () => {
-      setValidation(_ => ValidationUsername.validate(value));
-      None;
-    },
-    [|value|],
-  );
-  {value, onChange, validation, setValidation};
+  useValidatedField(ValidationUsername.validate);
 };
 
 let usePassword = () => {
-  let (value, onChange) = useField();
-  let (validation, setValidation) =
-    React.useState(() => ValidationPasswordBasic.validate(value));
-  React.useEffect1(
-    () => {
-      setValidation(_ => ValidationPasswordBasic.validate(value));
-      None;
-    },
-    [|value|],
-  );
-  {value, onChange, validation, setValidation};
+  useValidatedField(ValidationPasswordBasic.validate);
 };
 
 let useSubmitCore = () => {

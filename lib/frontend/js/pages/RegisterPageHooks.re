@@ -2,56 +2,36 @@ open Promise_syntax;
 open React.Event;
 open RegisterPageHooksCore;
 
-let useField = () => {
-  let (state, setState) = React.useState(() => "");
+let useValidatedField = validateFn => {
+  let (value, setValue) = React.useState(() => "");
+
   let onChange =
     React.useCallback0((event: Form.t) => {
       Form.preventDefault(event);
-      setState(_ => Form.target(event)##value);
+      setValue(_ => Form.target(event)##value);
     });
-  (state, onChange);
+
+  let (validation, setValidation) = React.useState(() => validateFn(value));
+
+  let (prevValue, setPrevValue) = React.useState(() => value);
+  if (value !== prevValue) {
+    setPrevValue(_ => value);
+    setValidation(_ => validateFn(value));
+  };
+
+  {value, onChange, validation, setValidation};
 };
 
 let useUsername = () => {
-  let (value, onChange) = useField();
-  let (validation, setValidation) =
-    React.useState(() => ValidationUsername.validate(value));
-  React.useEffect1(
-    () => {
-      setValidation(_ => ValidationUsername.validate(value));
-      None;
-    },
-    [|value|],
-  );
-  {value, onChange, validation, setValidation};
+  useValidatedField(ValidationUsername.validate);
 };
 
 let usePassword = (~username: string) => {
-  let (value, onChange) = useField();
-  let (validation, setValidation) =
-    React.useState(() => ValidationPassword.validate(username, value));
-  React.useEffect2(
-    () => {
-      setValidation(_ => ValidationPassword.validate(username, value));
-      None;
-    },
-    (username, value),
-  );
-  {value, onChange, validation, setValidation};
+  useValidatedField(ValidationPassword.validate(username));
 };
 
 let useConfirm = (~password: string) => {
-  let (value, onChange) = useField();
-  let (validation, setValidation) =
-    React.useState(() => ValidationPasswordConfirm.validate(password, value));
-  React.useEffect2(
-    () => {
-      setValidation(_ => ValidationPasswordConfirm.validate(password, value));
-      None;
-    },
-    (password, value),
-  );
-  {value, onChange, validation, setValidation};
+  useValidatedField(ValidationPasswordConfirm.validate(password));
 };
 
 let submitCore =
