@@ -4,10 +4,6 @@ module IndexCard = {
     background-color: $(Theme.background9);
     border-radius: 8px;
 
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-
     box-sizing: border-box;
     padding: 2rem;
 
@@ -21,16 +17,28 @@ module IndexCard = {
   |}
   ];
 
-  let articleCss = [%cx {| font-family: "Poppins" |}];
+  let articleCss = [%cx
+    {|
+    font-family: "Poppins";
+    text-align: center;
+  |}
+  ];
 
   let headingCss = [%cx {|
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 2rem 0;
   |}];
 
-  let iconCss = [%cx {|
-    color: $(Theme.primary);
+  let iconCss = [%cx
+    {|
+    color: rgba(0, 0, 0, 0.7);
+    background-color: $(Theme.primary);
+    padding: 1.5rem;
+    border-radius: 100%;
+    overflow: visible;
     flex-shrink: 0;
-  |}];
+    margin: 0 0 2rem 0;
+  |}
+  ];
 
   let pCss = [%cx
     {|
@@ -47,10 +55,10 @@ module IndexCard = {
   let make = (~title, ~iconFn, ~children) => {
     <div className=featureCardCss>
       <article className=articleCss>
+        {iconFn(~size="3rem", ~className=iconCss)}
         <h1 className=headingCss> {React.string(title)} </h1>
         children
       </article>
-      {iconFn(~size="3rem", ~className=iconCss)}
     </div>;
   };
 };
@@ -85,7 +93,7 @@ let make = () => {
       title="End-to-End Encryption"
       iconFn={(~size, ~className) => <Icons.MailLockLine size className />}>
       <p className=IndexCard.pCss>
-        {React.string("Sabihin utilizes end-to-end encryption techniques.")}
+        {React.string("sabihin.ph utilizes end-to-end encryption techniques.")}
       </p>
       <p className=IndexCard.pCss>
         {React.string("Messages can only be read by its intended recipients.")}
@@ -95,7 +103,9 @@ let make = () => {
       title="Open-Source Software"
       iconFn={(~size, ~className) => <Icons.RepositoryLine size className />}>
       <p className=IndexCard.pCss>
-        {React.string("Sabihin is built as and with open-source software.")}
+        {React.string(
+           "sabihin.ph is built as and built with open-source software.",
+         )}
       </p>
       <p className=IndexCard.pCss>
         {React.string(
@@ -105,15 +115,15 @@ let make = () => {
     </IndexCard>
     <IndexCard
       title="Functional Programming"
-      iconFn={(~size, ~className) => <Icons.OCamlFileIcon size className />}>
+      iconFn={(~size, ~className) => <Icons.FunctionVariant size className />}>
       <p className=IndexCard.pCss>
         {React.string(
-           "Sabihin is built with functional programming languages.",
+           "sabihin.ph leverages the power of functional programming languages.",
          )}
       </p>
       <p className=IndexCard.pCss>
         {React.string(
-           "OCaml offers performance, reliability, and fast iteration.",
+           "OCaml and ReasonML offers performance and type safety.",
          )}
       </p>
     </IndexCard>
