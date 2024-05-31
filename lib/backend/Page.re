@@ -1,26 +1,6 @@
 module Template = {
   [@react.component]
   let make = (~children) => {
-    let dataEmotion =
-      CssJs.Stylesheet.get_all(CssJs.instance)
-      |> List.map(((name, _)) =>
-           String.sub(name, 4, String.length(name) - 4)
-         )
-      |> List.cons("css")
-      |> String.concat(" ");
-
-    let styleTag = {
-      React.createElement(
-        "style",
-        [
-          String(("data-emotion", dataEmotion)),
-          Bool(("data-s", true)),
-          DangerouslyInnerHtml(CssJs.render_style_tag()),
-        ],
-        [],
-      );
-    };
-
     <html lang="en">
       <head>
         <meta charSet="UTF-8" />
@@ -32,7 +12,7 @@ module Template = {
         {Vite.make_script_tags()}
         <link rel="stylesheet" href="/static/fonts.css" />
         <link rel="stylesheet" href="/static/global.css" />
-        styleTag
+        {CssJs.style_tag()}
       </head>
       <body> <div id="root"> children </div> </body>
     </html>;
