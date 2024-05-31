@@ -19,6 +19,7 @@
 
 body {
   background-color: var(--background-10);
+  background-image: url("./noise.png");
   color: var(--foreground-10);
   margin: 0;
   padding: 0;
