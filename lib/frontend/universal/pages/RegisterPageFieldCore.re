@@ -20,11 +20,11 @@ align-items: center;
 
 box-sizing: border-box;
 padding: 1rem;
-background-color: $(Theme.backgroundSubtle);
+background-color: $(Theme.background9);
 border-radius: 8px;
 border-width: 4px;
 border-style: solid;
-border-color: $(Theme.backgroundSubtle);
+border-color: $(Theme.background9);
 gap: 0.5rem;
 
 &:focus-within {
@@ -40,8 +40,8 @@ let inputCss = [%cx
   {|
 height: 100%;
 width: 100%;
-color: $(Theme.foreground);
-background-color: $(Theme.backgroundSubtle);
+color: $(Theme.foreground10);
+background-color: $(Theme.background9);
 border: 0;
 font-family: "Poppins";
 font-size: 1rem;

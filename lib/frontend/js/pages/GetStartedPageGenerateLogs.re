@@ -27,8 +27,8 @@ module Log = {
   let iconFailureCss = [%cx {| color: $(Theme.failure) |}];
   let iconSuccessCss = [%cx {| color: $(Theme.success) |}];
 
-  let textLoadingCss = [%cx {| color: $(Theme.foreground) |}];
-  let textFinishedCss = [%cx {| color: $(Theme.foregroundSubtle) |}];
+  let textLoadingCss = [%cx {| color: $(Theme.foreground10) |}];
+  let textFinishedCss = [%cx {| color: $(Theme.foreground11) |}];
 
   let logCss = [%cx
     {|
@@ -69,8 +69,8 @@ module Logs = {
   let logsCss = [%cx
     {|
     min-height: 12rem;
-    background-color: $(Theme.neutral) ;
-    border-color: $(Theme.backgroundSubtle);
+    background-color: $(Theme.background11) ;
+    border-color: $(Theme.background9);
     border-radius: 8px;
     border-style: solid;
     border-width: 2px;

@@ -1,12 +1,15 @@
 let primary = `var("--primary");
 let secondary = `var("--secondary");
 let accent = `var("--accent");
-let foreground = `var("--foreground");
-let foregroundSubtle = `var("--foreground-subtle");
-let background = `var("--background");
-let backgroundSubtle = `var("--background-subtle");
-let neutral = `var("--neutral");
-let neutralSubtle = `var("--neutral-subtle");
+
+let foreground9 = `var("--foreground-9");
+let foreground10 = `var("--foreground-10");
+let foreground11 = `var("--foreground-11");
+
+let background9 = `var("--background-9");
+let background10 = `var("--background-10");
+let background11 = `var("--background-11");
+
 let success = `var("--success");
 let failure = `var("--failure");
 let warning = `var("--warning");
@@ -23,7 +26,7 @@ align-items: center;
 justify-content: center;
 
 cursor: pointer;
-border: 2px solid $(backgroundSubtle);
+border: 2px solid $(background9);
 border-radius: 8px;
 padding: 1rem;
 
@@ -45,7 +48,7 @@ align-items: center;
 justify-content: center;
 
 cursor: pointer;
-color: $(background);
+color: $(background10);
 background-color: $(primary);
 border: 2px solid $(primary);
 border-radius: 8px;
@@ -57,7 +60,7 @@ transition:
 
 &:hover {
   color: $(primary);
-  background-color: $(background);
+  background-color: $(background10);
 }
 |}
 ];

@@ -24,8 +24,8 @@ margin-top: 1rem;
 let itemCss = [%cx
   {|
 height: 12rem;
-background-color: $(Theme.neutral);
-border-color: $(Theme.backgroundSubtle);
+background-color: $(Theme.background11);
+border-color: $(Theme.background9);
 border-radius: 8px;
 border-style: solid;
 border-width: 2px;

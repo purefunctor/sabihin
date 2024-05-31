@@ -6,9 +6,9 @@ flex-wrap: wrap;
 
 padding-top: 2rem;
 padding-bottom: 2rem;
-border-top: 1px solid $(Theme.backgroundSubtle);
+border-top: 1px solid $(Theme.background9);
 
-color: $(Theme.foregroundSubtle);
+color: $(Theme.foreground11);
 font-family: "Poppins";
 |}
 ];

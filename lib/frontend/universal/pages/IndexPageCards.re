@@ -1,7 +1,7 @@
 module IndexCard = {
   let featureCardCss = [%cx
     {|
-    background-color: $(Theme.backgroundSubtle);
+    background-color: $(Theme.background9);
     border-radius: 8px;
 
     display: flex;
@@ -34,7 +34,7 @@ module IndexCard = {
 
   let pCss = [%cx
     {|
-    color: $(Theme.foregroundSubtle);
+    color: $(Theme.foreground11);
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     &:last-child {
@@ -63,7 +63,7 @@ gap: 2rem;
 
 padding-top: 4rem;
 padding-bottom: 4rem;
-border-top: 1px solid $(Theme.backgroundSubtle);
+border-top: 1px solid $(Theme.background9);
 
 $(Theme.afterMedium) {
   flex-direction: row;

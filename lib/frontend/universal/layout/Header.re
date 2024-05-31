@@ -5,7 +5,7 @@ display: flex;
 align-items: center;
 
 height: 4rem;
-border-bottom: 1px solid $(Theme.backgroundSubtle);
+border-bottom: 1px solid $(Theme.background9);
 padding-top: 1rem;
 padding-bottom: 1rem;
 |}

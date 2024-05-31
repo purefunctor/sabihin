@@ -2,12 +2,15 @@
   --primary: #f6a979;
   --secondary: #7bc8f4;
   --accent: #bea6dd;
-  --foreground: #f5f5f5;
-  --foreground-subtle: #c4c4c4;
-  --background: #1c1d21;
-  --background-subtle: #333437;
-  --neutral: #16171a;
-  --neutral-subtle: #191a1e;
+
+  --foreground-9: #f7f7f7;
+  --foreground-10: #f5f5f5;
+  --foreground-11: #c4c4c4;
+
+  --background-9: #333437;
+  --background-10: #1c1d21;
+  --background-11: #191a1e;
+
   --success: #c4e1a3;
   --failure: #ff9b85;
   --warning: #ffdf99;
@@ -15,8 +18,8 @@
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--background-10);
+  color: var(--foreground-10);
   margin: 0;
   padding: 0;
   margin-left: 2rem;
