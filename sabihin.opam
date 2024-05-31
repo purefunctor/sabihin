@@ -51,5 +51,5 @@ build: [
 dev-repo: "git+https://github.com/purefunctor/sabihin.git"
 pin-depends: [
   ["server-reason-react.dev" "https://github.com/ml-in-barcelona/server-reason-react/archive/ded352952dc49fcc7cad22956e0887c964b3c68b.tar.gz"]
-  ["styled-ppx.dev" "https://github.com/davesnx/styled-ppx/archive/f7affb36656c63a69ab8256a5149d30ef684563e.tar.gz"]
+  ["styled-ppx.dev" "https://github.com/davesnx/styled-ppx/archive/d3abc0f3c84d47978e60e1a1d2bc4380cf49fd66.tar.gz"]
 ]
