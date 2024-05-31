@@ -26,6 +26,7 @@ align-items: center;
 justify-content: center;
 
 cursor: pointer;
+background-color: $(background10);
 border: 2px solid $(background9);
 border-radius: 8px;
 padding: 1rem;
