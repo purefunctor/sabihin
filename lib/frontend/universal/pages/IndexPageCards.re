@@ -60,7 +60,10 @@ let cardsCss = [%cx
 display: flex;
 flex-direction: column;
 gap: 2rem;
-padding-top: 2rem;
+
+padding-top: 4rem;
+padding-bottom: 4rem;
+border-top: 1px solid $(Theme.backgroundSubtle);
 
 $(Theme.afterMedium) {
   flex-direction: row;

@@ -1,10 +1,9 @@
 let bannerCss = [%cx
   {|
+padding-top: 4rem;
+padding-bottom: 4rem;
 font-family: "Poppins";
 text-align: center;
-
-padding-bottom: 2rem;
-border-bottom: 1px solid $(Theme.backgroundSubtle);
 
 $(Theme.afterMedium) {
   text-align: left;
@@ -35,16 +34,12 @@ $(Theme.afterMedium) {
 |}
 ];
 
-let titleGradientCss = [%cx
+let titleUnderlineCss = [%cx
   {|
-background:
-  linear-gradient(
-    to right,
-    var(--primary),
-    var(--accent),
-    var(--secondary));
-background-clip: text;
-color: rgba(0, 0, 0, 0);
+text-decoration: underline;
+text-decoration-thickness: 0.1em;
+text-decoration-color: $(Theme.primary);
+text-underline-position: from-font;
 |}
 ];
 
@@ -71,10 +66,10 @@ let make = () => {
   <section className=bannerCss>
     <header>
       <h1 className=titleCss>
-        <div className=titleGradientCss>
+        <div className=titleUnderlineCss>
           {React.string("End-to-End Encrypted")}
         </div>
-        <div className=titleGradientCss>
+        <div className=titleUnderlineCss>
           {React.string("Anonymous Confessions")}
         </div>
       </h1>
