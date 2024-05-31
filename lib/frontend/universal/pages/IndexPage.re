@@ -1,6 +1,7 @@
 let indexPageCss = [%cx
   {|
 flex-grow: 1;
+align-items: center;
 
 $(Theme.afterLarge) {
   display: grid;
