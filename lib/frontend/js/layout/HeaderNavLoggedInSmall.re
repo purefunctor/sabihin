@@ -2,6 +2,7 @@ module Menu = {
   let menuCss = [%cx
     {|
     position: absolute;
+    z-index: 10000;
     background-color: $(Theme.background11);
     border-color: $(Theme.background9);
     border-style: solid;
