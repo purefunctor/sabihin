@@ -7,6 +7,7 @@ let make = () => {
   | ["register"] => <RegisterPage />
   | ["login"] => <LoginPage />
   | ["get-started"] => <GetStartedPage />
+  | ["inbox"] => <InboxPage />
   | ["not-found"]
   | _ => <NotFoundPage />
   };

@@ -10,4 +10,5 @@ let route =
       get "/register" [ "register" ];
       get "/profile" [ "profile" ];
       get "/get-started" [ "get-started" ];
+      get "/inbox" [ "inbox" ];
     ]
