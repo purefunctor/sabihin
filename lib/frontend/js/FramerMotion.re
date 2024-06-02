@@ -5,6 +5,7 @@ external div:
     ~animate: 'animate=?,
     ~transition: 'transition=?,
     ~variants: 'variants=?,
+    ~onClick: React.Event.Mouse.t => unit=?,
     ~className: string=?,
     ~children: React.element=?
   ) =>
@@ -17,6 +18,8 @@ external span:
     ~initial: 'initial=?,
     ~animate: 'animate=?,
     ~transition: 'transition=?,
+    ~variants: 'variants=?,
+    ~onClick: React.Event.Mouse.t => unit=?,
     ~className: string=?,
     ~children: React.element=?
   ) =>
