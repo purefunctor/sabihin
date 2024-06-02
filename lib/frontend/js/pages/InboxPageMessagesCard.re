@@ -1,89 +1,49 @@
-let containerCss = [%cx
-  {|
-  display: flex;
-  position: relative;
-  width: 100%;
-  height: 16rem;
-|}
-];
+open InboxPageMessagesStyles;
+open InboxPageMessagesCardHooks;
 
-let cardCss = [%cx
-  {|
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  backface-visibility: hidden;
-  color: $(Theme.background11);
-  font-family: "Poppins";
-  font-size: 4rem;
-  cursor: pointer;
-|}
-];
-
-let backCss = [%cx {|
-  background-color: $(Theme.primary);
-|}];
-
-let faceCss = [%cx {|
-  background-color: $(Theme.secondary);
-|}];
-
-let variants = {
-  "toHidden": {
-    "transform": [|
-      "perspective(1000px) translateY(0px) rotateY(0deg)",
-      "perspective(1000px) translateY(-10x) rotateY(0deg)",
-      "perspective(1000px) translateY(-10px) rotateY(180deg)",
-      "perspective(1000px) translateY(0px) rotateY(180deg)",
-    |],
-    "transition": {
-      "duration": 0.6,
-      "times": [|0.0, 0.16, 0.84, 1.0|],
-    },
-  },
-  "toRevealed": {
-    "transform": [|
-      "perspective(1000px) translateY(0px) rotateY(180deg)",
-      "perspective(1000px) translateY(-10px) rotateY(180deg)",
-      "perspective(1000px) translateY(-10px) rotateY(360deg)",
-      "perspective(1000px) translateY(0px) rotateY(360deg)",
-    |],
-    "transition": {
-      "duration": 0.6,
-      "times": [|0.0, 0.16, 0.84, 1.0|],
-    },
-  },
-  "toDeleted": {
-    "transform": [|"translateY(-50px)"|],
-  },
+module Face = {
+  [@react.component]
+  let make = (~faceInitial, ~faceAnimate, ~toggleReveal) => {
+    let onClick = React.useCallback1(_ => toggleReveal(), [|toggleReveal|]);
+    <FramerMotion.div
+      className=cardFaceCss
+      variants=cardVariants
+      initial=faceInitial
+      animate=faceAnimate>
+      <button className=cardFaceCloseCss onClick>
+        <Icons.CloseLine size="2rem" />
+      </button>
+      <div className=cardFaceContentCss>
+        {React.string("example content :3")}
+      </div>
+      <button className=cardFaceTrashCss>
+        <Icons.DeleteBinLine size="1.2rem" />
+        <span> {React.string("Trash")} </span>
+      </button>
+      <button className=cardFaceReplyCss>
+        <Icons.ChatLine size="1.2rem" />
+        <span> {React.string("Reply")} </span>
+      </button>
+      <button className=cardFaceShareCss>
+        <Icons.LinkM size="1.2rem" />
+        <span> {React.string("Share")} </span>
+      </button>
+    </FramerMotion.div>;
+  };
 };
 
-type state =
-  | Initial
-  | Revealed
-  | Hidden;
-
-let useRevealState = () => {
-  let (state, reduce) =
-    React.useReducer(
-      (state, ()) =>
-        switch (state) {
-        | Initial => Revealed
-        | Revealed => Hidden
-        | Hidden => Revealed
-        },
-      Initial,
-    );
-
-  let toRevealed = Js.Nullable.return("toRevealed");
-  let toHidden = Js.Nullable.return("toHidden");
-  let null = Js.Nullable.null;
-
-  // faceInitial, faceAnimate, backInitial, backAnimate
-  switch (state) {
-  | Initial => (toRevealed, null, toHidden, null, reduce)
-  | Revealed => (null, toRevealed, null, toHidden, reduce)
-  | Hidden => (null, toHidden, null, toRevealed, reduce)
+module Back = {
+  [@react.component]
+  let make = (~backInitial, ~backAnimate, ~toggleReveal) => {
+    let onClick = React.useCallback1(_ => toggleReveal(), [|toggleReveal|]);
+    <FramerMotion.div
+      className=cardBackCss
+      variants=cardVariants
+      initial=backInitial
+      animate=backAnimate
+      onClick>
+      <Icons.MailLockLine size="8rem" />
+    </FramerMotion.div>;
   };
 };
 
@@ -92,22 +52,8 @@ let make = () => {
   let (faceInitial, faceAnimate, backInitial, backAnimate, toggleReveal) =
     useRevealState();
 
-  let onClick = React.useCallback1(_ => toggleReveal(), [|toggleReveal|]);
-
-  <div className=containerCss onClick>
-    <FramerMotion.div
-      className={cardCss ++ " " ++ faceCss}
-      variants
-      initial=faceInitial
-      animate=faceAnimate>
-      {React.string("Face")}
-    </FramerMotion.div>
-    <FramerMotion.div
-      className={cardCss ++ " " ++ backCss}
-      variants
-      initial=backInitial
-      animate=backAnimate>
-      {React.string("Back")}
-    </FramerMotion.div>
+  <div className=cardOuterCss>
+    <Face faceInitial faceAnimate toggleReveal />
+    <Back backInitial backAnimate toggleReveal />
   </div>;
 };

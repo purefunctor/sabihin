@@ -1,8 +1,8 @@
-let inboxPageCss = [%cx {|
+let inboxCss = [%cx {|
   flex-grow: 1;
 |}];
 
 [@react.component]
 let make = (~children) => {
-  <main className=inboxPageCss> children </main>;
+  <main className=inboxCss> children </main>;
 };

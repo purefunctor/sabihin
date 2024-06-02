@@ -1,16 +1,9 @@
-let layoutCss = [%cx
-  {|
-  display: flex;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  gap: 2rem;
-  flex-direction: column;
-|}
-];
+open InboxPageMessagesStyles;
 
 [@react.component]
 let make = () => {
-  <div className=layoutCss>
+  <div className=messagesCss>
+    <InboxPageMessagesCard />
     <InboxPageMessagesCard />
     <InboxPageMessagesCard />
   </div>;
