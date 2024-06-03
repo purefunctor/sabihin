@@ -45,30 +45,10 @@ let cardFaceCss =
   color: $(Theme.foreground9);
   overflow: hidden;
   display: grid;
-  grid-template-areas:
-    "content content content"
-    "trash   reply   share";
-  grid-template-rows: 80% 20%;
+  grid-template-rows: 1fr 4rem;
+  grid-template-columns: 4rem 1fr 1fr 1fr;
 |}
   ];
-
-let cardFaceCloseCss = [%cx
-  {|
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  padding: 0;
-
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  color: $(Theme.foreground9);
-
-  &:hover {
-    color: $(Theme.primary);
-  }
-|}
-];
 
 let cardFaceContentCss = [%cx
   {|
@@ -79,13 +59,25 @@ let cardFaceContentCss = [%cx
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  grid-area: content;
+  grid-row: 1;
+  grid-column: 1 / span 4;
+|}
+];
+
+let cardFaceActionsCss = [%cx {|
+  display: flex;
+|}];
+
+let cardFaceButtonGroupCss = [%cx
+  {|
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 |}
 ];
 
 let cardFaceButtonCss = [%cx
   {|
-  flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,63 +85,55 @@ let cardFaceButtonCss = [%cx
   padding: 0;
 
   border-color: $(Theme.background9);
-  border-style: solid; 
+  border-style: solid;
   border-width: 2px 0 0 0;
+
   background-color: transparent;
   cursor: pointer;
   font-family: "Poppins";
   font-size: 1rem;
 
-  transition: color 150ms ease-in, background-color 150ms ease-in;
-
-  &:nth-child(2n) {
-    border-left-width: 2px;
+  &:not(:last-child) {
     border-right-width: 2px;
   }
+
+  grid-row: 2;
 |}
 ];
 
-let cardFaceTrashCss =
+let cardFaceMoreCss =
   cardFaceButtonCss
   ++ " "
   ++ [%cx
     {|
-color: $(Theme.failure);
-&:hover {
-  color: $(Theme.background9);
-  background-color: $(Theme.failure);
-}
-grid-area: trash;
+  color: $(Theme.foreground11);
+  &:hover {
+    color: $(Theme.foreground9);
+  }
 |}
   ];
 
-let cardFaceReplyCss =
+let makeCardFaceButton = color => {
   cardFaceButtonCss
   ++ " "
   ++ [%cx
     {|
-color: $(Theme.info);
-&:hover {
-  color: $(Theme.background9);
-  background-color: $(Theme.info);
-}
-grid-area: reply;
-|}
+    color: $(color);
+    &:hover {
+      color: $(Theme.background9);
+      background-color: $(color);
+    }
+    transition:
+      color 150ms ease-in,
+      background-color 150ms ease-in;
+  |}
   ];
+};
 
-let cardFaceShareCss =
-  cardFaceButtonCss
-  ++ " "
-  ++ [%cx
-    {|
-color: $(Theme.primary);
-&:hover {
-  color: $(Theme.background9);
-  background-color: $(Theme.primary);
-}
-grid-area: share;
-|}
-  ];
+let cardFaceFailCss = makeCardFaceButton(Theme.failure);
+let cardFaceCloseCss = cardFaceFailCss;
+let cardFaceReplyCss = makeCardFaceButton(Theme.secondary);
+let cardFaceShareCss = makeCardFaceButton(Theme.primary);
 
 let cardBackCss =
   cardInnerCss

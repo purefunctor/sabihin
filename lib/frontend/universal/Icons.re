@@ -1,3 +1,20 @@
+module AlarmWarningLine = {
+  [@react.component]
+  let make = (~size="1rem", ~className=?) => {
+    <svg
+      ?className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M4 20v-6a8 8 0 1 1 16 0v6h1v2H3v-2zm2 0h12v-6a6 6 0 0 0-12 0zm5-18h2v3h-2zm8.778 2.808l1.414 1.414l-2.12 2.121l-1.415-1.414zM2.808 6.222l1.414-1.414l2.121 2.12L4.93 8.344zM7 14a5 5 0 0 1 5-5v2a3 3 0 0 0-3 3z"
+      />
+    </svg>;
+  };
+};
+
 module BookLine = {
   [@react.component]
   let make = (~size="1rem", ~className="") => {
@@ -44,6 +61,23 @@ module CheckLine = {
       <path
         fill="currentColor"
         d="m10 15.17l9.192-9.191l1.414 1.414L10 17.999l-6.364-6.364l1.414-1.414z"
+      />
+    </svg>;
+  };
+};
+
+module CornerLeftDownLine = {
+  [@react.component]
+  let make = (~size="1rem", ~className=?) => {
+    <svg
+      ?className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M19 14V5h-2v7H6.828l3.95-3.95l-1.414-1.414L3 13l6.364 6.364l1.414-1.414L6.828 14z"
       />
     </svg>;
   };
@@ -182,6 +216,23 @@ module MenuLine = {
   };
 };
 
+module MoreLine = {
+  [@react.component]
+  let make = (~size="1rem", ~className=?) => {
+    <svg
+      ?className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M4.5 10.5c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5S6 12.825 6 12s-.675-1.5-1.5-1.5m15 0c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5S21 12.825 21 12s-.675-1.5-1.5-1.5m-7.5 0c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5s1.5-.675 1.5-1.5s-.675-1.5-1.5-1.5"
+      />
+    </svg>;
+  };
+};
+
 module QuestionLink = {
   [@react.component]
   let make = (~size="1rem", ~className="") => {
@@ -277,6 +328,23 @@ module RingResize = {
           values="0 12 12;360 12 12"
         />
       </g>
+    </svg>;
+  };
+};
+
+module SpamLine = {
+  [@react.component]
+  let make = (~size="1rem", ~className=?) => {
+    <svg
+      ?className
+      xmlns="http://www.w3.org/2000/svg"
+      width=size
+      height=size
+      viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="m15.936 2.501l5.565 5.565v7.87l-5.565 5.565h-7.87l-5.565-5.565v-7.87l5.565-5.565zm-.828 2H8.894L4.501 8.894v6.214L8.894 19.5h6.214l4.393-4.393V8.894zM8 11.001h8v2H8z"
+      />
     </svg>;
   };
 };
