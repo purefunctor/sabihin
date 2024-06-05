@@ -8,6 +8,7 @@ let make = () => {
   | ["login"] => <LoginPage />
   | ["get-started"] => <GetStartedPage />
   | ["inbox"] => <InboxPage />
+  | ["write"] => <WritePage />
   | ["not-found"]
   | _ => <NotFoundPage />
   };
